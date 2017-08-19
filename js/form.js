@@ -11,16 +11,31 @@
 
     progress = function () {
         $(document.body).append("<div id='prg'></div>");
-        var prg = $("#prg");
 
-        progress = function (val, display) {
+        var prg = $("#prg"), timer, width;
+
+        progress = function (display) {
             $(prg).css({
-                width: val + "%",
+                width: (display ? 0 : 100) + "%",
                 height: (display ? 3 : 0) + "px",
                 borderWidth: (display ? 1 : 0) + "px"
             });
 
-            if (!display) {
+            if (display) {
+                width = 5;
+
+                timer = setInterval(function () {
+                    width += 5;
+
+                    if (width < 100) {
+                        $(prg).css({ width: width + "%" });
+                    } else {
+                        clearInterval(timer);
+                    }
+                }, 500);
+            } else {
+                clearInterval(timer);
+
                 setTimeout(function () {
                     $(prg).css({ width: 0 });
                 }, 1000);
@@ -71,7 +86,7 @@
 
         xlock = true;
         $(".j-error", jar).addClass("hide");
-        progress(40, true);
+        progress(true);
 
         $.ajax({
             method: "POST",
@@ -82,7 +97,7 @@
                 }
 
                 showErrors();
-                progress(100, false);
+                progress(false);
             },
             data: uinputs
         }).done(function (response, status) {
@@ -90,7 +105,7 @@
                 onload();
             }
 
-            progress(100, false);
+            progress(false);
 
             if (status !== "success" || !response.status || response.errors) {
                 showErrors(response.errors);
