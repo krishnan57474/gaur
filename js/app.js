@@ -292,7 +292,7 @@
     }
 
     function searchFilter(elm) {
-        var reset = $(elm).text() !== "Search";
+        var reset = $(elm).hasClass("btn-danger");
 
         // reset validation
         getJitem("filterby").parent().removeClass("has-error");
