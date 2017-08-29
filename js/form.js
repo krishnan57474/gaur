@@ -1,7 +1,10 @@
 (function ($) {
     "use strict";
 
-    var configs, jar, xlock, derror, progress;
+    var configs, jar, xlock,
+
+    // self overriding fnc
+    progress, showErrors;
 
     function forEach(obj, callback) {
         Object.keys(obj).forEach(function (k) {
@@ -10,9 +13,11 @@
     }
 
     progress = function () {
-        $(document.body).append("<div id='prg'></div>");
+        var prg = $("<div id='prg'></div>"),
+        timer,
+        width;
 
-        var prg = $("#prg"), timer, width;
+        $(document.body).append(prg);
 
         progress = function (display) {
             $(prg).css({
@@ -45,39 +50,38 @@
         progress.apply(undefined, arguments);
     };
 
-    function getBCR(elm, key) {
-        elm = elm.getBoundingClientRect();
-        return key ? elm[key] : elm;
-    }
+    showErrors = function () {
+        var elm = $(".j-error", jar),
+        frg = document.createDocumentFragment(),
+        errorFrg = $.parseHTML("<li class='alert alert-danger'><span class='glyphicon glyphicon-remove-sign'></span> </li>"),
+        defaultError = "Invalid request. Please refresh the page or try again later.",
+        timer;
 
-    function scrollViewTo(elm) {
-        scrollTo(0, getBCR(elm, "top") - getBCR(document.body, "top"));
-    }
+        showErrors = function (errors) {
+            if (configs.hideErrors) {
+                clearTimeout(timer);
 
-    function showErrors(errors) {
-        var ifrg = "",
-        elm = $(".j-error", jar),
-        e = Number(elm.data("e")) || 0;
-        xlock = false;
-
-        // error counter
-        elm.data("e", ++e);
-
-        if (configs.hideErrors) {
-            setTimeout(function () {
-                if (e === Number(elm.data("e"))) {
+                timer = setTimeout(function () {
                     elm.addClass("hide");
-                }
-            }, 10000);
-        }
+                }, 10000);
+            }
 
-        (($.isArray(errors) && errors) || derror).forEach(function (v) {
-            ifrg += "<li class='alert alert-danger'><span class='glyphicon glyphicon-remove-sign'></span> " + v + "</li>";
-        });
+            if ($.isArray(errors)) {
+                errors.forEach(function (v) {
+                    $(frg).append($(errorFrg).clone().append(v));
+                });
+            } else {
+                $(frg).append($(errorFrg).clone().append(defaultError));
+            }
 
-        elm.html(ifrg).removeClass("hide");
-        scrollViewTo(elm[0]);
-    }
+            elm.children().remove();
+            elm.append(frg).removeClass("hide");
+            scrollTo(0, elm[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top);
+            xlock = false;
+        };
+
+        showErrors.apply(undefined, arguments);
+    };
 
     function submit(uinputs, onsuccess, onload) {
         if (xlock) {
@@ -132,7 +136,6 @@
         }
 
         jar = $("#j-ar");
-        derror = ["Invalid request. Please refresh the page or try again later."];
 
         if (configs.hideErrors) {
             $(".j-error", jar).on("click", function () {
