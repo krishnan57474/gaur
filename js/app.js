@@ -1,16 +1,25 @@
 (function ($) {
     "use strict";
 
-    var gform, jar, jitems, configs;
+    var gform, jar, configs,
+
+    // self overriding fnc
+    getJitem;
 
     // utils
-    function getJitem(key) {
-        if (!jitems[key]) {
-            jitems[key] = $("[data-jitem='" + key + "']", jar);
-        }
+    getJitem = function () {
+        var jitems = Object.create(null);
 
-        return jitems[key];
-    }
+        getJitem = function (key) {
+            if (!jitems[key]) {
+                jitems[key] = $("[data-jitem='" + key + "']", jar);
+            }
+
+            return jitems[key];
+        };
+
+        return getJitem.apply(undefined, arguments);
+    };
 
     function toNumber(val) {
         return Number(val);
@@ -371,7 +380,6 @@
         $ = jQuery;
         gform = new GForm();
         jar = $("#j-ar");
-        jitems = {};
         configs = {
             filterBy: "",
             keyword: "",
