@@ -78,7 +78,7 @@
 
             elm = e.target;
 
-            if (elm.tagName === "SPAN" && $(elm).hasClass("link")) {
+            if (elm.tagName === "SPAN" && $(elm).data("item") === "status") {
                 configs.action = $(elm);
                 getJitem("confirm").removeClass("hide");
             }
@@ -222,15 +222,16 @@
     // item
     function getItems() {
         var uinputs = {
-            "j-af":   "r",
-            action:   "getitems",
-            filter:   1,
-            filterby: configs.filterBy,
-            keyword:  configs.keyword,
-            count:    configs.listCount,
-            page:     configs.currentPage,
-            orderby:  configs.orderBy,
-            sortby:   configs.sortBy
+            "j-af":     "r",
+            action:     "getitems",
+            filterby:   configs.filterBy,
+            filterval:  configs.filterVal,
+            searchby:   configs.searchBy,
+            searchval:  configs.searchVal,
+            count:      configs.listCount,
+            page:       configs.currentPage,
+            orderby:    configs.orderBy,
+            sortby:     configs.sortBy
         };
 
         gform.submit({
@@ -311,36 +312,52 @@
         });
     }
 
+    function resetSearch() {
+        getJitem("filterby").val("");
+        getJitem("filterval").val("");
+        getJitem("searchby").val("");
+        getJitem("searchval").val("");
+        getJitem("orderby").val("");
+        getJitem("sortby").val("");
+    }
+
+    function isValidSearch() {
+        if (getJitem("filterby").val() && !getJitem("filterval").val()) {
+            getJitem("filterval").parent().addClass("has-error");
+            return false;
+        }
+
+        if (getJitem("searchval").val() && !getJitem("searchby").val()) {
+            getJitem("searchby").parent().addClass("has-error");
+            return false;
+        }
+
+        if (getJitem("orderby").val() && !getJitem("sortby").val()) {
+            getJitem("sortby").parent().addClass("has-error");
+            return false;
+        }
+
+        return true;
+    }
+
     function searchFilter(elm) {
         var reset = $(elm).hasClass("btn-danger");
 
         // reset validation
-        getJitem("filterby").parent().removeClass("has-error");
+        getJitem("filterval").parent().removeClass("has-error");
+        getJitem("searchby").parent().removeClass("has-error");
         getJitem("sortby").parent().removeClass("has-error");
 
         if (reset) {
-            getJitem("filterby").val("");
-            getJitem("keyword").val("");
-            getJitem("orderby").val("");
-            getJitem("sortby").val("");
-        }
-        else
-        {
-            if (getJitem("keyword").val() && !getJitem("filterby").val())
-            {
-                getJitem("filterby").parent().addClass("has-error");
-                return;
-            }
-
-            if (getJitem("orderby").val() && !getJitem("sortby").val())
-            {
-                getJitem("sortby").parent().addClass("has-error");
-                return;
-            }
+            resetSearch();
+        } else if (!isValidSearch()) {
+            return;
         }
 
         configs.filterBy = getJitem("filterby").val();
-        configs.keyword = getJitem("keyword").val();
+        configs.filterVal = getJitem("filterval").val();
+        configs.searchBy = getJitem("searchby").val();
+        configs.searchVal = getJitem("searchval").val();
         configs.orderBy = getJitem("orderby").val();
         configs.sortBy = toNumber(getJitem("sortby").val());
         configs.currentPage = 1;
@@ -369,12 +386,34 @@
         });
     }
 
+    function filterHandler() {
+        getJitem("filterby").on("change", function () {
+            getJitem("filterval").val("");
+            $("[data-item]", getJitem("filterval")).addClass("hide");
+            $("[data-item='" + getJitem("filterby").val() + "']", getJitem("filterval")).removeClass("hide");
+        });
+    }
+
 
     // init
     function applyFilter() {
         if (configs.filterBy) {
             getJitem("filterby").val(configs.filterBy);
-            getJitem("keyword").val(configs.keyword);
+
+            $("[data-item='" + configs.filterBy + "']", getJitem("filterval")).removeClass("hide").each(function (k ,elm) {
+                if (elm.value === configs.filterVal) {
+                    elm.selected = true;
+                    return false;
+                }
+            });
+        }
+
+        if (configs.searchBy) {
+            getJitem("searchby").val(configs.searchBy);
+            getJitem("searchval").val(configs.searchVal);
+        }
+
+        if (configs.filterBy || configs.searchBy) {
             getJitem("ufilters").removeClass("hide");
         }
 
@@ -392,12 +431,14 @@
         gform = new GForm();
         jar = $("#j-ar");
         configs = {
-            filterBy: "",
-            keyword: "",
-            currentPage: 1,
-            listCount: 5,
-            orderBy: "",
-            sortBy: 0
+            filterBy:       "",
+            filterVal:      "",
+            searchBy:       "",
+            searchVal:      "",
+            currentPage:    1,
+            listCount:      5,
+            orderBy:        "",
+            sortBy:         0
         };
 
         if (uconfigs) {
@@ -424,6 +465,7 @@
         forEach({
             search: function () {
                 searchHandler();
+                filterHandler();
             },
             status: function () {
                 actionHandler();
