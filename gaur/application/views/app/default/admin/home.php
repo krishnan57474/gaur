@@ -70,25 +70,25 @@ $this->load->view('app/default/common/head_top');
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Total users</div>
-                            <div data-jitem="total" class="panel-body text-center">0</div>
+                            <div data-jitem="u-total" class="panel-body text-center">0</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Verified users</div>
-                            <div data-jitem="verified" class="panel-body text-center">0</div>
+                            <div data-jitem="u-verified" class="panel-body text-center">0</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Unverified users</div>
-                            <div data-jitem="unverified" class="panel-body text-center">0</div>
+                            <div data-jitem="u-unverified" class="panel-body text-center">0</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Recent user</div>
-                            <div data-jitem="recent" class="panel-body text-center"></div>
+                            <div data-jitem="u-recent" class="panel-body text-center"></div>
                         </div>
                     </div>
                 </div>
@@ -102,51 +102,55 @@ $this->load->view('app/default/common/head_top');
     (function ($) {
         "use strict";
 
-        var gform, jar, jitems;
+        var gform, jar,
 
-        function getJitem(key, context) {
-            var elm;
+        // self overriding fnc
+        getJitem;
 
-            if (context || !jitems[key]) {
-                elm = $("[data-jitem='" + key + "']", context || jar);
+        getJitem = function () {
+            var jitems = Object.create(null);
 
-                if (!context) {
-                    jitems[key] = elm;
+            getJitem = function (key) {
+                if (!jitems[key]) {
+                    jitems[key] = $("[data-jitem='" + key + "']", jar);
                 }
-            } else {
-                elm = jitems[key];
-            }
 
-            return elm;
-        }
+                return jitems[key];
+            };
+
+            return getJitem.apply(undefined, arguments);
+        };
 
         function setUserInfo(data) {
-            var elm = getJitem("users"),
-            total = 0;
+            var total = 0;
 
             if (Number(data.total[0])) {
                 total += Number(data.total[0]);
-                getJitem("unverified", elm).text(data.total[0]);
+                getJitem("u-unverified").text(data.total[0]);
             }
 
             if (Number(data.total[1])) {
                 total += Number(data.total[1]);
-                getJitem("verified", elm).text(data.total[1]);
+                getJitem("u-verified").text(data.total[1]);
             }
 
-            getJitem("recent", elm).text(data.recent || "-");
-            getJitem("total", elm).text(total);
+            getJitem("u-recent").text(data.recent || "-");
+            getJitem("u-total").text(total);
         }
 
         function getItems() {
             gform.submit({
-                "j-af": "r",
-                action: "getitems"
-            }, function (data) {
-                setUserInfo(data.users);
-                getJitem("users").removeClass("hide");
-            }, function () {
-                getJitem("loading").addClass("hide");
+                data: {
+                    "j-af": "r",
+                    action: "getitems"
+                },
+                success: function (data) {
+                    setUserInfo(data.users);
+                    getJitem("users").removeClass("hide");
+                },
+                load: function () {
+                    getJitem("loading").addClass("hide");
+                }
             });
         }
 
@@ -154,7 +158,6 @@ $this->load->view('app/default/common/head_top');
             $ = jQuery;
             gform = new GForm();
             jar = $("#j-ar");
-            jitems = {};
 
             gform.init();
             getItems();

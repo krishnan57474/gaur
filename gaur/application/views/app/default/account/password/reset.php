@@ -105,14 +105,18 @@ $this->load->view('app/default/common/head_top');
         var gform, jar;
 
         function validateToken() {
-            gform.submit({ "j-af": "v" }, function (msg) {
-                $(".j-success", jar).text(msg).removeClass("hide");
+            gform.submit({
+                data: { "j-af": "v" },
+                success: function (msg) {
+                    $(".j-success", jar).text(msg).removeClass("hide");
 
-                setTimeout(function () {
-                    location.href = location.href;
-                }, 1000);
-            }, function () {
-                $(".j-loading", jar).addClass("hide");
+                    setTimeout(function () {
+                        location.href = location.href;
+                    }, 1000);
+                },
+                load: function () {
+                    $(".j-loading", jar).addClass("hide");
+                }
             });
         }
 
@@ -146,13 +150,16 @@ $this->load->view('app/default/common/head_top');
                 uinputs[v.name] = v.value;
             });
 
-            gform.submit(uinputs, function (msg) {
-                $(".j-success", jar).text(msg).removeClass("hide");
-                $(form).addClass("hide");
+            gform.submit({
+                data: uinputs,
+                success: function (msg) {
+                    $(".j-success", jar).text(msg).removeClass("hide");
+                    $(form).addClass("hide");
 
-                setTimeout(function () {
-                    location.href = "account/login";
-                }, 5000);
+                    setTimeout(function () {
+                        location.href = "account/login";
+                    }, 5000);
+                }
             });
         }
 

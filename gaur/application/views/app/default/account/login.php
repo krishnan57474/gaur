@@ -112,10 +112,13 @@ $this->load->view('app/default/common/head_top');
                 uinputs[v.name] = v.value;
             });
 
-            gform.submit(uinputs, function (msg) {
-                $(".j-success", jar).text(msg[0]).removeClass("hide");
-                $(form).addClass("hide");
-                location.href = msg[1];
+            gform.submit({
+                data: uinputs,
+                success: function (msg) {
+                    $(".j-success", jar).text(msg[0]).removeClass("hide");
+                    $(form).addClass("hide");
+                    location.href = msg[1];
+                }
             });
         }
 

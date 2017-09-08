@@ -71,7 +71,7 @@ $this->load->view('app/default/common/head_top');
 
                 <div id="j-ar" class="sblock center-block">
                     <ul class="list-unstyled j-error hide"></ul>
-                    <p class="alert alert-success hide"></p>
+                    <p class="alert alert-success j-success hide"></p>
 
                     <form method="post" onsubmit="return false">
                         <div class="form-group">
@@ -129,13 +129,16 @@ $this->load->view('app/default/common/head_top');
                 uinputs[v.name] = v.value;
             });
 
-            gform.submit(uinputs, function (msg) {
-                $(".alert-success", jar).text(msg[0]).removeClass("hide");
-                $(form).addClass("hide");
+            gform.submit({
+                data: uinputs,
+                success: function (msg) {
+                    $(".j-success", jar).text(msg[0]).removeClass("hide");
+                    $(form).addClass("hide");
 
-                setTimeout(function () {
-                    location.href = msg[1];
-                }, 3000);
+                    setTimeout(function () {
+                        location.href = msg[1];
+                    }, 3000);
+                }
             });
         }
 

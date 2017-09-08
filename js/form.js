@@ -83,30 +83,53 @@
         showErrors.apply(undefined, arguments);
     };
 
-    function submit(uinputs, onsuccess, onload) {
+    function isValidFile(file, atypes, limit) {
+        var rx = new RegExp("^" + atypes.join("$|^") + "$", "i");
+
+        if (!(rx.test(file.name.split(".").pop()))) {
+            showErrors(["The filetype you are attempting to upload is not allowed."]);
+            return false;
+        }
+
+        if (!file.size || file.size > limit) {
+            showErrors(["The uploaded file exceeds the maximum upload file size limit."]);
+            return false;
+        }
+
+        return true;
+    }
+
+    function submit(xconfigs) {
         if (xlock) {
             return;
+        }
+
+        var data = {
+            method: "POST",
+            url: xconfigs.url || location.href,
+            error: function () {
+                if (xconfigs.load) {
+                    xconfigs.load();
+                }
+
+                showErrors();
+                progress(false);
+            },
+            data: xconfigs.data
+        };
+
+        if (xconfigs.upload) {
+            data.processData = false;
+            data.contentType = false;
         }
 
         xlock = true;
         $(".j-error", jar).addClass("hide");
         progress(true);
 
-        $.ajax({
-            method: "POST",
-            url: location.href,
-            error: function () {
-                if (onload) {
-                    onload();
-                }
-
-                showErrors();
-                progress(false);
-            },
-            data: uinputs
-        }).done(function (response, status) {
-            if (onload) {
-                onload();
+        $.ajax(data).done(function (response, status) {
+            if (xconfigs.load) {
+                xconfigs.load();
             }
 
             progress(false);
@@ -116,7 +139,7 @@
                 return;
             }
 
-            onsuccess(response.data);
+            xconfigs.success(response.data);
             xlock = false;
         });
     }
@@ -149,6 +172,9 @@
     Form.prototype = {
         init: init,
         submit: submit,
+        isValidFile: isValidFile,
+        showErrors: showErrors,
+        progress: progress,
 
         get lock() { return xlock; },
         set lock(status) { xlock = status; }

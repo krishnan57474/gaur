@@ -111,10 +111,13 @@ $this->load->view('app/default/common/head_top');
                 uinputs[v.name] = v.value;
             });
 
-            gform.submit(uinputs, function (msg) {
-                $(".j-success", jar).text(msg[0]).removeClass("hide");
-                $(".j-warning", jar).text(msg[1]).removeClass("hide");
-                $(form).addClass("hide");
+            gform.submit({
+                data: uinputs,
+                success: function (msg) {
+                    $(".j-success", jar).text(msg[0]).removeClass("hide");
+                    $(".j-warning", jar).text(msg[1]).removeClass("hide");
+                    $(form).addClass("hide");
+                }
             });
         }
 

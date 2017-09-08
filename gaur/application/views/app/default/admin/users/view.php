@@ -180,11 +180,15 @@ $status = array(
 
             $("span", btn).addClass("glyphicon-refresh spin");
 
-            gform.submit({ "j-af": "s" }, function (msg) {
-                $(".j-success", jar).text(msg).removeClass("hide");
-                btn.addClass("hide");
-            }, function () {
-                $("span", btn).removeClass("glyphicon-refresh spin");
+            gform.submit({
+                data: { "j-af": "s" },
+                success: function (msg) {
+                    $(".j-success", jar).text(msg).removeClass("hide");
+                    btn.addClass("hide");
+                },
+                load: function () {
+                    $("span", btn).removeClass("glyphicon-refresh spin");
+                }
             });
         }
 

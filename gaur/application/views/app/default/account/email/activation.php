@@ -85,11 +85,15 @@ $this->load->view('app/default/common/head_top');
         var gform, jar;
 
         function validateToken() {
-            gform.submit({ "j-af": "v" }, function (msg) {
-                $(".j-success", jar).text(msg).removeClass("hide");
-                location.href = "account/password/create";
-            }, function () {
-                $(".j-loading", jar).addClass("hide");
+            gform.submit({
+                data: { "j-af": "v" },
+                success: function (msg) {
+                    $(".j-success", jar).text(msg).removeClass("hide");
+                    location.href = "account/password/create";
+                },
+                load: function () {
+                    $(".j-loading", jar).addClass("hide");
+                }
             });
         }
 
