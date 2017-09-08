@@ -85,9 +85,13 @@ class Home extends CI_Controller
             return $this->_aaction();
         }
 
-        $this->load->helper('html');
+        $this->load->helper(array('html', 'admin_filter'));
 
-        $filter = $this->_filter();
+        $filter = admin_filter(array(
+            'page'   => 'user',
+            'filter' => FALSE
+        ));
+
         $data = array();
         $data['filter'] = $filter;
         $data['filter']['current_page'] = 1;
@@ -97,13 +101,13 @@ class Home extends CI_Controller
             $data['filter']['current_page'] = ($filter['offset'] / $filter['list_count']) + 1;
         }
 
-        $filter_fields = array(
-            'id'       => 'ID',
-            'username' => 'Username',
-            'email'    => 'Email'
+        $data['search_fields'] = array(
+            'id'        => 'ID',
+            'username'  => 'Username',
+            'email'     => 'Email'
         );
 
-        $order_fields = array(
+        $data['order_fields'] = array(
             'id'           => 'ID',
             'username'     => 'Username',
             'email'        => 'Email',
@@ -112,48 +116,49 @@ class Home extends CI_Controller
             'activation'   => 'Verified'
         );
 
-        $data['filter_fields'] = $filter_fields;
-        $data['order_fields'] = $order_fields;
+        $data['filter_fields'] = array(
+            'status'        => 'Status',
+            'activation'    => 'Email',
+            'admin'         => 'Admin'
+        );
+
+        $data['filter_values'] = array(
+            'status' => array(
+                'Disabled',
+                'Enabled'
+            ),
+            'activation' => array(
+                'Unverified',
+                'Verified'
+            ),
+            'admin' => array(
+                'No',
+                'Yes'
+            )
+        );
 
         $this->load->view('app/default/admin/users/home', $data);
     }
 
     /**
-     * Filter user inputs
+     * Get users list
      *
-     * @return  array
+     * @param   array   form data
+     *
+     * @return  void
      */
-    private function _filter()
+    private function _action_getitems(&$fdata)
     {
-        if (!isset($_SESSION['admin']['filter']))
-        {
-            $_SESSION['admin'] = array(
-                'filter' => array()
-            );
-        }
-
-        if (!isset($_SESSION['admin']['filter']['user']))
-        {
-            $_SESSION['admin']['filter']['user'] = array(
-                'filter'        => NULL,
-                'list_count'    => 5,
-                'offset'        => 0,
-                'order'         => NULL
-            );
-        }
-
-        if (!form_input('filter'))
-        {
-            session_write_close();
-            return $_SESSION['admin']['filter']['user'];
-        }
-
-        $filter       = NULL;
-        $current_page = (int)form_input('page');
-        $list_count   = (int)form_input('count');
-        $order        = NULL;
+        $this->load->model('admin/users/users', NULL, TRUE);
+        $this->load->helper('admin_filter');
 
         $filter_fields = array(
+            'status',
+            'activation',
+            'admin'
+        );
+
+        $search_fields = array(
             'id',
             'username',
             'email'
@@ -168,66 +173,19 @@ class Home extends CI_Controller
             'activation'
         );
 
-        if (form_input('keyword')
-            && in_array(form_input('filterby'), $filter_fields))
-        {
-            $filter = array(
-                'by'      => form_input('filterby'),
-                'keyword' => form_input('keyword')
-            );
-        }
-
-        if (in_array(form_input('orderby'), $order_fields))
-        {
-            $order = array(
-                'order' => form_input('orderby'),
-                'sort'  => (bool)form_input('sortby') ? 'DESC' : 'ASC'
-            );
-        }
-
-        if ($current_page < 1)
-        {
-            $current_page = 1;
-        }
-
-        if ($list_count < 5 || $list_count > 20)
-        {
-            $list_count = ($list_count < 5) ? 5 : 20;
-        }
-
-        $offset = 0;
-
-        if ($current_page > 1)
-        {
-            $offset = ($current_page - 1) * $list_count;
-        }
-
-        $_SESSION['admin']['filter']['user'] = array(
-            'filter'        => $filter,
-            'list_count'    => $list_count,
-            'offset'        => $offset,
-            'order'         => $order
-        );
-
-        session_write_close();
-        return $_SESSION['admin']['filter']['user'];
-    }
-
-    /**
-     * Get users list
-     *
-     * @param   array   form data
-     *
-     * @return  void
-     */
-    private function _action_getitems(&$fdata)
-    {
-        $this->load->model('admin/users/users', NULL, TRUE);
-
-        $filter = $this->_filter();
+        $filter = admin_filter(array(
+            'page'          => 'user',
+            'filter'        => TRUE,
+            'filter_fields' => $filter_fields,
+            'search_fields' => $search_fields,
+            'order_fields'  => $order_fields
+        ));
 
         $items = $this->users->get(
-            $filter['filter'],
+            array(
+                'filter' => $filter['filter'],
+                'search' => $filter['search']
+            ),
             $filter['list_count'],
             $filter['offset'],
             $filter['order']
@@ -271,10 +229,17 @@ class Home extends CI_Controller
     private function _action_gettotal(&$fdata)
     {
         $this->load->model('admin/users/users', NULL, TRUE);
+        $this->load->helper('admin_filter');
 
-        $filter = $this->_filter();
+        $filter = admin_filter(array(
+            'page'   => 'user',
+            'filter' => FALSE
+        ));
 
-        $fdata['data'] = (int)$this->users->total($filter['filter']);
+        $fdata['data'] = (int)$this->users->total(array(
+            'filter' => $filter['filter'],
+            'search' => $filter['search']
+        ));
     }
 
     /**

@@ -37,20 +37,24 @@
         var elm = configs.action;
 
         gform.submit({
-            "j-af": "r",
-            action: "changestatus",
-            id: elm.closest("tr").data("id")
-        }, function (status) {
-            if (!status) {
-                return;
+            data: {
+                "j-af": "r",
+                action: "changestatus",
+                id: elm.closest("tr").data("id")
+            },
+            success: function (status) {
+                if (!status) {
+                    return;
+                }
+
+                status = !elm.hasClass("text-success");
+
+                elm[status ? "addClass" : "removeClass"]("glyphicon-ok text-success");
+                elm[!status ? "addClass" : "removeClass"]("glyphicon-remove text-danger");
+            },
+            load: function () {
+                getJitem("confirm").addClass("hide");
             }
-
-            status = !elm.hasClass("text-success");
-
-            elm[status ? "addClass" : "removeClass"]("glyphicon-ok text-success");
-            elm[!status ? "addClass" : "removeClass"]("glyphicon-remove text-danger");
-        }, function () {
-            getJitem("confirm").addClass("hide");
         });
     }
 
@@ -196,18 +200,21 @@
         gform.lock = false;
 
         gform.submit({
-            "j-af": "r",
-            action: "gettotal"
-        }, function (data) {
-            if (!data) {
-                return;
+            data: {
+                "j-af": "r",
+                action: "gettotal"
+            },
+            success: function (data) {
+                if (!data) {
+                    return;
+                }
+
+                configs.totalItems = toNumber(data);
+                $("span", getJitem("total")).text(configs.totalItems);
+
+                configs.totalPage  = Math.ceil(configs.totalItems / configs.listCount);
+                buildPagination();
             }
-
-            configs.totalItems = toNumber(data);
-            $("span", getJitem("total")).text(configs.totalItems);
-
-            configs.totalPage  = Math.ceil(configs.totalItems / configs.listCount);
-            buildPagination();
         });
     }
 
@@ -226,18 +233,22 @@
             sortby:   configs.sortBy
         };
 
-        gform.submit(uinputs, function (data) {
-            if (!data) {
-                getJitem("noitems").removeClass("hide");
-                return;
-            }
+        gform.submit({
+            data: uinputs,
+            success: function (data) {
+                if (!data) {
+                    getJitem("noitems").removeClass("hide");
+                    return;
+                }
 
-            getJitem("items").html(data).removeClass("hide");
-            configs.totalPage ? buildPagination() : getPagination();
-        }, function () {
-            ["loading", "noitems", "items", "footer"].forEach(function (v) {
-                getJitem(v).addClass("hide");
-            });
+                getJitem("items").html(data).removeClass("hide");
+                configs.totalPage ? buildPagination() : getPagination();
+            },
+            load: function () {
+                ["loading", "noitems", "items", "footer"].forEach(function (v) {
+                    getJitem(v).addClass("hide");
+                });
+            }
         });
     }
 

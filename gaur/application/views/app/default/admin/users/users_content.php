@@ -48,7 +48,7 @@ foreach ($items as $item):
     <td><?php echo hentities($item['username']); ?></td>
     <td><?php echo hentities($item['email']); ?></td>
     <td class="text-center"><?php echo $item['last_visited'] ? ($item['last_visited'] . ' ago') : '-'; ?></td>
-    <td class="text-center"><span class="link <?php echo $status[$item['status']]; ?>"></span></td>
+    <td class="text-center"><span data-item="status" class="link <?php echo $status[$item['status']]; ?>"></span></td>
     <td class="text-center"><span class="<?php echo $status[$item['activation']]; ?>"></span></td>
     <td class="text-center"><a href="admin/users/edit/<?php echo $item['id']; ?>"><span class="glyphicon glyphicon-pencil"></span></a></td>
     <td class="text-center"><a href="admin/users/view/<?php echo $item['id']; ?>"><span class="glyphicon glyphicon-link"></span></a></td>

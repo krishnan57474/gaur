@@ -110,7 +110,25 @@ $this->load->view('app/default/common/head_top');
                         </select>
                     </div>
                     <div class="form-group c-mr-1">
-                        <input class="form-control" data-jitem="keyword" type="text" placeholder="keyword">
+                        <select class="form-control" data-jitem="filterval">
+                            <option value="">Choose</option>
+                            <?php foreach ($filter_values as $fk => $fv): ?>
+                            <?php foreach ($fv as $k => $v): ?>
+                            <option class="hide" data-item="<?php echo $fk; ?>" value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                            <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group c-mr-1">
+                        <select class="form-control" data-jitem="searchby">
+                            <option value="">Search by</option>
+                            <?php foreach ($search_fields as $k => $v): ?>
+                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group c-mr-1">
+                        <input class="form-control" data-jitem="searchval" type="text" placeholder="keyword">
                     </div>
                     <div class="form-group c-mr-1">
                         <select class="form-control" data-jitem="orderby">
@@ -237,7 +255,9 @@ $this->load->view('app/default/common/head_top');
         function init() {
             var configs = {
                 filterBy:    "<?php echo $filter['filter'] ? $filter['filter']['by'] : ''; ?>",
-                keyword:     "<?php echo $filter['filter'] ? hentities($filter['filter']['keyword']) : ''; ?>",
+                filterVal:   "<?php echo $filter['filter'] ? hentities($filter['filter']['val']) : ''; ?>",
+                searchBy:    "<?php echo $filter['search'] ? $filter['search']['by'] : ''; ?>",
+                searchVal:   "<?php echo $filter['search'] ? hentities($filter['search']['val']) : ''; ?>",
                 currentPage: <?php echo $filter['current_page']; ?>,
                 listCount:   <?php echo $filter['list_count']; ?>,
                 orderBy:     "<?php echo $filter['order'] ? $filter['order']['order'] : ''; ?>",

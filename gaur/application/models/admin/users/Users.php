@@ -61,9 +61,20 @@ class Users extends CI_Model
                     `id`, `username`, `email`, `status`, `activation`, `last_visited`
                 FROM `gaur_users`';
 
-        if ($filter)
+        if ($filter['filter'] || $filter['search'])
         {
-            $qry .= ' WHERE `' . $filter['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['keyword']));
+            $qry .= ' WHERE';
+        }
+
+        if ($filter['filter'])
+        {
+            $qry .= ' `' . $filter['filter']['by'] . '` = ' . $this->db->escape($filter['filter']['val']);
+        }
+
+        if ($filter['search'])
+        {
+            $qry .= $filter['filter'] ? ' AND' : '';
+            $qry .= ' `' . $filter['search']['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val']));
         }
 
         if ($order)
@@ -88,9 +99,20 @@ class Users extends CI_Model
         $qry = 'SELECT COUNT(*) AS `total`
                 FROM `gaur_users`';
 
-        if ($filter)
+        if ($filter['filter'] || $filter['search'])
         {
-            $qry .= ' WHERE `' . $filter['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['keyword']));
+            $qry .= ' WHERE';
+        }
+
+        if ($filter['filter'])
+        {
+            $qry .= ' `' . $filter['filter']['by'] . '` = ' . $this->db->escape($filter['filter']['val']);
+        }
+
+        if ($filter['search'])
+        {
+            $qry .= $filter['filter'] ? ' AND' : '';
+            $qry .= ' `' . $filter['search']['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val']));
         }
 
         return $this->db->query($qry)->row('total');
