@@ -20,7 +20,7 @@
         $(document.body).append(prg);
 
         progress = function (display) {
-            $(prg).css({
+            prg.css({
                 width: (display ? 0 : 100) + "%",
                 height: (display ? 3 : 0) + "px",
                 borderWidth: (display ? 1 : 0) + "px"
@@ -33,7 +33,7 @@
                     width += 5;
 
                     if (width < 100) {
-                        $(prg).css({ width: width + "%" });
+                        prg.css({ width: width + "%" });
                     } else {
                         clearInterval(timer);
                     }
@@ -42,7 +42,7 @@
                 clearInterval(timer);
 
                 setTimeout(function () {
-                    $(prg).css({ width: 0 });
+                    prg.css({ width: 0 });
                 }, 1000);
             }
         };
@@ -52,8 +52,8 @@
 
     showErrors = function () {
         var elm = $(".j-error", jar),
-        frg = document.createDocumentFragment(),
-        errorFrg = $.parseHTML("<li class='alert alert-danger'><span class='glyphicon glyphicon-remove-sign'></span> </li>"),
+        frg = $(document.createDocumentFragment()),
+        errorFrg = $($.parseHTML("<li class='alert alert-danger'><span class='glyphicon glyphicon-remove-sign'></span> </li>")),
         defaultError = "Invalid request. Please refresh the page or try again later.",
         timer;
 
@@ -68,16 +68,15 @@
 
             if ($.isArray(errors)) {
                 errors.forEach(function (v) {
-                    $(frg).append($(errorFrg).clone().append(v));
+                    frg.append(errorFrg.clone().append(v));
                 });
             } else {
-                $(frg).append($(errorFrg).clone().append(defaultError));
+                frg.append(errorFrg.clone().append(defaultError));
             }
 
             elm.children().remove();
             elm.append(frg).removeClass("hide");
             scrollTo(0, elm[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top);
-            xlock = false;
         };
 
         showErrors.apply(undefined, arguments);
@@ -114,6 +113,7 @@
 
                 showErrors();
                 progress(false);
+                xlock = false;
             },
             data: xconfigs.data
         };
@@ -136,6 +136,7 @@
 
             if (status !== "success" || !response.status || response.errors) {
                 showErrors(response.errors);
+                xlock = false;
                 return;
             }
 
