@@ -66,7 +66,7 @@ $this->load->view('app/default/common/head_top');
                     <p>Loading</p>
                 </div>
 
-                <div data-jitem="users" class="clearfix hide">
+                <div data-jitem="users" class="row hide">
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">Total users</div>
