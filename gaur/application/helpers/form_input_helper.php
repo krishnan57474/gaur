@@ -46,30 +46,25 @@ defined('BASEPATH') OR exit;
  */
 function form_input($key, $ainput = NULL)
 {
-    $ci = &get_instance();
+    $input = &get_instance()->input;
 
     if (!$ainput)
     {
-        return is_string($ci->input->post($key)) ? trim($ci->input->post($key)) : '';
+        return _trim_ary($input->post($key));
     }
 
-    return is_array($ci->input->post($key)) ? rc_trim($ci->input->post($key)) : array();
+    return is_array($input->post($key)) ? array_map('_trim_ary', $input->post($key)) : array();
 }
 
 
 /**
- * Recursively trim string
+ * Strip whitespace and array
  *
- * @param   string|array  string to trim
+ * @param   string|array    string to trim
  *
- * @return  string|array
+ * @return  string
  */
-function rc_trim($str)
+function _trim_ary($str)
 {
-    if (is_array($str))
-    {
-        return array_map('rc_trim', $str);
-    }
-
-    return trim($str);
+    return !is_array($str) ? trim($str) : '';
 }
