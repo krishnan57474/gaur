@@ -37,11 +37,11 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <div class="container c-ptb-2">
+    <div class="container page-header">
         <div class="row">
             <div class="col-md-3 hidden-sm hidden-xs">
-                <p class="c-ma text-center">
-                    <a href="" class="h1 c-ma"><?php echo config_item('site_name'); ?></a>
+                <p class="text-center">
+                    <a href="" class="h1"><?php echo config_item('site_name'); ?></a>
                 </p>
             </div>
 

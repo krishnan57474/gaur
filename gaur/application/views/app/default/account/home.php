@@ -44,15 +44,8 @@ $this->load->view('app/default/common/head_top');
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
-    <?php $this->load->view('app/default/common/css'); ?>
-
-    <style>
-        .c-ma {
-            margin: 0 auto;
-        }
-    </style>
-
     <?php
+        $this->load->view('app/default/common/css');
         $this->load->view('app/default/common/head_bottom');
         $this->load->view('app/default/common/menu');
     ?>

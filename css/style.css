@@ -1,19 +1,3 @@
-/* padding */
-.c-ptb-1 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.c-ptb-2 {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
-/* margin */
-.c-ma {
-    margin: 0 auto;
-}
-
 /* progress */
 #prg {
     background: #ffe623;

@@ -37,7 +37,7 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <div class="container c-ptb-1">
+    <div class="container form-group">
         <div class="row">
             <div class="col-md-12">
                 © <?php echo date('Y') . ' ' . config_item('site_name'); ?>.
