@@ -6,6 +6,10 @@
     // self overriding fnc
     progress, showErrors;
 
+    function poverride(key, fnc) {
+        Form.prototype[key] = fnc;
+    }
+
     function forEach(obj, callback) {
         Object.keys(obj).forEach(function (k) {
             callback(obj[k], k, obj);
@@ -28,6 +32,7 @@
 
             if (display) {
                 width = 5;
+                clearInterval(timer);
 
                 timer = setInterval(function () {
                     width += 5;
@@ -47,6 +52,7 @@
             }
         };
 
+        poverride("progress", progress);
         progress.apply(undefined, arguments);
     };
 
@@ -79,6 +85,7 @@
             scrollTo(0, elm[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top);
         };
 
+        poverride("showErrors", showErrors);
         showErrors.apply(undefined, arguments);
     };
 
