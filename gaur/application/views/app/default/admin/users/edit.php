@@ -104,7 +104,7 @@ $this->load->view('app/default/common/head_top');
 
                         <div class="form-group">
                             <input name="<?php echo $csrf['name']; ?>" type="hidden" value="<?php echo $csrf['hash']; ?>">
-                            <input class="btn btn-success" type="submit" value="Create">
+                            <input class="btn btn-success" type="submit" value="Update">
                             <a class="btn btn-default" href="admin/users">Cancel</a>
                         </div>
                     </form>
