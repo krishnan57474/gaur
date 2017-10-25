@@ -74,7 +74,7 @@ class Mail
     {
         $this->ci->load->library('email');
 
-        $this->ci->email->from('no-replay@example.com', config_item('site_name'));
+        $this->ci->email->from('no-reply@example.com', config_item('site_name'));
         $this->ci->email->to($data['to']);
         $this->ci->email->subject($data['subject']);
         $this->ci->email->message($data['message']);
