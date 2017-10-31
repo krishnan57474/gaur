@@ -23,7 +23,7 @@
     function setActiveMenu() {
         var base = segment(location.href.replace(document.baseURI, ""));
 
-        $(".sm > li > a").each(function (k, elm) {
+        $("#sm-menu > li > a").each(function (k, elm) {
             if (compareSegment(base, segment($(elm).attr("href")))) {
                 $(elm).parent().addClass("active");
                 return false;
@@ -72,7 +72,7 @@
 
     function loadMenu() {
         importFile("js/smartmenus.js", function () {
-            $(".sm").smartmenus({
+            $("#sm-menu").smartmenus({
                 subMenusSubOffsetX: 1,
                 subMenusSubOffsetY: -8
             });

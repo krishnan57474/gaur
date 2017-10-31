@@ -46,12 +46,12 @@ defined('BASEPATH') OR exit;
             </div>
 
             <div class="col-md-9">
-                <input id="menu-state" type="checkbox">
-                <label class="menu-btn" for="menu-state">
-                    <span class="menu-btn-icon"></span>
-                    <a href="" class="menu-btn-title"><?php echo config_item('site_name'); ?></a>
+                <input id="sm-state" type="checkbox">
+                <label class="sm-btn" for="sm-state">
+                    <span class="sm-icon"></span>
+                    <a href="" class="sm-title"><?php echo config_item('site_name'); ?></a>
                 </label>
-                <ul id="main-menu" class="sm sm-clean">
+                <ul id="sm-menu" class="sm sm-clean">
                     <li>
                         <a href=""><span class="glyphicon glyphicon-home"></span> Home</a>
                     </li>
