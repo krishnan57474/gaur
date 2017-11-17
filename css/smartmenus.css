@@ -15,10 +15,6 @@
     display: block;
     white-space: nowrap;
     overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    -moz-text-overflow: ellipsis;
-    -webkit-text-overflow: ellipsis;
     text-overflow: ellipsis;
     opacity: 1;
     -webkit-transform: none;
@@ -214,10 +210,6 @@
     text-align: center;
     text-shadow: none;
     background: rgba(255, 255, 255, 0.5);
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -228,10 +220,6 @@
 
 .sm-clean > li:first-child > a,
 .sm-clean > li:first-child > :not(ul) a {
-    -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    -ms-border-radius: 5px 5px 0 0;
-    -o-border-radius: 5px 5px 0 0;
     border-radius: 5px 5px 0 0;
 }
 
@@ -320,10 +308,6 @@
     .sm-clean a.highlighted {
         padding: 12px 12px;
         color: #555555;
-        -webkit-border-radius: 0 !important;
-        -moz-border-radius: 0 !important;
-        -ms-border-radius: 0 !important;
-        -o-border-radius: 0 !important;
         border-radius: 0 !important;
     }
     .sm-clean a:hover,
@@ -351,10 +335,6 @@
         border-style: solid dashed dashed dashed;
         border-color: #555555 transparent transparent transparent;
         background: transparent;
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        -ms-border-radius: 0;
-        -o-border-radius: 0;
         border-radius: 0;
     }
     .sm-clean a.highlighted span.sub-arrow:before {
@@ -386,10 +366,6 @@
         border: 1px solid #bbbbbb;
         padding: 5px 0;
         background: white;
-        -webkit-border-radius: 5px !important;
-        -moz-border-radius: 5px !important;
-        -ms-border-radius: 5px !important;
-        -o-border-radius: 5px !important;
         border-radius: 5px !important;
         -webkit-box-shadow: 0 5px 9px rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0 5px 9px rgba(0, 0, 0, 0.2);
@@ -503,10 +479,6 @@
     }
     .sm-clean.sm-vertical {
         padding: 10px 0;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        -ms-border-radius: 5px;
-        -o-border-radius: 5px;
         border-radius: 5px;
     }
     .sm-clean.sm-vertical a {
