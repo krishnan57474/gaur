@@ -249,7 +249,7 @@ class Edit extends CI_Controller
 
         // normalise chars
         $this->finputs['username'] = strtolower($this->finputs['username']);
-        $this->finputs['email'] = strtolower($this->finputs['email']);
+        $this->finputs['email'] = mb_strtolower($this->finputs['email']);
         $this->finputs['status'] = (int)$this->finputs['status'];
 
         if ($_SESSION['user_id'] === $user['id'])
