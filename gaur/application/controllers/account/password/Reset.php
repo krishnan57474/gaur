@@ -78,7 +78,7 @@ class Reset extends CI_Controller
         if ($this->input->method() === 'post'
             && $this->input->is_ajax_request()
             && $this->load->helper('form_input')
-            && !preg_match('#[^vs]#', form_input('j-af')))
+            && preg_match('#^[vs]$#', form_input('j-af')))
         {
             return $this->_aaction($token);
         }
