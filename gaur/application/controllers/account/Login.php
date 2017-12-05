@@ -127,7 +127,12 @@ class Login extends CI_Controller
         {
             $this->load->model('users/user', NULL, TRUE);
 
-            if (!$this->user->login($finputs['username'], $finputs['password']))
+            $uid = $this->user->login($finputs['username'], $finputs['password']);
+
+            // store user id
+            $_SESSION['user_id'] = $uid;
+
+            if (!$uid)
             {
                 $this->errors[] = 'Incorrect username or password';
             }

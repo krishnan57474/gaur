@@ -72,7 +72,7 @@ class User extends CI_Model
      * @param   string  username
      * @param   string  password
      *
-     * @return  bool
+     * @return  int
      */
     public function login($username, $password)
     {
@@ -86,13 +86,10 @@ class User extends CI_Model
 
         if (!$user || !password_verify($password, $user['password']))
         {
-            return FALSE;
+            return 0;
         }
 
-        // store user id
-        $_SESSION['user_id'] = $user['id'];
-
-        return TRUE;
+        return $user['id'];
     }
 
     /**
