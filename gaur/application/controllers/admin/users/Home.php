@@ -147,7 +147,7 @@ class Home extends CI_Controller
      *
      * @return  void
      */
-    private function _action_getitems(&$fdata)
+    private function _aaction_getitems(&$fdata)
     {
         $this->load->model('admin/users/users', NULL, TRUE);
         $this->load->helper('admin_filter');
@@ -226,7 +226,7 @@ class Home extends CI_Controller
      *
      * @return  void
      */
-    private function _action_gettotal(&$fdata)
+    private function _aaction_gettotal(&$fdata)
     {
         $this->load->model('admin/users/users', NULL, TRUE);
         $this->load->helper('admin_filter');
@@ -249,7 +249,7 @@ class Home extends CI_Controller
      *
      * @return  void
      */
-    private function _action_changestatus(&$fdata)
+    private function _aaction_changestatus(&$fdata)
     {
         if ($_SESSION['user_id'] === form_input('id'))
         {
@@ -274,10 +274,10 @@ class Home extends CI_Controller
         $fdata['status'] = 0;
 
         if (!preg_match('#[^a-z]#', form_input('action'))
-            && method_exists($this, '_action_' . form_input('action')))
+            && method_exists($this, '_aaction_' . form_input('action')))
         {
             $fdata['status'] = 1;
-            $this->{'_action_' . form_input('action')}($fdata);
+            $this->{'_aaction_' . form_input('action')}($fdata);
         }
 
         $this->output->set_content_type('json')->set_output(json_encode($fdata));
