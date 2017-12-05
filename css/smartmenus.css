@@ -239,7 +239,7 @@
 .sm-clean ul a:hover,
 .sm-clean ul a:focus,
 .sm-clean ul a:active {
-    font-size: 16px;
+    font-size: 14px;
     border-left: 8px solid transparent;
 }
 
@@ -277,15 +277,12 @@
         width: 12em;
     }
     .sm-clean li {
-        float: left;
-    }
-    .sm-clean.sm-rtl li {
-        float: right;
+        display: inline-block;
     }
     .sm-clean ul li,
     .sm-clean.sm-rtl ul li,
     .sm-clean.sm-vertical li {
-        float: none;
+        display: block;
     }
     .sm-clean a {
         white-space: nowrap;
@@ -517,8 +514,4 @@
     .sm-clean.sm-vertical ul a.disabled {
         background: white;
     }
-}
-
-.sm > .active > a {
-    color: #d23600;
 }
