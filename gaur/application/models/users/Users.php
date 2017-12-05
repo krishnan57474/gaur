@@ -55,7 +55,7 @@ class Users extends CI_Model
     public function is_username_exists($username)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `username` = ' . $this->db->escape($username);
 
         return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);
@@ -71,7 +71,7 @@ class Users extends CI_Model
     public function is_email_exists($email)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `email` = ' . $this->db->escape($email);
 
         return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);
@@ -87,7 +87,7 @@ class Users extends CI_Model
     public function is_active($email)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `status` = 1
                     AND `activation` = 1
                     AND `email` = ' . $this->db->escape($email);
@@ -105,7 +105,7 @@ class Users extends CI_Model
     public function get_user($email)
     {
         $qry = 'SELECT `id`, `username`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `email` = ' . $this->db->escape($email);
 
         return $this->db->query($qry)->row_array();

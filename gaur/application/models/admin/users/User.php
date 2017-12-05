@@ -55,7 +55,7 @@ class User extends CI_Model
     public function is_admin($id)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `admin` = 1
                     AND `id` = ' . $id;
 
@@ -71,7 +71,7 @@ class User extends CI_Model
      */
     public function change_status($id)
     {
-        $qry = 'UPDATE `gaur_users`
+        $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
                 SET `status`= NOT `status`
                 WHERE `id` = ' . $id;
 
@@ -87,7 +87,7 @@ class User extends CI_Model
      */
     public function add($data)
     {
-        $qry = 'INSERT INTO `gaur_users`(`username`, `email`, `password`, `date_added`)
+        $qry = 'INSERT INTO `' . $this->db->dbprefix('users') . '`(`username`, `email`, `password`, `date_added`)
                     VALUES ('
                         . $this->db->escape($data['username']) . ', '
                         . $this->db->escape($data['email']) . ', '
@@ -109,7 +109,7 @@ class User extends CI_Model
     public function get($id)
     {
         $qry = 'SELECT `id`, `username`, `email`, `status`, `activation`, `admin`, `date_added`, `last_visited`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `id` = ' . $id;
 
         return $this->db->query($qry)->row_array();
@@ -125,7 +125,7 @@ class User extends CI_Model
      */
     public function update($id, $user)
     {
-        $qry = 'UPDATE `gaur_users`
+        $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
                 SET `username` = ' . $this->db->escape($user['username'])
                     . ', `email` = ' . $this->db->escape($user['email']);
 

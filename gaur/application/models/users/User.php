@@ -54,7 +54,7 @@ class User extends CI_Model
      */
     public function add($data)
     {
-        $qry = 'INSERT INTO `gaur_users`(`username`, `email`, `password`, `date_added`)
+        $qry = 'INSERT INTO `' . $this->db->dbprefix('users') . '`(`username`, `email`, `password`, `date_added`)
                     VALUES ('
                         . $this->db->escape($data['username']) . ', '
                         . $this->db->escape($data['email']) . ', '
@@ -77,7 +77,7 @@ class User extends CI_Model
     public function login($username, $password)
     {
         $qry = 'SELECT `id`, `password`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `username` = ' . $this->db->escape($username)
                 . ' AND `status` = 1
                     AND `activation` = 1';
@@ -101,7 +101,7 @@ class User extends CI_Model
      */
     public function activate($id)
     {
-        $qry = 'UPDATE `gaur_users`
+        $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
                 SET `status`= 1, `activation`= 1
                 WHERE `id` = ' . $id;
 
@@ -118,7 +118,7 @@ class User extends CI_Model
     public function get($id)
     {
         $qry = 'SELECT `username`, `email`, `date_added`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `id` = ' . $id;
 
         return $this->db->query($qry)->row_array();
@@ -133,7 +133,7 @@ class User extends CI_Model
      */
     public function update_last_visit($id)
     {
-        $qry = 'UPDATE `gaur_users`
+        $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
                 SET `last_visited`= ' . $this->db->escape(date('Y-m-d H:i:s'))
                 . ' WHERE `id` = ' . $id;
 
@@ -150,7 +150,7 @@ class User extends CI_Model
     public function get_password($id)
     {
         $qry = 'SELECT `password`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `id` = ' . $id;
 
         return $this->db->query($qry)->row('password');
@@ -166,7 +166,7 @@ class User extends CI_Model
      */
     public function change_password($id, $password)
     {
-        $qry = 'UPDATE `gaur_users`
+        $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
                 SET `password`= ' . $this->db->escape(password_hash($password, PASSWORD_DEFAULT))
                 . ' WHERE `id` = ' . $id;
 

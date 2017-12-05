@@ -59,7 +59,7 @@ class Users extends CI_Model
     {
         $qry = 'SELECT
                     `id`, `username`, `email`, `status`, `activation`, `last_visited`
-                FROM `gaur_users`';
+                FROM `' . $this->db->dbprefix('users') . '`';
 
         if ($filter['filter'] || $filter['search'])
         {
@@ -97,7 +97,7 @@ class Users extends CI_Model
     public function total($filter)
     {
         $qry = 'SELECT COUNT(*) AS `total`
-                FROM `gaur_users`';
+                FROM `' . $this->db->dbprefix('users') . '`';
 
         if ($filter['filter'] || $filter['search'])
         {
@@ -126,7 +126,7 @@ class Users extends CI_Model
     public function total_by_group()
     {
         $qry = 'SELECT `activation`, COUNT(*) AS `total`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 GROUP BY `activation`';
 
         return $this->db->query($qry)->result_array();
@@ -140,7 +140,7 @@ class Users extends CI_Model
     public function recent_user()
     {
         $qry = 'SELECT `username`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 ORDER BY `id` DESC
                 LIMIT 1';
 
@@ -157,7 +157,7 @@ class Users extends CI_Model
     public function is_username_exists($username)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `username` = ' . $this->db->escape($username);
 
         return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);
@@ -173,7 +173,7 @@ class Users extends CI_Model
     public function is_email_exists($email)
     {
         $qry = 'SELECT `id`
-                FROM `gaur_users`
+                FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `email` = ' . $this->db->escape($email);
 
         return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);

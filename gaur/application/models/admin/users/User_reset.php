@@ -54,7 +54,7 @@ class User_reset extends CI_Model
      */
     public function add($data)
     {
-        $qry = 'INSERT INTO `gaur_user_resets`(`uid`, `token`, `type`, `expire`)
+        $qry = 'INSERT INTO `' . $this->db->dbprefix('user_resets') . '`(`uid`, `token`, `type`, `expire`)
                     VALUES ('
                         . $data['uid'] . ', '
                         . $this->db->escape($data['token']) . ', '
@@ -76,7 +76,7 @@ class User_reset extends CI_Model
     public function get($uid, $type)
     {
         $qry = 'SELECT *
-                FROM `gaur_user_resets`
+                FROM `' . $this->db->dbprefix('user_resets') . '`
                 WHERE `uid` = ' . $uid
                 . ' AND `type` = ' . $type;
 
