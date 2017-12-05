@@ -37,10 +37,10 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <div class="container form-group">
+    <footer class="container">
         <div class="row">
             <div class="col-md-12">
-                © <?php echo date('Y') . ' ' . config_item('site_name'); ?>.
+                <p>© <?php echo date('Y') . ' ' . config_item('site_name'); ?>.</p>
             </div>
         </div>
-    </div>
+    </footer>

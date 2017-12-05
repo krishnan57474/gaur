@@ -37,7 +37,7 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <div class="container page-header">
+    <header class="container page-header">
         <div class="row">
             <div class="col-md-3 hidden-sm hidden-xs">
                 <p class="text-center">
@@ -76,4 +76,4 @@ defined('BASEPATH') OR exit;
                 </ul>
             </div>
         </div>
-    </div>
+    </header>
