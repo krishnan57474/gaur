@@ -129,10 +129,12 @@ class Login extends CI_Controller
 
             $uid = $this->user->login($finputs['username'], $finputs['password']);
 
-            // store user id
-            $_SESSION['user_id'] = $uid;
-
-            if (!$uid)
+            if ($uid)
+            {
+                // store user id
+                $_SESSION['user_id'] = $uid;
+            }
+            else
             {
                 $this->errors[] = 'Incorrect username or password';
             }
