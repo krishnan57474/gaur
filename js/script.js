@@ -25,7 +25,7 @@
 
         $("#sm-menu > li > a").each(function (k, elm) {
             if (compareSegment(base, segment($(elm).attr("href")))) {
-                $(elm).parent().addClass("active");
+                $(elm).addClass("current");
                 return false;
             }
         });
