@@ -51,8 +51,13 @@ $status = array(
 
     <?php $this->load->view('app/default/common/css'); ?>
 
-    <?php if (!$user['activation']): ?>
     <style>
+        .text-overflow {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        <?php if (!$user['activation']): ?>
         .spin {
             -webkit-animation: spin 1s linear infinite;
             -moz-animation: spin 1s linear infinite;
@@ -77,8 +82,8 @@ $status = array(
                 transform: rotate(360deg);
             }
         }
+        <?php endif; ?>
     </style>
-    <?php endif; ?>
 
     <?php
         $this->load->view('app/default/common/head_bottom');
@@ -124,44 +129,49 @@ $status = array(
                 </p>
                 <?php endif; ?>
 
-                <table class="table">
-                    <tr>
-                        <td>ID</td>
-                        <td><?php echo $user['id']; ?></td>
-                    </tr>
-                    <tr>
-                        <td>Username</td>
-                        <td><?php echo hentities($user['username']); ?></td>
-                    </tr>
-                    <tr>
-                        <td>Email</td>
-                        <td><?php echo hentities($user['email']); ?></td>
-                    </tr>
-                    <tr>
-                        <td>Status</td>
-                        <td><span class="<?php echo $status[$user['status']]; ?>"></span></td>
-                    </tr>
-                    <tr>
-                        <td>Email verified</td>
-                        <td><span class="<?php echo $status[$user['activation']]; ?>"></span></td>
-                    </tr>
-                    <tr>
-                        <td>is Admin</td>
-                        <td><span class="<?php echo $status[$user['admin']]; ?>"></span></td>
-                    </tr>
-                    <tr>
-                        <td>Date added</td>
-                        <td><?php echo $user['date_added']; ?> (<?php echo datetime_diff($user['date_added'], date('Y-m-d H:i:s')); ?> ago)</td>
-                    </tr>
-                    <tr>
-                        <td>Last visited</td>
-                        <td>
-                            <?php if (preg_match('#[1-9]#', $user['last_visited'])): ?>
-                            <?php echo $user['last_visited']; ?> (<?php echo datetime_diff($user['last_visited'], date('Y-m-d H:i:s')); ?> ago)
-                            <?php else: echo '-'; endif; ?>
-                        </td>
-                    </tr>
-                </table>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">User details</h1>
+                    </div>
+                    <div class="panel-body">
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">ID</div>
+                            <div class="col-xs-8"><?php echo $user['id']; ?></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">Username</div>
+                            <div class="col-xs-8 text-overflow"><?php echo hentities($user['username']); ?></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">Email</div>
+                            <div class="col-xs-8 text-overflow"><?php echo hentities($user['email']); ?></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">Status</div>
+                            <div class="col-xs-8"><span class="<?php echo $status[$user['status']]; ?>"></span></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">Email verified</div>
+                            <div class="col-xs-8"><span class="<?php echo $status[$user['activation']]; ?>"></span></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">is Admin</div>
+                            <div class="col-xs-8"><span class="<?php echo $status[$user['admin']]; ?>"></span></div>
+                        </div>
+                        <div class="clearfix form-group">
+                            <div class="col-xs-4">Date added</div>
+                            <div class="col-xs-8"><?php echo $user['date_added']; ?> (<?php echo datetime_diff($user['date_added'], date('Y-m-d H:i:s')); ?> ago)</div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-xs-4">Last visited</div>
+                            <div class="col-xs-8">
+                                <?php if (preg_match('#[1-9]#', $user['last_visited'])): ?>
+                                <?php echo $user['last_visited']; ?> (<?php echo datetime_diff($user['last_visited'], date('Y-m-d H:i:s')); ?> ago)
+                                <?php else: echo '-'; endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>

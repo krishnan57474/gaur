@@ -67,25 +67,25 @@ $this->load->view('app/default/common/head_top');
                 </div>
 
                 <div data-jitem="users" class="row hide">
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">Total users</div>
                             <div data-jitem="u-total" class="panel-body text-center">0</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">Verified users</div>
                             <div data-jitem="u-verified" class="panel-body text-center">0</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">Unverified users</div>
                             <div data-jitem="u-unverified" class="panel-body text-center">0</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-sm-6">
                         <div class="panel panel-default">
                             <div class="panel-heading">Recent user</div>
                             <div data-jitem="u-recent" class="panel-body text-center"></div>
