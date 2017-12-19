@@ -35,7 +35,7 @@
         var script = document.createElement("script");
 
         script.onload = function () {
-            script.remove();
+            script.parentNode.removeChild(script);
 
             if (callback) {
                 callback();
