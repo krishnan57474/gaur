@@ -39,13 +39,13 @@ defined('BASEPATH') OR exit;
 ?>
     <header class="container page-header">
         <div class="row">
-            <div class="col-md-3 hidden-sm hidden-xs">
+            <div class="col-sm-3 hidden-xs">
                 <p class="text-center">
                     <a href="" class="h1"><?php echo config_item('site_name'); ?></a>
                 </p>
             </div>
 
-            <div class="col-md-9">
+            <div class="col-sm-9">
                 <input id="sm-state" type="checkbox">
                 <label class="sm-btn" for="sm-state">
                     <span class="sm-icon"></span>
