@@ -59,20 +59,31 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-3">
-                <table class="table table-bordered">
-                    <tr class="panel panel-default">
-                        <th class="panel-heading">Password settings</th>
-                    </tr>
-                    <tr>
-                        <td><a href="account">Account</a></td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                    </tr>
+            <div class="col-sm-3">
+                <table class="table table-bordered collapse-container">
+                    <thead>
+                        <tr class="panel panel-default">
+                            <th class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-9">Password</div>
+                                    <div class="col-xs-3 visible-xs text-right collapse-btn">
+                                        <span class="glyphicon glyphicon-menu-hamburger"></span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="hidden-xs collapse-content">
+                        <tr>
+                            <td><a href="account">Account</a></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <div class="col-md-9">
+            <div class="col-sm-9">
                 <ol class="breadcrumb">
                     <li>You are here: </li>
                     <li><a href="">Home</a></li>
@@ -81,7 +92,9 @@ $this->load->view('app/default/common/head_top');
                 </ol>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Change password</div>
+                    <div class="panel-heading">
+                        <h1 class="panel-title">Change password</h1>
+                    </div>
                     <div id="j-ar" class="panel-body">
                         <ul class="list-unstyled j-error hide"></ul>
                         <p class="alert alert-success j-success c-ma hide"></p>
@@ -135,6 +148,12 @@ $this->load->view('app/default/common/head_top');
             });
         }
 
+        function collapse() {
+            $(".collapse-btn").on("click", function () {
+                $(this).closest(".collapse-container").find(".collapse-content").toggleClass("hidden-xs");
+            });
+        }
+
         function init() {
             $ = jQuery;
             gform = new GForm();
@@ -142,6 +161,7 @@ $this->load->view('app/default/common/head_top');
 
             gform.init();
             $("form", jar).on("submit", submitForm);
+            collapse();
         }
 
         window._jq = [init];
