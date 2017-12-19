@@ -82,7 +82,7 @@ $this->load->view('app/default/common/head_top');
 
                         <div class="form-group">
                             <input name="<?php echo $csrf['name']; ?>" type="hidden" value="<?php echo $csrf['hash']; ?>">
-                            <input class="btn btn-primary" type="submit" value="Reset Password">
+                            <input class="btn btn-primary" type="submit" value="Create Password">
                         </div>
                     </form>
                 </div>
