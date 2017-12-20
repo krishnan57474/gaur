@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit;
                     <span class="sm-icon"></span>
                     <a href="" class="sm-title"><?php echo config_item('site_name'); ?></a>
                 </label>
-                <ul id="sm-menu" class="sm sm-clean">
+                <ul class="sm">
                     <li>
                         <a href="admin/users">Users</a>
                     </li>

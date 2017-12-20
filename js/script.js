@@ -23,7 +23,7 @@
     function setActiveMenu() {
         var base = segment(location.href.replace(document.baseURI, ""));
 
-        $("#sm-menu > li > a").each(function (k, elm) {
+        $(".sm > li > a").each(function (k, elm) {
             if (compareSegment(base, segment($(elm).attr("href")))) {
                 $(elm).addClass("current");
                 return false;
@@ -72,10 +72,7 @@
 
     function loadMenu() {
         importFile("js/smartmenus.js", function () {
-            $("#sm-menu").smartmenus({
-                subMenusSubOffsetX: 1,
-                subMenusSubOffsetY: -8
-            });
+            $(".sm").smartmenus();
         });
     }
 
