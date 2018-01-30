@@ -60,7 +60,7 @@
         var head = document.head;
 
         $(".j-lcss").each(function (c, elm) {
-            $(head).append($("<link rel='stylesheet' href='" + elm.src + "'>"));
+            $(head).prepend($("<link rel='stylesheet' href='" + elm.src + "'>"));
         });
     }
 
