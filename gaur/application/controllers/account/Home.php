@@ -55,6 +55,11 @@ class Home extends CI_Controller
         // prevent non logged users
         if (!isset($_SESSION['user_id']))
         {
+            // login redirect
+            $_SESSION['redirect'] = 'account';
+            $this->session->mark_as_flash('redirect');
+            session_write_close();
+
             $this->load->helper('url');
             redirect('account/login', 'location');
         }
