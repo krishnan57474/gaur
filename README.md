@@ -4,11 +4,11 @@ Gaur is an open source web application.
 
 ## Releases
 
-Latest stable version: [v2.2.0](//github.com/krishnan57474/gaur/releases/latest)
+Latest stable version: [v2.3.0](https://github.com/krishnan57474/gaur/releases/latest)
 
 ## License
 
-Distributed under the MIT License. See [License details](http://opensource.org/licenses/MIT).
+Distributed under the MIT License. See [License details](https://opensource.org/licenses/MIT).
 
 ## Trademarks
 
