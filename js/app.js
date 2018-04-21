@@ -33,9 +33,7 @@
 
 
     // action
-    function changeStatus() {
-        var elm = configs.action;
-
+    function changeStatus(elm) {
         gform.submit({
             data: {
                 "j-af": "r",
@@ -63,24 +61,25 @@
             if ($(this).text() === "Cancel") {
                 getJitem("confirm").addClass("hide");
             } else {
-                changeStatus();
+                changeStatus(configs.action);
             }
+
+            delete configs.action;
         });
     }
 
     function statusHandler() {
-        var elm;
-
         getJitem("items").on("click", function (e) {
             if (gform.lock) {
                 return;
             }
 
-            elm = e.target;
+            var elm = e.target;
 
             if (elm.tagName === "SPAN" && $(elm).data("item") === "status") {
                 configs.action = $(elm);
                 getJitem("confirm").removeClass("hide");
+                $("html, body").animate({ scrollTop: getJitem("confirm").offset().top });
             }
         });
     }
@@ -120,14 +119,12 @@
     }
 
     function paginationHandler() {
-        var elm;
-
         getJitem("pagination").on("click", function (e) {
             if (gform.lock) {
                 return;
             }
 
-            elm = e.target;
+            var elm = e.target;
 
             if (elm.tagName === "SPAN") {
                 paginationFilter($(elm));
@@ -212,7 +209,7 @@
                 configs.totalItems = toNumber(data);
                 $("span", getJitem("total")).text(configs.totalItems);
 
-                configs.totalPage  = Math.ceil(configs.totalItems / configs.listCount);
+                configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
                 buildPagination();
             }
         });
@@ -262,10 +259,7 @@
     }
 
     function applyOrder(elm) {
-        if (!elm) {
-            elm = $("[data-id='" + configs.orderBy + "']", getJitem("order"));
-        }
-
+        elm = elm || $("[data-id='" + configs.orderBy + "']", getJitem("order"));
         elm.data("sort", configs.sortBy).children().addClass("glyphicon-sort-by-attributes" + (configs.sortBy ? "-alt" : ""));
     }
 
@@ -284,14 +278,12 @@
     }
 
     function orderHandler() {
-        var elm;
-
         getJitem("order").on("click", function (e) {
             if (gform.lock) {
                 return;
             }
 
-            elm = e.target;
+            var elm = e.target;
 
             if (elm.tagName === "TH" && $(elm).hasClass("link")) {
                 orderFilter($(elm));
@@ -307,7 +299,7 @@
 
             configs.listCount = toNumber(this.value);
             configs.currentPage = 1;
-            configs.totalPage  = Math.ceil(configs.totalItems / configs.listCount);
+            configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
             getItems();
         });
     }
@@ -327,6 +319,11 @@
             return false;
         }
 
+        if (getJitem("searchby").val() && !getJitem("searchval").val()) {
+            getJitem("searchval").parent().addClass("has-error");
+            return false;
+        }
+
         if (getJitem("searchval").val() && !getJitem("searchby").val()) {
             getJitem("searchby").parent().addClass("has-error");
             return false;
@@ -334,6 +331,11 @@
 
         if (getJitem("orderby").val() && !getJitem("sortby").val()) {
             getJitem("sortby").parent().addClass("has-error");
+            return false;
+        }
+
+        if (getJitem("sortby").val() && !getJitem("orderby").val()) {
+            getJitem("orderby").parent().addClass("has-error");
             return false;
         }
 
