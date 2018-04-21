@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2017, Krishnan
+ * Copyright (c) 2017 - 2018, Krishnan
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@
  *
  * @package    Gaur
  * @author     Krishnan <krishnan57474@gmail.com>
- * @copyright  Copyright (c) 2017, Krishnan
- * @license    http://opensource.org/licenses/MIT   MIT License
+ * @copyright  Copyright (c) 2017 - 2018, Krishnan
+ * @license    https://opensource.org/licenses/MIT   MIT License
  * @link       https://github.com/krishnan57474
  * @since      Version 1.0.0
  */
@@ -37,7 +37,7 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <script async type="text/x-js" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script async type="text/x-js" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script async type="text/x-js" src="js/smartmenus.js"></script>
 
     <script async src="js/script.js"></script>
