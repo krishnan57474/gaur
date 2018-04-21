@@ -6,7 +6,7 @@
  *
  * This content is released under the MIT License (MIT)
  *
- * Copyright (c) 2017, Krishnan
+ * Copyright (c) 2017 - 2018, Krishnan
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@
  *
  * @package    Gaur
  * @author     Krishnan <krishnan57474@gmail.com>
- * @copyright  Copyright (c) 2017, Krishnan
- * @license    http://opensource.org/licenses/MIT   MIT License
+ * @copyright  Copyright (c) 2017 - 2018, Krishnan
+ * @license    https://opensource.org/licenses/MIT   MIT License
  * @link       https://github.com/krishnan57474
  * @since      Version 1.0.0
  */
@@ -152,7 +152,7 @@ class Home extends CI_Controller
             {
                 $this->errors[] = 'Incorrect current password';
             }
-            else if ($this->finputs['cpassword'] === $this->finputs['password'])
+            elseif ($this->finputs['cpassword'] === $this->finputs['password'])
             {
                 $this->errors[] = 'Please use different password';
             }
