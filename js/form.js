@@ -82,7 +82,7 @@
 
             elm.children().remove();
             elm.append(frg).removeClass("hide");
-            scrollTo(0, elm[0].getBoundingClientRect().top - document.body.getBoundingClientRect().top);
+            $("html, body").animate({ scrollTop: elm.offset().top });
         };
 
         poverride("showErrors", showErrors);
@@ -92,7 +92,7 @@
     function isValidFile(file, atypes, limit) {
         var rx = new RegExp("^" + atypes.join("$|^") + "$", "i");
 
-        if (!(rx.test(file.name.split(".").pop()))) {
+        if (!rx.test(file.name.split(".").pop())) {
             showErrors(["The filetype you are attempting to upload is not allowed."]);
             return false;
         }
