@@ -8,11 +8,15 @@
     function compareSegment(base, current) {
         var i = -1,
         l = current.length,
-        match;
+        match = false;
+
+        if (!current) {
+            return match;
+        }
 
         while (++i < l) {
             if (base[i] === current[i] && (i + 1) >= l) {
-                match = 1;
+                match = true;
                 break;
             }
         }
@@ -21,10 +25,17 @@
     }
 
     function setActiveMenu() {
-        var base = segment(location.href.replace(document.baseURI, ""));
+        var base = segment(location.href.replace(document.baseURI, "")),
+        current;
 
         $(".sm > li > a").each(function (k, elm) {
-            if (compareSegment(base, segment($(elm).attr("href")))) {
+            current = $(elm).attr("href");
+
+            if (current === undefined) {
+                return;
+            }
+
+            if (compareSegment(base, segment(current))) {
                 $(elm).addClass("current");
                 return false;
             }
@@ -79,8 +90,8 @@
     function init() {
         $ = jQuery;
 
-        setActiveMenu();
         loadCss();
+        setActiveMenu();
         loadMenu();
 
         if ($(".j-ljs").length) {
@@ -90,5 +101,5 @@
         }
     }
 
-    importFile(["https://code.jquery.com/jquery-3.2.1.min.js"], init);
+    importFile("https://code.jquery.com/jquery-3.3.1.min.js", init);
 }());
