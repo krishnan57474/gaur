@@ -203,6 +203,7 @@ class Register extends CI_Controller
 
         // send email verification
         $this->mail->account_activation(array(
+            'subject'  => 'Activate your account',
             'username' => $this->finputs['username'],
             'email'    => $this->finputs['email'],
             'token'    => $token

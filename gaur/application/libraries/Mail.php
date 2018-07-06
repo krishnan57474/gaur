@@ -91,7 +91,6 @@ class Mail
      */
     public function account_activation($edata)
     {
-        $edata['subject'] = 'Activate your account';
         $msg = $this->ci->load->view('email/default/account/email/activation', $edata, TRUE);
 
         $data = array(
@@ -112,7 +111,6 @@ class Mail
      */
     public function forgot_password($edata)
     {
-        $edata['subject'] = 'Password reset request';
         $msg = $this->ci->load->view('email/default/account/password/forgot', $edata, TRUE);
 
         $data = array(
@@ -133,7 +131,6 @@ class Mail
      */
     public function contact($edata)
     {
-        $edata['subject'] = 'Contact enquiry';
         $msg = $this->ci->load->view('email/default/contact', $edata, TRUE);
 
         $data = array(

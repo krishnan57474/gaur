@@ -171,6 +171,7 @@ class Forgot extends CI_Controller
 
         // send password reset
         $status = $this->mail->forgot_password(array(
+            'subject'  => 'Password reset request',
             'username' => $user['username'],
             'email'    => $this->finputs['email'],
             'token'    => $token

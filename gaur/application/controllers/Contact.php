@@ -164,6 +164,7 @@ class Contact extends CI_Controller
 
         // send email
         $status = $this->mail->contact(array(
+            'subject' => 'Contact enquiry',
             'finputs' => $this->finputs,
             'email'   => 'contact@example.com'
         ));
