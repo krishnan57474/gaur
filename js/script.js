@@ -10,10 +10,6 @@
         l = current.length,
         match = false;
 
-        if (!current) {
-            return match;
-        }
-
         while (++i < l) {
             if (base[i] === current[i] && (i + 1) >= l) {
                 match = true;
@@ -68,10 +64,10 @@
     }
 
     function loadCss() {
-        var head = document.head;
+        var firstChild = $(document.head).children().first();
 
         $(".j-lcss").each(function (c, elm) {
-            $(head).prepend($("<link rel='stylesheet' href='" + elm.src + "'>"));
+            firstChild.before($("<link rel='stylesheet' href='" + elm.src + "'>"));
         });
     }
 
