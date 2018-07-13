@@ -118,7 +118,10 @@
                     xconfigs.load();
                 }
 
-                showErrors();
+                if (!xconfigs.ignoreErrors) {
+                    showErrors();
+                }
+
                 progress(false);
                 xlock = false;
             },
@@ -142,7 +145,10 @@
             progress(false);
 
             if (status !== "success" || !response.status || response.errors) {
-                showErrors(response.errors);
+                if (!xconfigs.ignoreErrors) {
+                    showErrors(response.errors);
+                }
+
                 xlock = false;
                 return;
             }
