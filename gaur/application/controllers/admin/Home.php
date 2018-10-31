@@ -69,12 +69,12 @@ class Home extends CI_Controller
             $this->load->model('admin/users/user', NULL, TRUE);
 
             $_SESSION['is_admin'] = $this->user->is_admin($_SESSION['user_id']);
-            session_write_close();
         }
 
         // prevent non admin users
         if (!$_SESSION['is_admin'])
         {
+            session_write_close();
             show_404(NULL, FALSE);
         }
 
@@ -90,32 +90,41 @@ class Home extends CI_Controller
     }
 
     /**
-     * Get total, recent info
+     * Get total users count
      *
      * @param   array   form data
      *
      * @return  void
      */
-    private function _aaction_getitems(&$fdata)
+    private function _aaction_getuserstotal(&$fdata)
     {
         $this->load->model('admin/users/users', NULL, TRUE);
 
         $total_users = $this->users->total_by_group();
-        $recent_user = $this->users->recent_user();
 
         foreach (array_splice($total_users, 0) as $v)
         {
             $total_users[$v['activation']] = $v['total'];
         }
 
-        $data = array();
+        $fdata['data'] = $total_users;
+    }
 
-        $data['users'] = array(
-            'total' => $total_users,
-            'recent' => $recent_user,
-        );
+    /**
+     * Get recent user info
+     *
+     * @param   array   form data
+     *
+     * @return  void
+     */
+    private function _aaction_getrecentuser(&$fdata)
+    {
+        $this->load->model('admin/users/users', NULL, TRUE);
+        $this->load->helper('html');
 
-        $fdata['data'] = $data;
+        $recent_user = $this->users->recent_user();
+
+        $fdata['data'] = hentities($recent_user);
     }
 
     /**
