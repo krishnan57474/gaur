@@ -37,9 +37,9 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <footer class="container">
+    <footer class="container border-top mt-3 pt-2">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12">
                 <p>© <?php echo date('Y') . ' ' . config_item('site_name'); ?>.</p>
             </div>
         </div>
