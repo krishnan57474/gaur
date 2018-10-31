@@ -53,7 +53,7 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12">
                 <h1>Welcome to <?php echo config_item('site_name'); ?></h1>
             </div>
         </div>

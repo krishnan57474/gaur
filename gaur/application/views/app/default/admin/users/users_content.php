@@ -37,20 +37,19 @@
 defined('BASEPATH') OR exit;
 
 $status = array(
-    'glyphicon glyphicon-remove text-danger',
-    'glyphicon glyphicon-ok text-success'
+    'oi oi-x text-danger',
+    'oi oi-check text-success'
 );
 
 foreach ($items as $item):
 ?>
 <tr data-id="<?php echo $item['id']; ?>">
-    <td class="text-center"><?php echo $item['id']; ?></td>
-    <td><?php echo hentities($item['username']); ?></td>
-    <td><?php echo hentities($item['email']); ?></td>
-    <td class="text-center"><?php echo $item['last_visited'] ? ($item['last_visited'] . ' ago') : '-'; ?></td>
-    <td class="text-center"><span data-item="status" class="link <?php echo $status[$item['status']]; ?>"></span></td>
-    <td class="text-center"><span class="<?php echo $status[$item['activation']]; ?>"></span></td>
-    <td class="text-center"><a href="admin/users/edit/<?php echo $item['id']; ?>"><span class="glyphicon glyphicon-pencil"></span></a></td>
-    <td class="text-center"><a href="admin/users/view/<?php echo $item['id']; ?>"><span class="glyphicon glyphicon-link"></span></a></td>
+    <td><?php echo $item['id']; ?></td>
+    <td class="text-left"><?php echo hentities($item['username']); ?></td>
+    <td class="text-left"><?php echo hentities($item['email']); ?></td>
+    <td><?php echo $item['last_visited'] ? ($item['last_visited'] . ' ago') : '-'; ?></td>
+    <td><button type="button" data-item="status" class="btn btn-link p-0 <?php echo $status[$item['status']]; ?>"></button></td>
+    <td><a href="admin/users/edit/<?php echo $item['id']; ?>"><span class="oi oi-pencil"></span></a></td>
+    <td><a href="admin/users/view/<?php echo $item['id']; ?>"><span class="oi oi-link-intact"></span></a></td>
 </tr>
 <?php endforeach; ?>

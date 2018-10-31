@@ -44,69 +44,43 @@ $this->load->view('app/default/common/head_top');
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
-    <?php $this->load->view('app/default/common/css'); ?>
-
-    <style>
-        .text-overflow {
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-    </style>
-
     <?php
+        $this->load->view('app/default/common/css');
         $this->load->view('app/default/common/head_bottom');
         $this->load->view('app/default/common/menu');
     ?>
 
     <main class="container">
         <div class="row">
-            <div class="col-sm-3">
-                <table class="table table-bordered collapse-container">
-                    <thead>
-                        <tr class="panel panel-default">
-                            <th class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-9">Account</div>
-                                    <div class="col-xs-3 visible-xs text-right collapse-btn">
-                                        <span class="glyphicon glyphicon-menu-hamburger"></span>
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="hidden-xs collapse-content">
-                        <tr>
-                            <td>Account</td>
-                        </tr>
-                        <tr>
-                            <td><a href="account/password">Password</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-sm-4 col-md-3">
+                <div class="card mb-3">
+                    <div class="card-header">Account</div>
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action active" href="account">Account</a>
+                        <a class="list-group-item list-group-item-action" href="account/password">Password</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8 col-md-9">
                 <ol class="breadcrumb">
-                    <li>You are here: </li>
-                    <li><a href="">Home</a></li>
-                    <li class="active">Account</li>
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item active">Account</li>
                 </ol>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">Account details</h1>
-                    </div>
-                    <div class="panel-body">
-                        <div class="clearfix form-group">
-                            <div class="col-sm-4">Username</div>
-                            <div class="col-sm-8 text-overflow"><?php echo hentities($user['username']); ?></div>
+                <div class="card">
+                    <div class="card-header">Account details</div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-4">Username</div>
+                            <div class="col-8"><?php echo hentities($user['username']); ?></div>
                         </div>
-                        <div class="clearfix form-group">
-                            <div class="col-sm-4">Email</div>
-                            <div class="col-sm-8 text-overflow"><?php echo hentities($user['email']); ?></div>
+                        <div class="row mb-3">
+                            <div class="col-4">Email</div>
+                            <div class="col-8"><?php echo hentities($user['email']); ?></div>
                         </div>
-                        <div class="clearfix">
-                            <div class="col-sm-4">Member since</div>
-                            <div class="col-sm-8"><?php echo date('F, Y', strtotime($user['date_added'])); ?></div>
+                        <div class="row">
+                            <div class="col-4">Member since</div>
+                            <div class="col-8"><?php echo date('F, Y', strtotime($user['date_added'])); ?></div>
                         </div>
                     </div>
                 </div>
@@ -114,28 +88,8 @@ $this->load->view('app/default/common/head_top');
         </div>
     </main>
 
-    <?php $this->load->view('app/default/common/foot_top'); ?>
-
-    <script>
-    (function ($) {
-        "use strict";
-
-        function collapse() {
-            $(".collapse-btn").on("click", function () {
-                $(this).closest(".collapse-container").find(".collapse-content").toggleClass("hidden-xs");
-            });
-        }
-
-        function init() {
-            $ = jQuery;
-            collapse();
-        }
-
-        (window._jq = window._jq || []).push(init);
-    }());
-    </script>
-
     <?php
+        $this->load->view('app/default/common/foot_top');
         $this->load->view('app/default/common/js');
         $this->load->view('app/default/common/foot_bottom');
     ?>
