@@ -38,9 +38,7 @@ defined('BASEPATH') OR exit;
 
 ?>
 <tr>
-<td style="background-color:#fff;padding:5px 20px;-webkit-border-radius:0 0 8px 8px;-moz-border-radius:0 0 8px 8px;border-radius:0 0 8px 8px">
-&nbsp;
-</td>
+<td style="background-color:#fff;padding:10px 20px;-webkit-border-radius:0 0 8px 8px;-moz-border-radius:0 0 8px 8px;border-radius:0 0 8px 8px"></td>
 </tr>
 <tr>
 <td style="padding:10px 20px 0">
