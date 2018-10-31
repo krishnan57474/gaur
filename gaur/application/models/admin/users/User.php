@@ -48,7 +48,7 @@ class User extends CI_Model
     /**
      * Admin existance check
      *
-     * @param   string  user id
+     * @param   int     user id
      *
      * @return  bool
      */
@@ -108,7 +108,7 @@ class User extends CI_Model
      */
     public function get($id)
     {
-        $qry = 'SELECT `id`, `username`, `email`, `status`, `activation`, `admin`, `date_added`, `last_visited`
+        $qry = 'SELECT *
                 FROM `' . $this->db->dbprefix('users') . '`
                 WHERE `id` = ' . $id;
 
@@ -123,20 +123,36 @@ class User extends CI_Model
      *
      * @return  void
      */
-    public function update($id, $user)
+    public function update($id, $data)
     {
         $qry = 'UPDATE `' . $this->db->dbprefix('users') . '`
-                SET `username` = ' . $this->db->escape($user['username'])
-                    . ', `email` = ' . $this->db->escape($user['email']);
+                SET `username` = ' . $this->db->escape($data['username'])
+                    . ', `email` = ' . $this->db->escape($data['email']);
 
-        if ($user['password'])
+        if ($data['password'] !== '')
         {
-            $qry .= ', `password`= ' . $this->db->escape(password_hash($user['password'], PASSWORD_DEFAULT));
+            $qry .= ', `password`= ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT));
         }
 
-        $qry .= ', `status`= ' . $user['status'];
+        $qry .= ', `status`= ' . $data['status'];
         $qry .= ' WHERE `id` = ' . $id;
 
         $this->db->query($qry);
+    }
+
+    /**
+     * User existance check
+     *
+     * @param   int     user id
+     *
+     * @return  bool
+     */
+    public function exists($id)
+    {
+        $qry = 'SELECT `id`
+                FROM `' . $this->db->dbprefix('users') . '`
+                WHERE `id` = ' . $this->db->escape($id);
+
+        return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);
     }
 }
