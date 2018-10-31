@@ -44,7 +44,7 @@ defined('BASEPATH') OR exit;
  *
  * @return  string|array
  */
-function form_input($key, $ainput = NULL)
+function form_input($key, $ainput = FALSE)
 {
     $input = &get_instance()->input;
 
