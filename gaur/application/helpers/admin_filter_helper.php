@@ -76,7 +76,6 @@ function admin_filter($configs)
 
     if (!$filter)
     {
-        session_write_close();
         return $_SESSION['admin']['filter'][$page];
     }
 
@@ -86,23 +85,52 @@ function admin_filter($configs)
     $list_count   = (int)form_input('count');
     $order        = NULL;
 
-    if (isset($filter_fields)
-        && in_array(form_input('filterby'), $filter_fields))
+    if (isset($filter_fields))
     {
-        $filter = array(
-            'by'    => form_input('filterby'),
-            'val'   => form_input('filterval')
-        );
+        $fkeys = array();
+        $fvals = array();
+        $filterval = form_input('filterval', TRUE);
+
+        foreach (form_input('filterby', TRUE) as $k => $v)
+        {
+            if (in_array($v, $filter_fields))
+            {
+                $fkeys[$k] = $v;
+                $fvals[$k] = isset($filterval[$k]) ? $filterval[$k] : '';
+            }
+        }
+
+        if ($fkeys)
+        {
+            $filter = array(
+                'by'    => $fkeys,
+                'val'   => $fvals
+            );
+        }
     }
 
-    if (isset($search_fields)
-        && form_input('searchval') !== ''
-        && in_array(form_input('searchby'), $search_fields))
+    if (isset($search_fields))
     {
-        $search = array(
-            'by'    => form_input('searchby'),
-            'val'   => form_input('searchval')
-        );
+        $skeys = array();
+        $svals = array();
+        $searchval = form_input('searchval', TRUE);
+
+        foreach (form_input('searchby', TRUE) as $k => $v)
+        {
+            if (in_array($v, $search_fields))
+            {
+                $skeys[$k] = $v;
+                $svals[$k] = isset($searchval[$k]) ? $searchval[$k] : '';
+            }
+        }
+
+        if ($skeys)
+        {
+            $search = array(
+                'by'    => $skeys,
+                'val'   => $svals
+            );
+        }
     }
 
     if (isset($order_fields)
@@ -119,9 +147,14 @@ function admin_filter($configs)
         $current_page = 1;
     }
 
-    if ($list_count < 5 || $list_count > 20)
+    if ($list_count < 5)
     {
-        $list_count = ($list_count < 5) ? 5 : 20;
+        $list_count = 5;
+    }
+
+    if ($list_count > 20)
+    {
+        $list_count = 20;
     }
 
     $offset = 0;
@@ -139,6 +172,5 @@ function admin_filter($configs)
         'order'         => $order
     );
 
-    session_write_close();
     return $_SESSION['admin']['filter'][$page];
 }
