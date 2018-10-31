@@ -37,26 +37,26 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <header class="container page-header">
+    <header class="container border-bottom mb-3 mt-sm-2 pb-sm-2">
         <div class="row">
-            <div class="col-sm-3 hidden-xs">
-                <p class="text-center">
-                    <a href="" class="h1"><?php echo config_item('site_name'); ?></a>
-                </p>
+            <div class="col-sm-3 d-none d-sm-block">
+                <div class="text-center">
+                    <a href="" class="h1 mb-0"><?php echo config_item('site_name'); ?></a>
+                </div>
             </div>
 
             <div class="col-sm-9">
                 <input id="sm-state" type="checkbox">
                 <label class="sm-btn" for="sm-state">
                     <span class="sm-icon"></span>
-                    <a href="" class="sm-title"><?php echo config_item('site_name'); ?></a>
+                    <span class="sm-title"><?php echo config_item('site_name'); ?></span>
                 </label>
                 <ul class="sm">
                     <li>
-                        <a href="admin/users">Users</a>
+                        <a href="admin/users"><span class="oi oi-people"></span> Users</a>
                     </li>
                     <li>
-                        <a href="account/logout">Logout</a>
+                        <a href="account/logout"><span class="oi oi-account-logout"></span> Logout</a>
                     </li>
                 </ul>
             </div>
