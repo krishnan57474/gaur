@@ -58,7 +58,7 @@ class Users extends CI_Model
     public function get($filter, $limit, $offset, $order)
     {
         $qry = 'SELECT
-                    `id`, `username`, `email`, `status`, `activation`, `last_visited`
+                    `id`, `username`, `email`, `status`, `last_visited`
                 FROM `' . $this->db->dbprefix('users') . '`';
 
         if ($filter['filter'] || $filter['search'])
@@ -68,13 +68,33 @@ class Users extends CI_Model
 
         if ($filter['filter'])
         {
-            $qry .= ' `' . $filter['filter']['by'] . '` = ' . $this->db->escape($filter['filter']['val']);
+            $count = count($filter['filter']['by']);
+
+            foreach ($filter['filter']['by'] as $k => $v)
+            {
+                $qry .= ' `' . $v . '` = ' . $this->db->escape($filter['filter']['val'][$k]);
+
+                if ($k + 1 < $count)
+                {
+                    $qry .= ' AND';
+                }
+            }
         }
 
         if ($filter['search'])
         {
             $qry .= $filter['filter'] ? ' AND' : '';
-            $qry .= ' `' . $filter['search']['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val']));
+            $count = count($filter['search']['by']);
+
+            foreach ($filter['search']['by'] as $k => $v)
+            {
+                $qry .= ' `' . $v . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val'][$k]));
+
+                if ($k + 1 < $count)
+                {
+                    $qry .= ' AND';
+                }
+            }
         }
 
         if ($order)
@@ -106,13 +126,33 @@ class Users extends CI_Model
 
         if ($filter['filter'])
         {
-            $qry .= ' `' . $filter['filter']['by'] . '` = ' . $this->db->escape($filter['filter']['val']);
+            $count = count($filter['filter']['by']);
+
+            foreach ($filter['filter']['by'] as $k => $v)
+            {
+                $qry .= ' `' . $v . '` = ' . $this->db->escape($filter['filter']['val'][$k]);
+
+                if ($k + 1 < $count)
+                {
+                    $qry .= ' AND';
+                }
+            }
         }
 
         if ($filter['search'])
         {
             $qry .= $filter['filter'] ? ' AND' : '';
-            $qry .= ' `' . $filter['search']['by'] . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val']));
+            $count = count($filter['search']['by']);
+
+            foreach ($filter['search']['by'] as $k => $v)
+            {
+                $qry .= ' `' . $v . '` REGEXP ' . $this->db->escape(preg_quote($filter['search']['val'][$k]));
+
+                if ($k + 1 < $count)
+                {
+                    $qry .= ' AND';
+                }
+            }
         }
 
         return $this->db->query($qry)->row('total');
