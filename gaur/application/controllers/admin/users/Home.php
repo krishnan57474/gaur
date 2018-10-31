@@ -73,6 +73,7 @@ class Home extends CI_Controller
         // prevent non admin users
         if (!$_SESSION['is_admin'])
         {
+            session_write_close();
             show_404(NULL, FALSE);
         }
 
@@ -92,6 +93,8 @@ class Home extends CI_Controller
             'filter' => FALSE
         ));
 
+        session_write_close();
+
         $data = array();
         $data['filter'] = $filter;
         $data['filter']['current_page'] = 1;
@@ -100,21 +103,6 @@ class Home extends CI_Controller
         {
             $data['filter']['current_page'] = ($filter['offset'] / $filter['list_count']) + 1;
         }
-
-        $data['search_fields'] = array(
-            'id'        => 'ID',
-            'username'  => 'Username',
-            'email'     => 'Email'
-        );
-
-        $data['order_fields'] = array(
-            'id'           => 'ID',
-            'username'     => 'Username',
-            'email'        => 'Email',
-            'last_visited' => 'Last Visited',
-            'status'       => 'Status',
-            'activation'   => 'Verified'
-        );
 
         $data['filter_fields'] = array(
             'status'        => 'Status',
@@ -135,6 +123,20 @@ class Home extends CI_Controller
                 'No',
                 'Yes'
             )
+        );
+
+        $data['search_fields'] = array(
+            'id'        => 'ID',
+            'username'  => 'Username',
+            'email'     => 'Email'
+        );
+
+        $data['order_fields'] = array(
+            'id'           => 'ID',
+            'username'     => 'Username',
+            'email'        => 'Email',
+            'last_visited' => 'Last Visited',
+            'status'       => 'Status'
         );
 
         $this->load->view('app/default/admin/users/home', $data);
@@ -169,8 +171,7 @@ class Home extends CI_Controller
             'username',
             'email',
             'last_visited',
-            'status',
-            'activation'
+            'status'
         );
 
         $filter = admin_filter(array(
@@ -180,6 +181,8 @@ class Home extends CI_Controller
             'search_fields' => $search_fields,
             'order_fields'  => $order_fields
         ));
+
+        session_write_close();
 
         $items = $this->users->get(
             array(
@@ -236,6 +239,8 @@ class Home extends CI_Controller
             'filter' => FALSE
         ));
 
+        session_write_close();
+
         $fdata['data'] = (int)$this->users->total(array(
             'filter' => $filter['filter'],
             'search' => $filter['search']
@@ -251,14 +256,22 @@ class Home extends CI_Controller
      */
     private function _aaction_changestatus(&$fdata)
     {
-        if ($_SESSION['user_id'] === form_input('id'))
+        $this->load->model('admin/users/user', NULL, TRUE);
+
+        $id = (int)form_input('id');
+
+        if (!$this->user->exists($id))
+        {
+            $fdata['status'] = 0;
+            return;
+        }
+
+        if ((int)$_SESSION['user_id'] === $id)
         {
             return;
         }
 
-        $this->load->model('admin/users/user', NULL, TRUE);
-
-        $this->user->change_status((int)form_input('id'));
+        $this->user->change_status($id);
 
         $fdata['data'] = 1;
     }
