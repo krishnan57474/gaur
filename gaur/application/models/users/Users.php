@@ -110,4 +110,20 @@ class Users extends CI_Model
 
         return $this->db->query($qry)->row_array();
     }
+
+    /**
+     * Get login info by username
+     *
+     * @param   string  username
+     *
+     * @return  array
+     */
+    public function get_login($username)
+    {
+        $qry = 'SELECT `id`, `password`, `status`, `activation`
+                FROM `' . $this->db->dbprefix('users') . '`
+                WHERE `username` = ' . $this->db->escape($username);
+
+        return $this->db->query($qry)->row_array();
+    }
 }
