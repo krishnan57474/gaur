@@ -44,52 +44,81 @@ $this->load->view('app/default/common/head_top');
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
+    <?php $this->load->view('app/default/admin/common/css'); ?>
+
+    <style>
+        .overlay::after,
+        .overlay-content {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .overlay::after {
+            content: "";
+            bottom: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .overlay-content {
+            z-index: 1;
+        }
+    </style>
+
     <?php
-        $this->load->view('app/default/common/css');
         $this->load->view('app/default/common/head_bottom');
         $this->load->view('app/default/admin/common/menu');
     ?>
 
     <main class="container">
         <div class="row">
-            <div id="j-ar" class="col-md-12">
+            <div id="j-ar" class="col-sm-12">
                 <ol class="breadcrumb">
-                    <li>You are here: </li>
-                    <li><a href="">Home</a></li>
-                    <li class="active">Admin</li>
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item active">Admin</li>
                 </ol>
 
-                <ul class="list-unstyled j-error hide"></ul>
+                <ul class="list-unstyled j-error d-none" data-show-errors></ul>
 
-                <div data-jitem="loading" class="text-center">
-                    <p><img src="images/loader.gif" alt="loading"></p>
-                    <p>Loading</p>
-                </div>
+                <div class="overlay position-relative text-center">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <div class="card">
+                                <div class="card-header">Total users</div>
+                                <div class="card-body j-utotal">0</div>
+                            </div>
+                        </div>
 
-                <div data-jitem="users" class="row hide">
-                    <div class="col-md-3 col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Total users</div>
-                            <div data-jitem="u-total" class="panel-body text-center">0</div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <div class="card">
+                                <div class="card-header">Verified users</div>
+                                <div class="card-body j-uverified">0</div>
+                            </div>
+                        </div>
+
+                        <div class="w-100 d-md-none"></div>
+
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <div class="card">
+                                <div class="card-header">Unverified users</div>
+                                <div class="card-body j-uunverified">0</div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <div class="card">
+                                <div class="card-header">Recent user</div>
+                                <div class="card-body j-urecent">-</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Verified users</div>
-                            <div data-jitem="u-verified" class="panel-body text-center">0</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Unverified users</div>
-                            <div data-jitem="u-unverified" class="panel-body text-center">0</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Recent user</div>
-                            <div data-jitem="u-recent" class="panel-body text-center"></div>
-                        </div>
+
+                    <div class="text-center j-loading overlay-content">
+                        <p><img src="images/loader.gif" alt="loading"></p>
+                        <p>Loading</p>
                     </div>
                 </div>
             </div>
@@ -102,54 +131,54 @@ $this->load->view('app/default/common/head_top');
     (function ($) {
         "use strict";
 
-        var gform, jar,
+        var gform, jar, callbacksQueue;
 
-        // self overriding fnc
-        getJitem;
-
-        getJitem = function () {
-            var jitems = Object.create(null);
-
-            getJitem = function (key) {
-                if (!jitems[key]) {
-                    jitems[key] = $("[data-jitem='" + key + "']", jar);
-                }
-
-                return jitems[key];
-            };
-
-            return getJitem.apply(undefined, arguments);
-        };
-
-        function setUserInfo(data) {
-            var total = 0;
-
-            if (Number(data.total[0])) {
-                total += Number(data.total[0]);
-                getJitem("u-unverified").text(data.total[0]);
+        function processQueue() {
+            if (callbacksQueue.length) {
+                setTimeout(function () {
+                    gform.lock = false;
+                    callbacksQueue.pop()();
+                }, 1000);
+            } else {
+                $(".j-loading", jar).addClass("d-none");
+                $(".overlay", jar).removeClass("overlay");
             }
-
-            if (Number(data.total[1])) {
-                total += Number(data.total[1]);
-                getJitem("u-verified").text(data.total[1]);
-            }
-
-            getJitem("u-recent").text(data.recent || "-");
-            getJitem("u-total").text(total);
         }
 
-        function getItems() {
+        function getRecentUser() {
             gform.submit({
                 data: {
                     "j-af": "r",
-                    action: "getitems"
+                    action: "getrecentuser"
                 },
-                success: function (data) {
-                    setUserInfo(data.users);
-                    getJitem("users").removeClass("hide");
+                success: function (rdata) {
+                    $(".j-urecent", jar).text(rdata || "-");
+                    processQueue();
+                }
+            });
+        }
+
+        function getUsersTotal() {
+            gform.submit({
+                data: {
+                    "j-af": "r",
+                    action: "getuserstotal"
                 },
-                load: function () {
-                    getJitem("loading").addClass("hide");
+                success: function (rdata) {
+                    var total = 0;
+
+                    if (Number(rdata[0])) {
+                        total += Number(rdata[0]);
+                        $(".j-uunverified", jar).text(rdata[0]);
+                    }
+
+                    if (Number(rdata[1])) {
+                        total += Number(rdata[1]);
+                        $(".j-uverified", jar).text(rdata[1]);
+                    }
+
+                    $(".j-utotal", jar).text(total);
+                    processQueue();
                 }
             });
         }
@@ -159,17 +188,22 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init();
-            getItems();
+            callbacksQueue = [
+                getUsersTotal,
+                getRecentUser
+            ];
+
+            callbacksQueue.reverse();
+            processQueue();
         }
 
         (window._jq = window._jq || []).push(init);
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
-        $this->load->view('app/default/common/js');
+        $this->load->view('app/default/admin/common/js');
         $this->load->view('app/default/common/foot_bottom');
     ?>

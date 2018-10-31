@@ -60,23 +60,23 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12">
                 <ol class="breadcrumb">
-                    <li> You are here: </li>
-                    <li><a href="">Home</a></li>
-                    <li><a href="admin">Admin</a></li>
-                    <li><a href="admin/users">Users</a></li>
-                    <li class="active">Add</li>
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item"><a href="admin">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="admin/users">Users</a></li>
+                    <li class="breadcrumb-item active">Add</li>
                 </ol>
 
-                <div id="j-ar" class="sblock center-block">
-                    <ul class="list-unstyled j-error hide"></ul>
-                    <p class="alert alert-success j-success hide"></p>
+                <div id="j-ar" class="sblock m-auto">
+                    <ul class="list-unstyled j-error d-none"></ul>
+                    <p class="alert alert-success j-success d-none"></p>
 
                     <form method="post" onsubmit="return false">
                         <div class="form-group">
                             <label>Username <span class="text-danger">*</span></label>
                             <input class="form-control" name="username" type="text" required>
+                            <small class="form-text text-muted">Username can contain letters (a-z) and numbers (0-9).</small>
                         </div>
 
                         <div class="form-group">
@@ -86,8 +86,14 @@ $this->load->view('app/default/common/head_top');
 
                         <div class="form-group">
                             <input name="<?php echo $csrf['name']; ?>" type="hidden" value="<?php echo $csrf['hash']; ?>">
-                            <input class="btn btn-success" type="submit" value="Create">
-                            <a class="btn btn-default" href="admin/users">Cancel</a>
+                            <div class="form-row">
+                                <div class="col">
+                                    <input class="btn btn-block btn-primary" type="submit" value="Create">
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-block btn-secondary" href="admin/users">Cancel</a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -108,17 +114,17 @@ $this->load->view('app/default/common/head_top');
             form = this;
 
             $("[name]", form).each(function (k, v) {
-                uinputs[v.name] = v.value;
+                uinputs[$(v).attr("name")] = $(v).val();
             });
 
             gform.submit({
                 data: uinputs,
-                success: function (msg) {
-                    $(".j-success", jar).text(msg[0]).removeClass("hide");
-                    $(form).addClass("hide");
+                success: function (rdata) {
+                    $(".j-success", jar).text(rdata[0]).removeClass("d-none");
+                    $(form).addClass("d-none");
 
                     setTimeout(function () {
-                        location.href = msg[1];
+                        location.href = rdata[1];
                     }, 3000);
                 }
             });
@@ -129,7 +135,6 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init();
             $("form", jar).on("submit", submitForm);
         }
 
@@ -137,7 +142,7 @@ $this->load->view('app/default/common/head_top');
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');

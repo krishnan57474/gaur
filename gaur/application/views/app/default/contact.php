@@ -60,12 +60,12 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div id="j-ar" class="sblock center-block">
+            <div class="col-sm-12">
+                <div id="j-ar" class="sblock m-auto">
                     <h1 class="text-center">Contact</h1>
 
-                    <ul class="list-unstyled j-error hide"></ul>
-                    <p class="alert alert-success j-success hide"></p>
+                    <ul class="list-unstyled j-error d-none"></ul>
+                    <p class="alert alert-success j-success d-none"></p>
 
                     <form method="post" onsubmit="return false">
                         <div class="form-group">
@@ -88,9 +88,9 @@ $this->load->view('app/default/common/head_top');
                             <textarea class="form-control" name="message" required></textarea>
                         </div>
 
-                        <div class="form-group">
+                        <div>
                             <input type="hidden" name="<?php echo $csrf['name']; ?>" value="<?php echo $csrf['hash']; ?>">
-                            <input class="btn btn-default" type="submit" value="Submit">
+                            <input class="btn btn-primary" type="submit" value="Submit">
                         </div>
                     </form>
                 </div>
@@ -111,14 +111,14 @@ $this->load->view('app/default/common/head_top');
             form = this;
 
             $("[name]", form).each(function (k, v) {
-                uinputs[v.name] = v.value;
+                uinputs[$(v).attr("name")] = $(v).val();
             });
 
             gform.submit({
                 data: uinputs,
                 success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("hide");
-                    $(form).addClass("hide");
+                    $(".j-success", jar).text(msg).removeClass("d-none");
+                    $(form).addClass("d-none");
                 }
             });
         }
@@ -128,7 +128,6 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init();
             $("form", jar).on("submit", submitForm);
         }
 
@@ -136,7 +135,7 @@ $this->load->view('app/default/common/head_top');
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');

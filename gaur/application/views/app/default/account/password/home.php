@@ -44,60 +44,35 @@ $this->load->view('app/default/common/head_top');
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
-    <?php $this->load->view('app/default/common/css'); ?>
-
-    <style>
-        .c-ma {
-            margin: 0 auto;
-        }
-    </style>
-
     <?php
+        $this->load->view('app/default/common/css');
         $this->load->view('app/default/common/head_bottom');
         $this->load->view('app/default/common/menu');
     ?>
 
     <main class="container">
         <div class="row">
-            <div class="col-sm-3">
-                <table class="table table-bordered collapse-container">
-                    <thead>
-                        <tr class="panel panel-default">
-                            <th class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-9">Password</div>
-                                    <div class="col-xs-3 visible-xs text-right collapse-btn">
-                                        <span class="glyphicon glyphicon-menu-hamburger"></span>
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="hidden-xs collapse-content">
-                        <tr>
-                            <td><a href="account">Account</a></td>
-                        </tr>
-                        <tr>
-                            <td>Password</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-sm-4 col-md-3">
+                <div class="card mb-3">
+                    <div class="card-header">Password</div>
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action" href="account">Account</a>
+                        <a class="list-group-item list-group-item-action active" href="account/password">Password</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8 col-md-9">
                 <ol class="breadcrumb">
-                    <li>You are here: </li>
-                    <li><a href="">Home</a></li>
-                    <li><a href="account">Account</a></li>
-                    <li class="active">Password</li>
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item"><a href="account">Account</a></li>
+                    <li class="breadcrumb-item active">Password</li>
                 </ol>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h1 class="panel-title">Change password</h1>
-                    </div>
-                    <div id="j-ar" class="panel-body">
-                        <ul class="list-unstyled j-error hide"></ul>
-                        <p class="alert alert-success j-success c-ma hide"></p>
+                <div class="card">
+                    <div class="card-header">Change password</div>
+                    <div id="j-ar" class="card-body">
+                        <ul class="list-unstyled j-error d-none"></ul>
+                        <p class="alert alert-success j-success m-auto d-none"></p>
 
                         <form method="post" onsubmit="return false">
                             <div class="form-group">
@@ -136,21 +111,15 @@ $this->load->view('app/default/common/head_top');
             form = this;
 
             $("[name]", form).each(function (k, v) {
-                uinputs[v.name] = v.value;
+                uinputs[$(v).attr("name")] = $(v).val();
             });
 
             gform.submit({
                 data: uinputs,
                 success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("hide");
-                    $(form).addClass("hide");
+                    $(".j-success", jar).text(msg).removeClass("d-none");
+                    $(form).addClass("d-none");
                 }
-            });
-        }
-
-        function collapse() {
-            $(".collapse-btn").on("click", function () {
-                $(this).closest(".collapse-container").find(".collapse-content").toggleClass("hidden-xs");
             });
         }
 
@@ -159,16 +128,14 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init();
             $("form", jar).on("submit", submitForm);
-            collapse();
         }
 
         (window._jq = window._jq || []).push(init);
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');

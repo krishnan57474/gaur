@@ -60,12 +60,12 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div id="j-ar" class="sblock center-block">
+            <div class="col-sm-12">
+                <div id="j-ar" class="sblock m-auto">
                     <h1 class="text-center">Forgot Password</h1>
 
-                    <ul class="list-unstyled j-error hide"></ul>
-                    <p class="alert alert-success j-success hide"></p>
+                    <ul class="list-unstyled j-error d-none"></ul>
+                    <p class="alert alert-success j-success d-none"></p>
 
                     <form method="post" onsubmit="return false">
                         <div class="form-group">
@@ -73,9 +73,17 @@ $this->load->view('app/default/common/head_top');
                             <input class="form-control" name="email" type="email" required>
                         </div>
 
-                        <div class="form-group">
+                        <div>
                             <input name="<?php echo $csrf['name']; ?>" type="hidden" value="<?php echo $csrf['hash']; ?>">
-                            <input class="btn btn-primary" type="submit" value="Reset Password">
+                            <div class="form-row align-items-center">
+                                <div class="col-5">
+                                    <input class="btn btn-block btn-primary" type="submit" value="Reset">
+                                </div>
+                                <div class="col-7 text-right">
+                                    <span class="oi oi-account-login"></span>
+                                    <a href="account/login">Sign In</a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -96,14 +104,14 @@ $this->load->view('app/default/common/head_top');
             form = this;
 
             $("[name]", form).each(function (k, v) {
-                uinputs[v.name] = v.value;
+                uinputs[$(v).attr("name")] = $(v).val();
             });
 
             gform.submit({
                 data: uinputs,
                 success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("hide");
-                    $(form).addClass("hide");
+                    $(".j-success", jar).text(msg).removeClass("d-none");
+                    $(form).addClass("d-none");
                 }
             });
         }
@@ -113,7 +121,6 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init();
             $("form", jar).on("submit", submitForm);
         }
 
@@ -121,7 +128,7 @@ $this->load->view('app/default/common/head_top');
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');

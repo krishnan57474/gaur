@@ -60,12 +60,12 @@ $this->load->view('app/default/common/head_top');
 
     <main class="container">
         <div class="row">
-            <div class="col-md-12">
-                <div id="j-ar" class="sblock center-block">
+            <div class="col-sm-12">
+                <div id="j-ar" class="sblock m-auto">
                     <h1 class="text-center">Account Activation</h1>
 
-                    <ul class="list-unstyled j-error hide"></ul>
-                    <p class="alert alert-success j-success hide"></p>
+                    <ul class="list-unstyled j-error d-none" data-show-errors></ul>
+                    <p class="alert alert-success j-success d-none"></p>
 
                     <div class="text-center j-loading">
                         <p><img src="images/loader.gif" alt="loading"></p>
@@ -87,12 +87,15 @@ $this->load->view('app/default/common/head_top');
         function validateToken() {
             gform.submit({
                 data: { "j-af": "v" },
-                success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("hide");
-                    location.href = "account/password/create";
+                success: function (rdata) {
+                    $(".j-success", jar).text(rdata[0]).removeClass("d-none");
+
+                    setTimeout(function () {
+                        location.href = rdata[1];
+                    }, 1000);
                 },
                 load: function () {
-                    $(".j-loading", jar).addClass("hide");
+                    $(".j-loading", jar).addClass("d-none");
                 }
             });
         }
@@ -102,10 +105,6 @@ $this->load->view('app/default/common/head_top');
             gform = new GForm();
             jar = $("#j-ar");
 
-            gform.init({
-                hideErrors: false
-            });
-
             validateToken();
         }
 
@@ -113,7 +112,7 @@ $this->load->view('app/default/common/head_top');
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');
