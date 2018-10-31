@@ -108,34 +108,39 @@ class Contact extends CI_Controller
         {
             $this->finputs[$field] = form_input($field);
 
-            if (!$this->finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
 
-        if (mb_strlen($this->finputs['name']) < 4
-            || mb_strlen($this->finputs['name']) > 20)
+        if (mb_strlen($this->finputs['name']) > 20)
         {
-            $this->errors[] = 'Name must be between 4 and 20 characters!';
+            $this->errors[] = 'Name must be lessthan 21 characters!';
         }
 
         if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'Email does not apear to be valid';
+            $this->errors[] = 'Email address does not apear to be valid!';
+        }
+        elseif(mb_strlen($this->finputs['email']) > 254)
+        {
+            $this->errors[] = 'Email address must be lessthan 255 characters!';
         }
 
-        if (preg_match('#[^0-9]#', $this->finputs['phone'])
-            || strlen($this->finputs['phone']) > 15)
+        if (preg_match('#[^0-9]#', $this->finputs['phone']))
         {
-            $this->errors[] = 'Phone no. does not appear to be valid';
+            $this->errors[] = 'Phone number does not appear to be valid!';
+        }
+        elseif(strlen($this->finputs['phone']) !== 10)
+        {
+            $this->errors[] = 'Phone number must be 10 digits!';
         }
 
-        if (mb_strlen($this->finputs['message']) < 4
-            || mb_strlen($this->finputs['message']) > 2000)
+        if (mb_strlen($this->finputs['message']) > 1024)
         {
-            $this->errors[] = 'Message must be between 4 and 2000 characters!';
+            $this->errors[] = 'Message must be lessthan 1025 characters!';
         }
 
         return !$this->errors;
@@ -162,16 +167,17 @@ class Contact extends CI_Controller
         $this->load->library('mail');
         $this->load->helper('xhtml');
 
+        $data = array();
+        $data['to']         = 'contact@example.com';
+        $data['subject']    = 'Contact enquiry';
+        $data['inputs']     = $this->finputs;
+
         // send email
-        $status = $this->mail->contact(array(
-            'subject' => 'Contact enquiry',
-            'finputs' => $this->finputs,
-            'email'   => 'contact@example.com'
-        ));
+        $status = $this->mail->send('email/default/contact', $data);
 
         if ($status)
         {
-            $fdata['data'] = 'Your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config_item('site_name');
+            $fdata['data'] = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config_item('site_name');
         }
         else
         {
