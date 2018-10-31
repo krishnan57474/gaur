@@ -50,27 +50,6 @@ $this->load->view('app/default/common/head_top');
         .link {
             cursor: pointer;
         }
-
-        .c-pt-5 {
-            padding-top: 5px;
-        }
-
-        .thead {
-            background: #f5f5f5;
-        }
-
-        .sblock {
-            width: 400px;
-            max-width: 100%;
-        }
-
-        .c-mr-1 {
-            margin-right: 10px;
-        }
-
-        .c-ma {
-            margin: 0 auto;
-        }
     </style>
 
     <?php
@@ -78,169 +57,182 @@ $this->load->view('app/default/common/head_top');
         $this->load->view('app/default/admin/common/menu');
     ?>
 
-    <main class="container">
-        <div class="row">
-            <div id="j-ar" class="col-md-12">
-                <div class="clearfix">
-                    <ol class="breadcrumb pull-left">
-                        <li>You are here: </li>
-                        <li><a href="">Home</a></li>
-                        <li><a href="admin">Admin</a></li>
-                        <li class="active">Users</li>
-                    </ol>
-                    <div class="form-group pull-right">
-                        <a href="admin/users/add" class="btn btn-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
+    <main id="j-ar" class="container">
+        <div class="row align-items-center">
+            <div class="col-sm-6">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Home</a></li>
+                    <li class="breadcrumb-item"><a href="admin">Admin</a></li>
+                    <li class="breadcrumb-item active">Users</li>
+                </ol>
+            </div>
+            <div class="col-sm-6 mb-2">
+                <div class="row no-gutters">
+                    <div class="col offset-lg-6 mb-2 mr-1">
+                        <a href="admin/users/add" class="btn btn-block btn-success">
+                            <span class="oi oi-pencil"></span>
                             Add
                         </a>
-                        <span data-jitem="filter" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-search"></span>
+                    </div>
+                    <div class="col mb-2">
+                        <button type="button" data-jitem="filter" class="btn btn-block btn-primary">
+                            <span class="oi oi-magnifying-glass"></span>
                             Filter
-                        </span>
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div data-jitem="ufilters" class="form-group form-inline hide">
-                    <div class="form-group c-mr-1">
-                        <select class="form-control" data-jitem="filterby">
-                            <option value="">Filter by</option>
-                            <?php foreach ($filter_fields as $k => $v): ?>
-                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group c-mr-1">
-                        <select class="form-control" data-jitem="filterval">
-                            <option value="">Choose</option>
-                            <?php foreach ($filter_values as $fk => $fv): ?>
-                            <?php foreach ($fv as $k => $v): ?>
-                            <option class="hide" data-item="<?php echo $fk; ?>" value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                            <?php endforeach; ?>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group c-mr-1">
-                        <select class="form-control" data-jitem="searchby">
-                            <option value="">Search by</option>
-                            <?php foreach ($search_fields as $k => $v): ?>
-                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group c-mr-1">
-                        <input class="form-control" data-jitem="searchval" type="text" placeholder="keyword">
-                    </div>
-                    <div class="form-group c-mr-1">
-                        <select class="form-control" data-jitem="orderby">
-                            <option value="">Order by</option>
-                            <?php foreach ($order_fields as $k => $v): ?>
-                            <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group c-mr-1">
-                        <select class="form-control" data-jitem="sortby">
-                            <option value="">Sort by</option>
-                            <option value="0">ASC</option>
-                            <option value="1">DESC</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <span class="btn btn-block btn-success">
-                            <span class="glyphicon glyphicon-search"></span>
+        <div data-jitem="ufilters" class="form-row d-none">
+            <div class="col-sm-6 col-md-3 mb-2">
+                <div class="mb-1">
+                    <select class="form-control" data-jitem="filterby">
+                        <option value="">Filter by</option>
+                        <?php foreach ($filter_fields as $k => $v): ?>
+                        <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="mb-1">
+                    <select class="form-control" data-jitem="filterval">
+                        <option value="">Choose</option>
+                        <?php foreach ($filter_values as $fk => $fv): ?>
+                        <?php foreach ($fv as $k => $v): ?>
+                        <option class="d-none" data-item="<?php echo $fk; ?>" value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 mb-2">
+                <div class="mb-1">
+                    <select class="form-control" data-jitem="searchby">
+                        <option value="">Search by</option>
+                        <?php foreach ($search_fields as $k => $v): ?>
+                        <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="mb-1">
+                    <input class="form-control" data-jitem="searchval" type="text" placeholder="keyword">
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 mb-2">
+                <div class="mb-1">
+                    <select class="form-control" data-jitem="orderby">
+                        <option value="">Order by</option>
+                        <?php foreach ($order_fields as $k => $v): ?>
+                        <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="mb-1">
+                    <select class="form-control" data-jitem="sortby">
+                        <option value="">Sort by</option>
+                        <option value="0">ASC</option>
+                        <option value="1">DESC</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 mb-2">
+                <div class="row no-gutters">
+                    <div class="col col-sm-12 mb-1 mr-1">
+                        <button data-action="search" type="button" class="btn btn-block btn-success">
+                            <span class="oi oi-magnifying-glass"></span>
                             Search
-                        </span>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <span class="btn btn-block btn-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
+                    <div class="col col-sm-12 mb-1">
+                        <button data-action="reset" type="button" class="btn btn-block btn-danger">
+                            <span class="oi oi-x"></span>
                             Clear
-                        </span>
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div data-jitem="confirm" class="alert alert-warning clearfix hide">
-                    <div class="pull-left c-pt-5">Confirm change status</div>
-                    <div class="pull-right">
-                        <span class="btn btn-success">Confirm</span>
-                        <span class="btn btn-default">Cancel</span>
-                    </div>
+        <div data-jitem="confirm" class="alert alert-warning text-center text-sm-left d-none">
+            <div class="row align-items-center">
+                <div class="col-sm-6 mb-2 mb-sm-0">Confirm change status</div>
+                <div class="col-sm-6 text-sm-right">
+                    <button data-action="confirm" type="button" class="btn btn-success">Confirm</button>
+                    <button data-action="cancel" type="button" class="btn btn-secondary">Cancel</button>
                 </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-sm-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover text-center">
                         <colgroup>
                             <col style="width: 70px">
                             <col>
                             <col>
                             <col style="width: 150px">
                             <col style="width: 100px">
-                            <col style="width: 100px">
-                            <col style="width: 50px">
-                            <col style="width: 50px">
+                            <col style="width: 70px">
+                            <col style="width: 70px">
                         </colgroup>
-                        <thead class="thead">
+                        <thead class="thead-light">
                             <tr data-jitem="order">
-                                <th data-id="id" class="link text-center">
-                                    <span class="small glyphicon glyphicon-sort"></span>
+                                <th data-id="id" class="link">
+                                    <span class="small oi oi-elevator"></span>
                                     ID
                                 </th>
-                                <th data-id="username" class="link">
-                                    <span class="small glyphicon glyphicon-sort"></span>
+                                <th data-id="username" class="link text-left">
+                                    <span class="small oi oi-elevator"></span>
                                     Username
                                 </th>
-                                <th data-id="email" class="link">
-                                    <span class="small glyphicon glyphicon-sort"></span>
+                                <th data-id="email" class="link text-left">
+                                    <span class="small oi oi-elevator"></span>
                                     Email
                                 </th>
-                                <th data-id="last_visited" class="link text-center">
-                                    <span class="small glyphicon glyphicon-sort"></span>
+                                <th data-id="last_visited" class="link">
+                                    <span class="small oi oi-elevator"></span>
                                     Last Visited
                                 </th>
-                                <th data-id="status" class="link text-center">
-                                    <span class="small glyphicon glyphicon-sort"></span>
+                                <th data-id="status" class="link">
+                                    <span class="small oi oi-elevator"></span>
                                     Status
                                 </th>
-                                <th data-id="activation" class="link text-center">
-                                    <span class="small glyphicon glyphicon-sort"></span>
-                                    Verified
-                                </th>
-                                <th class="text-center">Edit</th>
-                                <th class="text-center">View</th>
+                                <th>Edit</th>
+                                <th>View</th>
                             </tr>
                         </thead>
                         <tbody data-jitem="items"></tbody>
                     </table>
-
-                    <ul class="list-unstyled j-error hide"></ul>
-
-                    <div data-jitem="loading" class="text-center">
-                        <p><img src="images/loader.gif" alt="loading"></p>
-                        <p>Loading</p>
-                    </div>
-
-                    <div data-jitem="noitems" class="text-center hide">No result found</div>
                 </div>
 
-                <div data-jitem="footer" class="clearfix hide">
-                    <div class="pull-left form-group">
-                        <ul data-jitem="pagination" class="pagination c-ma"></ul>
-                    </div>
+                <ul class="list-unstyled j-error d-none" data-show-errors></ul>
 
-                    <div class="pull-right form-inline sblock text-right">
-                        <div data-jitem="total" class="form-group">
-                            <b>Total</b>: <span></span> &nbsp; / &nbsp;
-                        </div>
-                        <div class="form-group">
-                          <label>List count</label>
-                          <select data-jitem="listcount" class="form-control">
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="15">15</option>
-                              <option value="20">20</option>
-                          </select>
-                        </div>
-                    </div>
+                <div data-jitem="loading" class="text-center">
+                    <p><img src="images/loader.gif" alt="loading"></p>
+                    <p>Loading</p>
+                </div>
+
+                <div data-jitem="noitems" class="text-center d-none">No result found</div>
+            </div>
+        </div>
+
+        <div data-jitem="footer" class="row d-none">
+            <div class="col-md-6">
+                <ul data-jitem="pagination" class="pagination flex-wrap flex-sm-nowrap"></ul>
+            </div>
+
+            <div class="col-md-6 text-right">
+                <b>Total</b>:
+                <span data-jitem="total"></span> &nbsp; / &nbsp;
+                <b>List count</b>
+                <div class="d-inline-block">
+                    <select data-jitem="listcount" class="form-control">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -252,12 +244,22 @@ $this->load->view('app/default/common/head_top');
     (function () {
         "use strict";
 
+        function toArray(obj) {
+            var aobj = [];
+
+            Object.keys(obj).forEach(function (k) {
+                aobj[k] = obj[k];
+            });
+
+            return aobj;
+        }
+
         function init() {
             var configs = {
-                filterBy:    "<?php echo $filter['filter'] ? $filter['filter']['by'] : ''; ?>",
-                filterVal:   "<?php echo $filter['filter'] ? hentities($filter['filter']['val']) : ''; ?>",
-                searchBy:    "<?php echo $filter['search'] ? $filter['search']['by'] : ''; ?>",
-                searchVal:   "<?php echo $filter['search'] ? hentities($filter['search']['val']) : ''; ?>",
+                filterBy:    <?php echo $filter['filter'] ? json_encode($filter['filter']['by']) : '[]'; ?>,
+                filterVal:   <?php echo $filter['filter'] ? json_encode($filter['filter']['val']) : '[]'; ?>,
+                searchBy:    <?php echo $filter['search'] ? json_encode($filter['search']['by']) : '[]'; ?>,
+                searchVal:   <?php echo $filter['search'] ? json_encode($filter['search']['val']) : '[]'; ?>,
                 currentPage: <?php echo $filter['current_page']; ?>,
                 listCount:   <?php echo $filter['list_count']; ?>,
                 orderBy:     "<?php echo $filter['order'] ? $filter['order']['order'] : ''; ?>",
@@ -265,20 +267,26 @@ $this->load->view('app/default/common/head_top');
 
                 handlers:    {
                     search: true,
-                    status: true,
-                    order:  true
+                    order:  true,
+                    status: true
                 }
             };
 
-            (new App()).init(configs);
+            ["filterBy", "filterVal", "searchBy", "searchVal"].forEach(function (k) {
+                if (!Array.isArray(configs[k])) {
+                    configs[k] = toArray(configs[k]);
+                }
+            });
+
+            (new GApp()).init(configs);
         }
 
         (window._jq = window._jq || []).push(init);
     }());
     </script>
 
-    <script async type="text/x-js" src="js/form.js" class="j-ljs"></script>
-    <script async type="text/x-js" src="js/app.js" class="j-ljs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/app.js" class="j-ajs"></script>
 
     <?php
         $this->load->view('app/default/common/js');
