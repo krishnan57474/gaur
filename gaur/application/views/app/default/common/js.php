@@ -37,7 +37,63 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <script async type="text/x-js" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script async type="text/x-js" src="js/smartmenus.js"></script>
+    <script>
+    (function ($) {
+        "use strict";
+
+        function segment(url) {
+            return url.replace(/\/$/, "").split("/");
+        }
+
+        function compareSegment(base, current) {
+            var i = -1,
+            l = current.length,
+            match = false;
+
+            while (++i < l) {
+                if (base[i] === current[i] && (i + 1) >= l) {
+                    match = true;
+                    break;
+                }
+            }
+
+            return match;
+        }
+
+        function setActiveMenu() {
+            var base = segment(location.href.replace(document.baseURI, "")),
+            current;
+
+            $(".sm > li > a").each(function (k, elm) {
+                current = $(elm).attr("href");
+
+                if (current === undefined) {
+                    return;
+                }
+
+                if (compareSegment(base, segment(current))) {
+                    $(elm).addClass("current");
+                    return false;
+                }
+            });
+        }
+
+        function initMenu() {
+            $(".sm").smartmenus();
+        }
+
+        function init() {
+            $ = jQuery;
+            setActiveMenu();
+            initMenu();
+        }
+
+        (window._jq = window._jq || []).push(init);
+    }());
+    </script>
+
+    <script type="text/x-async-css" data-src="https://cdn.jsdelivr.net/gh/iconic/open-iconic@1.1.1/font/css/open-iconic-bootstrap.min.css" data-integrity="sha384-wWci3BOzr88l+HNsAtr3+e5bk9qh5KfjU6gl/rbzfTYdsAVHBEbxB33veLYmFg/a" class="j-acss"></script>
+
+    <script type="text/x-async-js" data-src="https://cdn.jsdelivr.net/gh/vadikom/smartmenus@1.1.0/dist/jquery.smartmenus.min.js" data-integrity="sha384-kiPl6IJ5XxKLYw0Q2pnwgDh1cclkWG/FxMm94STsu7hO1zRtLFh0nVBnxh5FJTaA" class="j-ajs"></script>
 
     <script async src="js/script.js"></script>
