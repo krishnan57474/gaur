@@ -46,6 +46,13 @@ defined('BASEPATH') OR exit;
 class Login extends CI_Controller
 {
     /**
+     * Filtered inputs
+     *
+     * @var array
+     */
+    private $finputs;
+
+    /**
      * Input errors
      *
      * @var array
@@ -95,49 +102,60 @@ class Login extends CI_Controller
     }
 
     /**
+     * Validate username and password
+     *
+     * @return  bool
+     */
+    private function _validate_user()
+    {
+        $this->load->model('users/users', NULL, TRUE);
+
+        $user = $this->users->get_login($this->finputs['username']);
+
+        if (!$user
+            || !$user['status']
+            || !$user['activation']
+            || !password_verify($this->finputs['password'], $user['password']))
+        {
+            $this->errors[] = 'Incorrect username or password!';
+        }
+        else
+        {
+            // store user id
+            $_SESSION['user_id'] = $user['id'];
+        }
+
+        return !$this->errors;
+    }
+
+    /**
      * Validate user inputs
      *
      * @return  bool
      */
     private function _validate()
     {
-        $finputs = array();
+        $this->finputs = array();
         $this->errors = array();
 
         foreach (array('username', 'password') as $field)
         {
-            $finputs[$field] = form_input($field);
+            $this->finputs[$field] = form_input($field);
 
-            if (!$finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
 
-        if (preg_match('#[^a-zA-Z0-9]#', $finputs['username'])
-            || strlen($finputs['username']) < 4
-            || strlen($finputs['username']) > 32
-            || mb_strlen($finputs['password']) < 4
-            || mb_strlen($finputs['password']) > 64)
+        if (preg_match('#[^a-zA-Z0-9]#', $this->finputs['username'])
+            || strlen($this->finputs['username']) < 3
+            || strlen($this->finputs['username']) > 32
+            || mb_strlen($this->finputs['password']) < 4
+            || mb_strlen($this->finputs['password']) > 64)
         {
-            $this->errors[] = 'Incorrect username or password';
-        }
-        else
-        {
-            $this->load->model('users/user', NULL, TRUE);
-
-            $uid = $this->user->login($finputs['username'], $finputs['password']);
-
-            if ($uid)
-            {
-                // store user id
-                $_SESSION['user_id'] = $uid;
-            }
-            else
-            {
-                $this->errors[] = 'Incorrect username or password';
-            }
+            $this->errors[] = 'Incorrect username or password!';
         }
 
         return !$this->errors;
@@ -152,7 +170,8 @@ class Login extends CI_Controller
      */
     private function _aaction_submit(&$fdata)
     {
-        if (!$this->_validate())
+        if (!$this->_validate()
+            || !$this->_validate_user())
         {
             // keep temporary redirect
             if (isset($_SESSION['redirect']))
@@ -167,6 +186,8 @@ class Login extends CI_Controller
             return;
         }
 
+        $this->load->model('users/user');
+
         $this->user->update_last_visit($_SESSION['user_id']);
 
         // default login success redirect
@@ -176,6 +197,8 @@ class Login extends CI_Controller
         {
             $url = $_SESSION['redirect'];
         }
+
+        session_write_close();
 
         $fdata['data'] = array(
             'You have successfully logged in',
