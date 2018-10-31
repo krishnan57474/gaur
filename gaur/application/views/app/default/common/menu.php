@@ -37,40 +37,40 @@
 defined('BASEPATH') OR exit;
 
 ?>
-    <header class="container page-header">
+    <header class="container border-bottom mb-3 mt-sm-2 pb-sm-2">
         <div class="row">
-            <div class="col-sm-3 hidden-xs">
-                <p class="text-center">
-                    <a href="" class="h1"><?php echo config_item('site_name'); ?></a>
-                </p>
+            <div class="col-sm-3 d-none d-sm-block">
+                <div class="text-center">
+                    <a href="" class="h1 mb-0"><?php echo config_item('site_name'); ?></a>
+                </div>
             </div>
 
             <div class="col-sm-9">
                 <input id="sm-state" type="checkbox">
                 <label class="sm-btn" for="sm-state">
                     <span class="sm-icon"></span>
-                    <a href="" class="sm-title"><?php echo config_item('site_name'); ?></a>
+                    <span class="sm-title"><?php echo config_item('site_name'); ?></span>
                 </label>
                 <ul class="sm">
                     <li>
-                        <a href=""><span class="glyphicon glyphicon-home"></span> Home</a>
+                        <a href=""><span class="oi oi-home"></span> Home</a>
                     </li>
                     <li>
-                        <a href="contact"><span class="glyphicon glyphicon-envelope"></span> Contact</a>
+                        <a href="contact"><span class="oi oi-envelope-closed"></span> Contact</a>
                     </li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <li>
-                        <a href="account"><span class="glyphicon glyphicon-user"></span> Account</a>
+                        <a href="account"><span class="oi oi-person"></span> Account</a>
                     </li>
                     <li>
-                        <a href="account/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                        <a href="account/logout"><span class="oi oi-account-logout"></span> Logout</a>
                     </li>
                     <?php else: ?>
                     <li>
-                        <a href="account/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                        <a href="account/login"><span class="oi oi-account-login"></span> Login</a>
                     </li>
                     <li>
-                        <a href="account/register"><span class="glyphicon glyphicon-user"></span> Register</a>
+                        <a href="account/register"><span class="oi oi-person"></span> Register</a>
                     </li>
                     <?php endif; ?>
                 </ul>
