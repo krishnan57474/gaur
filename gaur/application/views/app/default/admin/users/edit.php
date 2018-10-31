@@ -44,7 +44,7 @@ $this->load->view('app/default/common/head_top');
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
-    <?php $this->load->view('app/default/common/css'); ?>
+    <?php $this->load->view('app/default/admin/common/css'); ?>
 
     <style>
         .sblock {
@@ -163,6 +163,6 @@ $this->load->view('app/default/common/head_top');
     <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
 
     <?php
-        $this->load->view('app/default/common/js');
+        $this->load->view('app/default/admin/common/js');
         $this->load->view('app/default/common/foot_bottom');
     ?>

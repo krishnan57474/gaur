@@ -49,7 +49,7 @@ $status = array(
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
 
-    <?php $this->load->view('app/default/common/css'); ?>
+    <?php $this->load->view('app/default/admin/common/css'); ?>
 
     <?php if (!$user['activation']): ?>
     <style>
@@ -219,6 +219,6 @@ $status = array(
     <?php endif; ?>
 
     <?php
-        $this->load->view('app/default/common/js');
+        $this->load->view('app/default/admin/common/js');
         $this->load->view('app/default/common/foot_bottom');
     ?>
