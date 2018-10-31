@@ -101,6 +101,37 @@ class Home extends CI_Controller
     }
 
     /**
+     * Validate password
+     *
+     * @return  bool
+     */
+    private function _validate_password()
+    {
+        if (mb_strlen($this->finputs['cpassword']) < 4
+            || mb_strlen($this->finputs['cpassword']) > 64)
+        {
+            $this->errors[] = 'Incorrect current password!';
+        }
+        else
+        {
+            $this->load->model('users/user', NULL, TRUE);
+
+            $password = $this->user->get_password($_SESSION['user_id']);
+
+            if (!password_verify($this->finputs['cpassword'], $password))
+            {
+                $this->errors[] = 'Incorrect current password!';
+            }
+            elseif ($this->finputs['cpassword'] === $this->finputs['password'])
+            {
+                $this->errors[] = 'Please use different password!';
+            }
+        }
+
+        return !$this->errors;
+    }
+
+    /**
      * Validate user inputs
      *
      * @return  bool
@@ -114,9 +145,9 @@ class Home extends CI_Controller
         {
             $this->finputs[$field] = form_input($field);
 
-            if (!$this->finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
@@ -124,38 +155,12 @@ class Home extends CI_Controller
         if (mb_strlen($this->finputs['password']) < 4
             || mb_strlen($this->finputs['password']) > 64)
         {
-            $this->errors[] = 'Password must be between 4 and 64 characters';
+            $this->errors[] = 'Password must be between 4 and 64 characters!';
         }
 
         if ($this->finputs['password'] !== $this->finputs['password-confirm'])
         {
-            $this->errors[] = 'Password confirmation does not match the password';
-        }
-
-        if ($this->errors)
-        {
-            return FALSE;
-        }
-
-        if (mb_strlen($this->finputs['cpassword']) < 4
-            || mb_strlen($this->finputs['cpassword']) > 64)
-        {
-            $this->errors[] = 'Incorrect current password';
-        }
-        else
-        {
-            $this->load->model('users/user', NULL, TRUE);
-
-            $password = $this->user->get_password($_SESSION['user_id']);
-
-            if (!password_verify($this->finputs['cpassword'], $password))
-            {
-                $this->errors[] = 'Incorrect current password';
-            }
-            elseif ($this->finputs['cpassword'] === $this->finputs['password'])
-            {
-                $this->errors[] = 'Please use different password';
-            }
+            $this->errors[] = 'Password confirmation does not match the password!';
         }
 
         return !$this->errors;
@@ -170,7 +175,8 @@ class Home extends CI_Controller
      */
     private function _aaction_submit(&$fdata)
     {
-        if (!$this->_validate())
+        if (!$this->_validate()
+            || !$this->_validate_password())
         {
             $this->session->mark_as_flash('csrf-aph');
             session_write_close();
@@ -180,6 +186,7 @@ class Home extends CI_Controller
         }
 
         $this->user->change_password($_SESSION['user_id'], $this->finputs['password']);
+
         $fdata['data'] = 'Congratulations! your password has been successfully updated.';
     }
 

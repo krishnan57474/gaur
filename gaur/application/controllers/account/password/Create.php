@@ -108,9 +108,9 @@ class Create extends CI_Controller
         {
             $this->finputs[$field] = form_input($field);
 
-            if (!$this->finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
@@ -118,12 +118,12 @@ class Create extends CI_Controller
         if (mb_strlen($this->finputs['password']) < 4
             || mb_strlen($this->finputs['password']) > 64)
         {
-            $this->errors[] = 'Password must be between 4 and 64 characters';
+            $this->errors[] = 'Password must be between 4 and 64 characters!';
         }
 
         if ($this->finputs['password'] !== $this->finputs['password-confirm'])
         {
-            $this->errors[] = 'Password confirmation does not match the password';
+            $this->errors[] = 'Password confirmation does not match the password!';
         }
 
         return !$this->errors;
@@ -154,7 +154,7 @@ class Create extends CI_Controller
         unset($_SESSION['password_create']);
         session_write_close();
 
-        $fdata['data'] = 'Congratulations! your password has been successfully updated. Now you can log in by using your username and password.';
+        $fdata['data'] = 'Congratulations! your password has been successfully created. Now you can log in by using your username and password.';
     }
 
     /**

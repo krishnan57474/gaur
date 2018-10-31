@@ -66,7 +66,7 @@ class Edit extends CI_Controller
      *
      * @return  void
      */
-    public function _remap($id = NULL)
+    public function _remap($id)
     {
         // prevent non logged users
         if (!isset($_SESSION['user_id']))
@@ -90,6 +90,7 @@ class Edit extends CI_Controller
         if (!$_SESSION['is_admin']
             || $id < 1)
         {
+            session_write_close();
             show_404(NULL, FALSE);
         }
 
@@ -131,88 +132,94 @@ class Edit extends CI_Controller
     }
 
     /**
-     * Validate user inputs
+     * Validate username and email
      *
-     * @param   array   user info
+     * @param   int     user id
      *
      * @return  bool
      */
-    private function _validate($user)
+    private function _validate_user($id)
+    {
+        $this->load->model('admin/users/users');
+
+        $user = $this->user->get($id);
+
+        if ($this->finputs['username'] !== $user['username']
+            && $this->users->is_username_exists($this->finputs['username']))
+        {
+            $this->errors[] = 'Username is already in use!';
+        }
+
+        if ($this->finputs['email'] !== $user['email']
+            && $this->users->is_email_exists($this->finputs['email']))
+        {
+            $this->errors[] = 'E-mail address is already in use!';
+        }
+
+        return !$this->errors;
+    }
+
+    /**
+     * Validate user inputs
+     *
+     * @return  bool
+     */
+    private function _validate()
     {
         $this->errors = array();
         $this->finputs = array();
 
-        foreach (array('username', 'email') as $field)
+        foreach (array('username', 'email', 'status') as $field)
         {
             $this->finputs[$field] = form_input($field);
 
-            if (!$this->finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
 
-        foreach (array('password', 'password-confirm', 'status') as $field)
+        foreach (array('password', 'password-confirm') as $field)
         {
             $this->finputs[$field] = form_input($field);
         }
 
         if (preg_match('#[^a-zA-Z0-9]#', $this->finputs['username'])
-            || !preg_match('#[^0-9]#', $this->finputs['username']))
+            || !preg_match('#[a-zA-Z]#', $this->finputs['username']))
         {
-            $this->errors[] = 'Username does not appear to be valid. Allowed characters [a-zA-Z0-9]';
+            $this->errors[] = 'Username does not appear to be valid!';
         }
-        elseif (strlen($this->finputs['username']) < 4
+        elseif (strlen($this->finputs['username']) < 3
             || strlen($this->finputs['username']) > 32)
         {
-            $this->errors[] = 'Username must be between 4 and 32 characters';
-        }
-        elseif ($this->finputs['username'] !== $user['username'])
-        {
-            $this->load->model('admin/users/users');
-
-            if ($this->users->is_username_exists($this->finputs['username']))
-            {
-                $this->errors[] = 'Username is already registered';
-            }
+            $this->errors[] = 'Username must be between 3 and 32 characters!';
         }
 
-        if ($this->finputs['password'])
+        if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            if (mb_strlen($this->finputs['password']) < 4
-                || mb_strlen($this->finputs['password']) > 64)
-            {
-                $this->errors[] = 'Password must be between 4 and 64 characters';
-            }
-
-            if ($this->finputs['password'] !== $this->finputs['password-confirm'])
-            {
-                $this->errors[] = 'Password confirmation does not match the password';
-            }
+            $this->errors[] = 'Email address does not apear to be valid!';
+        }
+        elseif(mb_strlen($this->finputs['email']) > 254)
+        {
+            $this->errors[] = 'Email address must be lessthan 255 characters!';
         }
 
-        if (mb_strlen($this->finputs['email']) > 254
-            || !filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
+        if ($this->finputs['password'] !== ''
+            && (mb_strlen($this->finputs['password']) < 4
+                || mb_strlen($this->finputs['password']) > 64))
         {
-            $this->errors[] = 'E-mail address does not appear to be valid';
+            $this->errors[] = 'Password must be between 4 and 64 characters!';
         }
-        elseif ($this->finputs['email'] !== $user['email'])
-        {
-            if (!isset($this->users))
-            {
-                $this->load->model('admin/users/users');
-            }
 
-            if ($this->users->is_email_exists($this->finputs['email']))
-            {
-                $this->errors[] = 'E-mail address is already registered';
-            }
+        if ($this->finputs['password'] !== $this->finputs['password-confirm'])
+        {
+            $this->errors[] = 'Password confirmation does not match the password!';
         }
 
         if (!preg_match('#^[0-1]$#', $this->finputs['status']))
         {
-            $this->errors[] = 'Status does not appear to be valid';
+            $this->errors[] = 'Status does not appear to be valid!';
         }
 
         return !$this->errors;
@@ -230,15 +237,14 @@ class Edit extends CI_Controller
     {
         $this->load->model('admin/users/user', NULL, TRUE);
 
-        $user = $this->user->get($id);
-
-        if (!$user)
+        if (!$this->user->exists($id))
         {
             $fdata['status'] = 0;
             return;
         }
 
-        if (!$this->_validate($user))
+        if (!$this->_validate()
+            || !$this->_validate_user($id))
         {
             $this->session->mark_as_flash('csrf-aue');
             session_write_close();
@@ -252,15 +258,15 @@ class Edit extends CI_Controller
         $this->finputs['email'] = mb_strtolower($this->finputs['email']);
         $this->finputs['status'] = (int)$this->finputs['status'];
 
-        if ($_SESSION['user_id'] === $user['id'])
+        if ((int)$_SESSION['user_id'] === $id)
         {
             $this->finputs['status'] = 1;
         }
 
-        $this->user->update($user['id'], $this->finputs);
+        $this->user->update($id, $this->finputs);
 
         $fdata['data'] = array(
-            'Congratulations! user has been successfully updated!',
+            'Congratulations! user has been successfully updated.',
             'admin/users'
         );
     }

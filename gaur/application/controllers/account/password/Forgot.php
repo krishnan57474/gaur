@@ -107,16 +107,19 @@ class Forgot extends CI_Controller
 
         $this->finputs['email'] = form_input('email');
 
-        if (!$this->finputs['email'])
+        if ($this->finputs['email'] === '')
         {
-            $this->errors[] = 'Please enter your e-mail address';
+            $this->errors[] = 'Please enter your e-mail address!';
             return FALSE;
         }
 
-        if (mb_strlen($this->finputs['email']) > 254
-            || !filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
+        if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'E-mail address does not appear to be valid';
+            $this->errors[] = 'Email address does not apear to be valid!';
+        }
+        elseif(mb_strlen($this->finputs['email']) > 254)
+        {
+            $this->errors[] = 'Email address must be lessthan 255 characters!';
         }
         else
         {
@@ -124,7 +127,7 @@ class Forgot extends CI_Controller
 
             if (!$this->users->is_active($this->finputs['email']))
             {
-                $this->errors[] = 'Unable to sent confirmation to the provided e-mail address';
+                $this->errors[] = 'Unable to sent confirmation to the provided e-mail address!';
             }
         }
 
@@ -169,13 +172,14 @@ class Forgot extends CI_Controller
             'expire'  => date('Y-m-d H:i:s', strtotime('1 hour'))
         ));
 
+        $data = array();
+        $data['to']         = $this->finputs['email'];
+        $data['subject']    = 'Password reset request';
+        $data['username']   = $user['username'];
+        $data['token']      = $token;
+
         // send password reset
-        $status = $this->mail->forgot_password(array(
-            'subject'  => 'Password reset request',
-            'username' => $user['username'],
-            'email'    => $this->finputs['email'],
-            'token'    => $token
-        ));
+        $status = $this->mail->send('email/default/account/password/forgot', $data);
 
         if ($status)
         {
