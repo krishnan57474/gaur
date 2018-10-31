@@ -89,7 +89,7 @@ class Activation extends CI_Controller
         if (!$reset)
         {
             $fdata['errors'] = array(
-                'Opps! verification failed. Invalid verification code or expired verification code.'
+                'Oops! verification failed. Invalid verification code or expired verification code.'
             );
 
             return;
@@ -105,7 +105,10 @@ class Activation extends CI_Controller
         $this->session->mark_as_flash('password_create');
         session_write_close();
 
-        $fdata['data'] = 'Congratulations! your email address has been successfully verified.';
+        $fdata['data'] = array(
+            'Congratulations! your email address has been successfully verified.',
+            'account/password/create'
+        );
     }
 
     /**
@@ -120,7 +123,7 @@ class Activation extends CI_Controller
         $fdata = array();
         $fdata['status'] = 0;
 
-        if (!preg_match('#[^a-zA-Z0-9]#', $token)
+        if (!preg_match('#[^a-fA-F0-9]#', $token)
             && strlen($token) === 32)
         {
             $fdata['status'] = 1;
