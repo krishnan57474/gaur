@@ -3,13 +3,14 @@
     position: relative;
     display: block;
     padding: 0.815em 40px;
-    height: 50px;
+    height: 24px;
     overflow: hidden;
     line-height: 26px;
     text-align: center;
     cursor: pointer;
     color: #BBB1A3;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    box-sizing: content-box;
 }
 
 .sm-title {
@@ -22,21 +23,19 @@
     transform: none;
     -webkit-transition: all 0.25s;
     transition: all 0.25s;
-    font: italic bold 1.111em/10px Verdana, Arial, Helvetica, sans-serif;
+    font: italic bold 18px/24px Verdana, Arial, Helvetica, sans-serif;
     color: #3092C0;
-    padding-top: 10px;
 }
 
 #sm-state:checked ~ .sm-btn .sm-title {
     opacity: 0;
     -webkit-transform: translate3d(0, -50%, 0);
     transform: translate3d(0, -50%, 0);
-    display: none;
 }
 
 .sm-icon,
-.sm-icon:before,
-.sm-icon:after {
+.sm-icon::before,
+.sm-icon::after {
     position: absolute;
     top: 50%;
     left: 5px;
@@ -47,13 +46,13 @@
     transition: all 0.25s;
 }
 
-.sm-icon:before {
+.sm-icon::before {
     content: "";
     top: -7px;
     left: 0;
 }
 
-.sm-icon:after {
+.sm-icon::after {
     content: "";
     top: 7px;
     left: 0;
@@ -64,13 +63,13 @@
     background: transparent;
 }
 
-#sm-state:checked ~ .sm-btn .sm-icon:before {
+#sm-state:checked ~ .sm-btn .sm-icon::before {
     top: 0;
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
 
-#sm-state:checked ~ .sm-btn .sm-icon:after {
+#sm-state:checked ~ .sm-btn .sm-icon::after {
     top: 0;
     -webkit-transform: rotate(45deg);
     transform: rotate(45deg);
@@ -95,7 +94,7 @@
     display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
     .sm-btn {
         position: absolute;
         top: -99999px;
@@ -261,7 +260,7 @@
     border-left: 40px solid transparent;
 }
 
-@media (min-width:768px) {
+@media (min-width: 576px) {
     .sm ul {
         position: absolute;
         width: 12em;
