@@ -1,44 +1,13 @@
-(function ($) {
+(function () {
     "use strict";
 
-    function segment(url) {
-        return url.replace(/\/$/, "").split("/");
-    }
-
-    function compareSegment(base, current) {
-        var i = -1,
-        l = current.length,
-        match = false;
-
-        while (++i < l) {
-            if (base[i] === current[i] && (i + 1) >= l) {
-                match = true;
-                break;
-            }
-        }
-
-        return match;
-    }
-
-    function setActiveMenu() {
-        var base = segment(location.href.replace(document.baseURI, "")),
-        current;
-
-        $(".sm > li > a").each(function (k, elm) {
-            current = $(elm).attr("href");
-
-            if (current === undefined) {
-                return;
-            }
-
-            if (compareSegment(base, segment(current))) {
-                $(elm).addClass("current");
-                return false;
-            }
+    function forEach(obj, callback) {
+        Object.keys(obj).forEach(function (k) {
+            callback(obj[k], k, obj);
         });
     }
 
-    function importFile(fileSrc, callback) {
+    function importFile(fileSrc, integrity, callback) {
         var script = document.createElement("script");
 
         script.onload = function () {
@@ -49,6 +18,12 @@
             }
         };
 
+        if (integrity) {
+            script.integrity = integrity;
+            script.crossOrigin = "anonymous";
+        }
+
+        script.async = true;
         script.src = fileSrc;
         document.head.appendChild(script);
     }
@@ -63,39 +38,43 @@
         }
     }
 
-    function loadCss() {
-        var firstChild = $(document.head).children().first();
-
-        $(".j-lcss").each(function (c, elm) {
-            firstChild.before($("<link rel='stylesheet' href='" + elm.src + "'>"));
-        });
-    }
-
     function loadJs(scripts) {
-        importFile(scripts.shift().src, function () {
+        var elm = scripts.pop();
+
+        importFile(elm.getAttribute("data-src"), elm.getAttribute("data-integrity"), function () {
             scripts.length ? loadJs(scripts) : asyncQueue();
         });
     }
 
-    function loadMenu() {
-        importFile("js/smartmenus.js", function () {
-            $(".sm").smartmenus();
+    function loadCss() {
+        var head = document.head,
+        firstChild = head.childNodes[0],
+        link;
+
+        forEach(document.querySelectorAll(".j-acss"), function (elm) {
+            link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = elm.getAttribute("data-src");
+
+            if (elm.hasAttribute("data-integrity")) {
+                link.integrity = elm.getAttribute("data-integrity");
+                link.crossOrigin = "anonymous";
+            }
+
+            firstChild = firstChild || head.childNodes[0];
+            head.insertBefore(link, firstChild);
         });
     }
 
     function init() {
-        $ = jQuery;
-
         loadCss();
-        setActiveMenu();
-        loadMenu();
 
-        if ($(".j-ljs").length) {
-            loadJs($(".j-ljs").toArray());
+        if (document.querySelector(".j-ajs")) {
+            loadJs([].slice.call(document.querySelectorAll(".j-ajs")).reverse());
         } else {
             asyncQueue();
         }
     }
 
-    importFile("https://code.jquery.com/jquery-3.3.1.min.js", init);
+    init();
 }());
