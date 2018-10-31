@@ -52,7 +52,7 @@ class View extends CI_Controller
      *
      * @return  void
      */
-    public function _remap($id = NULL)
+    public function _remap($id)
     {
         // prevent non logged users
         if (!isset($_SESSION['user_id']))
@@ -76,6 +76,7 @@ class View extends CI_Controller
         if (!$_SESSION['is_admin']
             || $id < 1)
         {
+            session_write_close();
             show_404(NULL, FALSE);
         }
 
@@ -139,12 +140,14 @@ class View extends CI_Controller
         $this->load->library('mail');
         $this->load->helper('xhtml');
 
+        $data = array();
+        $data['to']         = $user['email'];
+        $data['subject']    = 'Activate your account';
+        $data['username']   = $user['username'];
+        $data['token']      = $reset['token'];
+
         // send email verification
-        $status = $this->mail->account_activation(array(
-            'username' => $user['username'],
-            'email'    => $user['email'],
-            'token'    => $reset['token']
-        ));
+        $status = $this->mail->send('email/default/account/email/activation', $data);
 
         if ($status)
         {
