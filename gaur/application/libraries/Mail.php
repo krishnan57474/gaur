@@ -60,85 +60,28 @@ class Mail
     public function __construct()
     {
         $this->ci = &get_instance();
+
         $this->ci->load->config('email');
+        $this->ci->load->library('email');
     }
 
     /**
      * Send email
      *
+     * @param   string  view path
      * @param   array   email data
      *
      * @return  bool
      */
-    private function send($data)
+    public function send($path, $data)
     {
-        $this->ci->load->library('email');
+        $msg = $this->ci->load->view($path, $data, TRUE);
 
         $this->ci->email->from('no-reply@example.com', config_item('site_name'));
         $this->ci->email->to($data['to']);
         $this->ci->email->subject($data['subject']);
-        $this->ci->email->message($data['message']);
+        $this->ci->email->message($msg);
 
         return $this->ci->email->send();
-    }
-
-    /**
-     * Send account activaton email
-     *
-     * @param   array   email data
-     *
-     * @return  bool
-     */
-    public function account_activation($edata)
-    {
-        $msg = $this->ci->load->view('email/default/account/email/activation', $edata, TRUE);
-
-        $data = array(
-            'to'      => $edata['email'],
-            'subject' => $edata['subject'],
-            'message' => $msg
-        );
-
-        return $this->send($data);
-    }
-
-    /**
-     * Send forgot password email
-     *
-     * @param   array   email data
-     *
-     * @return  bool
-     */
-    public function forgot_password($edata)
-    {
-        $msg = $this->ci->load->view('email/default/account/password/forgot', $edata, TRUE);
-
-        $data = array(
-            'to'      => $edata['email'],
-            'subject' => $edata['subject'],
-            'message' => $msg
-        );
-
-        return $this->send($data);
-    }
-
-    /**
-     * Send contact enquiry email
-     *
-     * @param   array   email data
-     *
-     * @return  bool
-     */
-    public function contact($edata)
-    {
-        $msg = $this->ci->load->view('email/default/contact', $edata, TRUE);
-
-        $data = array(
-            'to'      => $edata['email'],
-            'subject' => $edata['subject'],
-            'message' => $msg
-        );
-
-        return $this->send($data);
     }
 }
