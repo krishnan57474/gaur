@@ -40,7 +40,7 @@ $this->load->view('email/default/common/head');
 
 ?>
 <tr>
-<td style="background-color:#f6f6f7;padding:30px 20px 10px">
+<td style="background-color:#f6f6f7;padding:20px 20px 10px">
 <p style="color:#465059;font-size:24px;font-weight:bold;text-align:center;margin:0">
 Password Reset
 </p>
@@ -56,7 +56,8 @@ Password reset request
 <tr>
 <td style="background-color:#fff;padding:20px">
 <p style="font-size:14px;color:#555;line-height: 22px;margin:0">
-Hi <?php echo xhentities($username); ?>,<br /> <?php echo config_item('site_name'); ?> recently received a request for a password reset. To change your account password, you'll need to reset your password.
+Hi <?php echo xhentities($username); ?>,<br />
+<?php echo config_item('site_name'); ?> recently received a request for a password reset. To change your account password, you'll need to reset your password.
 </p>
 </td>
 </tr>

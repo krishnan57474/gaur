@@ -40,7 +40,7 @@ $this->load->view('email/default/common/head');
 
 ?>
 <tr>
-<td style="background-color:#f6f6f7;padding:30px 20px 20px">
+<td style="background-color:#f6f6f7;padding:20px">
 <p style="color:#465059;font-size:24px;font-weight:bold;text-align:center;margin:0">
 Welcome to <?php echo config_item('site_name'); ?>
 </p>
@@ -49,7 +49,9 @@ Welcome to <?php echo config_item('site_name'); ?>
 <tr>
 <td style="background-color:#fff;padding:20px">
 <p style="font-size:14px;color:#555;text-align:center;line-height: 22px;margin:0">
-Hi <?php echo xhentities($username); ?>,<br /> You are ready to setup your new account.<br /> To setup your account, you'll need to activate your account.
+Hi <?php echo xhentities($username); ?>,<br />
+You are ready to setup your new account.<br />
+To setup your account, you'll need to activate your account.
 </p>
 </td>
 </tr>
