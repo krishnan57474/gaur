@@ -42,7 +42,7 @@ defined('BASEPATH') OR exit;
 <head>
     <!-- meta for browsers -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <base href="<?php echo config_item('base_url'); ?>">
