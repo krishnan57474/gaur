@@ -21,10 +21,6 @@
         return getJitem.apply(undefined, arguments);
     };
 
-    function toNumber(val) {
-        return Number(val);
-    }
-
     function forEach(obj, callback) {
         Object.keys(obj).forEach(function (k) {
             callback(obj[k], k, obj);
@@ -38,7 +34,7 @@
             data: {
                 "j-af": "r",
                 action: "changestatus",
-                id: elm.closest("tr").data("id")
+                id: elm.closest("tr").attr("data-id")
             },
             success: function (status) {
                 if (!status) {
@@ -47,19 +43,19 @@
 
                 status = !elm.hasClass("text-success");
 
-                elm[status ? "addClass" : "removeClass"]("glyphicon-ok text-success");
-                elm[!status ? "addClass" : "removeClass"]("glyphicon-remove text-danger");
+                elm[status ? "addClass" : "removeClass"]("oi-check text-success");
+                elm[!status ? "addClass" : "removeClass"]("oi-x text-danger");
             },
             load: function () {
-                getJitem("confirm").addClass("hide");
+                getJitem("confirm").addClass("d-none");
             }
         });
     }
 
     function actionHandler() {
         $(".btn", getJitem("confirm")).on("click", function () {
-            if ($(this).text() === "Cancel") {
-                getJitem("confirm").addClass("hide");
+            if ($(this).attr("data-action") === "cancel") {
+                getJitem("confirm").addClass("d-none");
             } else {
                 changeStatus(configs.action);
             }
@@ -70,15 +66,15 @@
 
     function statusHandler() {
         getJitem("items").on("click", function (e) {
-            if (gform.lock) {
+            if (configs.lock) {
                 return;
             }
 
             var elm = e.target;
 
-            if (elm.tagName === "SPAN" && $(elm).data("item") === "status") {
+            if (elm.tagName === "BUTTON" && $(elm).attr("data-item") === "status") {
                 configs.action = $(elm);
-                getJitem("confirm").removeClass("hide");
+                getJitem("confirm").removeClass("d-none");
                 $("html, body").animate({ scrollTop: getJitem("confirm").offset().top });
             }
         });
@@ -109,18 +105,24 @@
             }
 
             default: {
-                configs.currentPage = toNumber(elm.text());
+                configs.currentPage = Number(elm.text());
             }
         }
 
-        if (configs.currentPage >= 1 && configs.currentPage <= configs.totalPage) {
-            getItems();
+        if (configs.currentPage < 1) {
+            configs.currentPage = 1;
         }
+
+        if (configs.currentPage > configs.totalPage) {
+            configs.currentPage = configs.totalPage;
+        }
+
+        getItems();
     }
 
     function paginationHandler() {
         getJitem("pagination").on("click", function (e) {
-            if (gform.lock) {
+            if (configs.lock) {
                 return;
             }
 
@@ -132,51 +134,53 @@
         });
     }
 
-    function buildPaginationFrg(total, current) {
+    function buildPaginationFrg(totalPage, currentPage) {
         var frg = "",
-        listFrg = "<li><span class='link'>#</span></li>",
-        paginationStart = current - 2,
+        listFrg = "<li class='page-item mb-2'><span class='page-link'>#</span></li>",
+        sideLinksCount = 2,
+        totalLinks = sideLinksCount * 2,
+        paginationStart = 1,
         paginationEnd;
 
-        if (paginationStart < 1) {
-            paginationStart = 1;
+        if (currentPage > sideLinksCount) {
+            paginationStart = currentPage - sideLinksCount;
         }
 
-        paginationEnd = (paginationStart + 4);
+        paginationEnd = paginationStart + totalLinks;
 
-        if (paginationEnd > total) {
-            paginationStart -= paginationEnd - total;
+        if (paginationEnd > totalPage) {
+            paginationStart -= paginationEnd - totalPage;
 
             if (paginationStart < 1) {
                 paginationStart = 1;
             }
 
-            paginationEnd = (total > 1) ? total : 0;
+            paginationEnd = totalPage;
         }
 
-        if (current > 2) {
+        if (currentPage > 2) {
             frg += listFrg.replace("#", "Start");
         }
 
-        if (current > 1) {
+        if (currentPage > 1) {
             frg += listFrg.replace("#", "Previous");
         }
 
         paginationStart -= 1;
 
         while (++paginationStart <= paginationEnd) {
-            if (paginationStart !== current) {
+            if (paginationStart !== currentPage) {
                 frg += listFrg.replace("#", paginationStart);
             } else {
-                frg += listFrg.replace("<li>", "<li class='active'>").replace("#", paginationStart);
+                frg += listFrg.replace("#", paginationStart).replace("item", "item active");
             }
         }
 
-        if (current < total) {
+        if (currentPage < totalPage) {
             frg += listFrg.replace("#", "Next");
         }
 
-        if (total > 5 && (current + 1) < total) {
+        if (totalPage > (totalLinks + 1) && (currentPage + 1) < totalPage) {
             frg += listFrg.replace("#", "End");
         }
 
@@ -190,29 +194,27 @@
             getJitem("pagination").html(buildPaginationFrg(configs.totalPage, configs.currentPage));
         }
 
-        getJitem("footer").removeClass("hide");
+        getJitem("footer").removeClass("d-none");
     }
 
     function getPagination() {
-        gform.lock = false;
-
         gform.submit({
             data: {
                 "j-af": "r",
                 action: "gettotal"
             },
-            success: function (data) {
-                if (!data) {
+            success: function (total) {
+                if (!total) {
                     return;
                 }
 
-                configs.totalItems = toNumber(data);
-                $("span", getJitem("total")).text(configs.totalItems);
+                configs.totalItems = Number(total);
+                getJitem("total").text(configs.totalItems);
 
                 configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
                 buildPagination();
             }
-        });
+        }, true);
     }
 
 
@@ -231,20 +233,24 @@
             sortby:     configs.sortBy
         };
 
+        configs.lock = true;
+
         gform.submit({
             data: uinputs,
-            success: function (data) {
-                if (!data) {
-                    getJitem("noitems").removeClass("hide");
+            success: function (rdata) {
+                if (!rdata) {
+                    getJitem("noitems").removeClass("d-none");
                     return;
                 }
 
-                getJitem("items").html(data).removeClass("hide");
+                getJitem("items").html(rdata).removeClass("d-none");
                 configs.totalPage ? buildPagination() : getPagination();
             },
             load: function () {
+                configs.lock = false;
+
                 ["loading", "noitems", "items", "footer"].forEach(function (v) {
-                    getJitem(v).addClass("hide");
+                    getJitem(v).addClass("d-none");
                 });
             }
         });
@@ -253,19 +259,17 @@
 
     // filters
     function clearOrder() {
-        getJitem("order").children().each(function (k, elm) {
-            $(elm).children().removeClass("glyphicon-sort-by-attributes" + (toNumber($(elm).data("sort")) ? "-alt" : ""));
-        });
+        $("span", getJitem("order")).removeClass("oi-sort-ascending oi-sort-descending");
     }
 
     function applyOrder(elm) {
         elm = elm || $("[data-id='" + configs.orderBy + "']", getJitem("order"));
-        elm.data("sort", configs.sortBy).children().addClass("glyphicon-sort-by-attributes" + (configs.sortBy ? "-alt" : ""));
+        elm.children().addClass("oi-sort-" + (configs.sortBy ? "descending" : "ascending"));
     }
 
     function orderFilter(elm) {
-        configs.sortBy = (configs.orderBy === elm.data("id")) ? toNumber(!configs.sortBy) : 0;
-        configs.orderBy = elm.data("id");
+        configs.sortBy = (configs.orderBy === elm.attr("data-id")) ? Number(!configs.sortBy) : 0;
+        configs.orderBy = elm.attr("data-id");
         configs.currentPage = 1;
 
         clearOrder();
@@ -279,11 +283,15 @@
 
     function orderHandler() {
         getJitem("order").on("click", function (e) {
-            if (gform.lock) {
+            if (configs.lock) {
                 return;
             }
 
             var elm = e.target;
+
+            if (elm.tagName === "SPAN") {
+                elm = elm.parentNode;
+            }
 
             if (elm.tagName === "TH" && $(elm).hasClass("link")) {
                 orderFilter($(elm));
@@ -293,11 +301,12 @@
 
     function listCountHandler() {
         getJitem("listcount").on("change", function () {
-            if (gform.lock) {
+            if (configs.lock) {
+                getJitem("listcount").val(configs.listCount);
                 return;
             }
 
-            configs.listCount = toNumber(this.value);
+            configs.listCount = Number($(this).val());
             configs.currentPage = 1;
             configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
             getItems();
@@ -306,62 +315,82 @@
 
     function resetSearch() {
         getJitem("filterby").val("");
-        getJitem("filterval").val("");
+        getJitem("filterby").trigger("change");
         getJitem("searchby").val("");
         getJitem("searchval").val("");
         getJitem("orderby").val("");
         getJitem("sortby").val("");
     }
 
+    function isValidFilter() {
+        var isValid = true;
+
+        getJitem("filterby").each(function (k, elm) {
+            if ($(elm).val() && !getJitem("filterval").eq(k).val()) {
+                getJitem("filterval").eq(k).addClass("is-invalid");
+                isValid = false;
+                return false;
+            }
+        });
+
+        return isValid;
+    }
+
     function isValidSearch() {
-        if (getJitem("filterby").val() && !getJitem("filterval").val()) {
-            getJitem("filterval").parent().addClass("has-error");
-            return false;
-        }
+        var isValid = true;
 
-        if (getJitem("searchby").val() && !getJitem("searchval").val()) {
-            getJitem("searchval").parent().addClass("has-error");
-            return false;
-        }
+        getJitem("searchval").each(function (k, elm) {
+            if ($(elm).val() && !getJitem("searchby").eq(k).val()) {
+                getJitem("searchby").eq(k).addClass("is-invalid");
+                isValid = false;
+                return false;
+            }
+        });
 
-        if (getJitem("searchval").val() && !getJitem("searchby").val()) {
-            getJitem("searchby").parent().addClass("has-error");
-            return false;
-        }
+        return isValid;
+    }
+
+    function isValidOrder() {
+        var isValid = true;
 
         if (getJitem("orderby").val() && !getJitem("sortby").val()) {
-            getJitem("sortby").parent().addClass("has-error");
-            return false;
+            getJitem("sortby").addClass("is-invalid");
+            isValid = false;
+        } else if (getJitem("sortby").val() && !getJitem("orderby").val()) {
+            getJitem("orderby").addClass("is-invalid");
+            isValid = false;
         }
 
-        if (getJitem("sortby").val() && !getJitem("orderby").val()) {
-            getJitem("orderby").parent().addClass("has-error");
-            return false;
-        }
+        return isValid;
+    }
 
-        return true;
+    function getValues(elms) {
+        var val = elms.map(function () {
+            return $(this).val();
+        }).toArray();
+
+        return val;
     }
 
     function searchFilter(elm) {
-        var reset = $(elm).hasClass("btn-danger");
-
         // reset validation
-        getJitem("filterval").parent().removeClass("has-error");
-        getJitem("searchby").parent().removeClass("has-error");
-        getJitem("sortby").parent().removeClass("has-error");
+        getJitem("filterval").removeClass("is-invalid");
+        getJitem("searchby").removeClass("is-invalid");
+        getJitem("sortby").removeClass("is-invalid");
+        getJitem("orderby").removeClass("is-invalid");
 
-        if (reset) {
+        if (elm.attr("data-action") === "reset") {
             resetSearch();
-        } else if (!isValidSearch()) {
+        } else if (!isValidFilter() || !isValidSearch() || !isValidOrder()) {
             return;
         }
 
-        configs.filterBy = getJitem("filterby").val();
-        configs.filterVal = getJitem("filterval").val();
-        configs.searchBy = getJitem("searchby").val();
-        configs.searchVal = getJitem("searchval").val();
+        configs.filterBy = getValues(getJitem("filterby"));
+        configs.filterVal = getValues(getJitem("filterval"));
+        configs.searchBy = getValues(getJitem("searchby"));
+        configs.searchVal = getValues(getJitem("searchval"));
         configs.orderBy = getJitem("orderby").val();
-        configs.sortBy = toNumber(getJitem("sortby").val());
+        configs.sortBy = Number(getJitem("sortby").val());
         configs.currentPage = 1;
         configs.totalPage = 0;
 
@@ -375,48 +404,56 @@
     }
 
     function searchHandler() {
-        getJitem("filter").on("click", function () {
-            getJitem("ufilters").toggleClass("hide");
-        });
-
         $(".btn", getJitem("ufilters")).on("click", function () {
-            if (gform.lock) {
+            if (configs.lock) {
                 return;
             }
 
-            searchFilter(this);
+            searchFilter($(this));
         });
     }
 
     function filterHandler() {
         getJitem("filterby").on("change", function () {
-            getJitem("filterval").val("");
-            $("[data-item]", getJitem("filterval")).addClass("hide");
-            $("[data-item='" + getJitem("filterby").val() + "']", getJitem("filterval")).removeClass("hide");
+            var index = getJitem("filterby").index(this),
+            fbyElm = getJitem("filterby").eq(index),
+            fvalElm = getJitem("filterval").eq(index);
+
+            fvalElm.children().addClass("d-none");
+
+            if (fbyElm.val()) {
+                $("[data-item='" + fbyElm.val() + "']", fvalElm).removeClass("d-none").first().prop("selected", true);
+            } else {
+                fvalElm.children().first().removeClass("d-none").prop("selected", true);
+            }
+        });
+    }
+
+    function filterToggleHandler() {
+        getJitem("filter").on("click", function () {
+            getJitem("ufilters").toggleClass("d-none");
         });
     }
 
 
     // init
     function applyFilter() {
-        if (configs.filterBy) {
-            getJitem("filterby").val(configs.filterBy);
-
-            $("[data-item='" + configs.filterBy + "']", getJitem("filterval")).removeClass("hide").each(function (k ,elm) {
-                if (elm.value === configs.filterVal) {
-                    elm.selected = true;
-                    return false;
-                }
+        if (configs.filterBy.length) {
+            configs.filterBy.forEach(function (filterBy, index) {
+                getJitem("filterby").eq(index).val(filterBy);
+                getJitem("filterval").eq(index).children().first().addClass("hide").parent().find("[data-item='" + filterBy + "']").removeClass("d-none").filter("[value='" + configs.filterVal[index] + "']").prop("selected", true);
             });
         }
 
-        if (configs.searchBy) {
-            getJitem("searchby").val(configs.searchBy);
-            getJitem("searchval").val(configs.searchVal);
+        if (configs.searchBy.length) {
+            configs.searchBy.forEach(function (searchBy, index) {
+                getJitem("searchby").eq(index).val(searchBy);
+                getJitem("searchval").eq(index).val(configs.searchVal[index]);
+            });
         }
 
-        if (configs.filterBy || configs.searchBy) {
-            getJitem("ufilters").removeClass("hide");
+        if (configs.filterBy.length || configs.searchBy.length) {
+            getJitem("ufilters").removeClass("d-none");
         }
 
         if (configs.orderBy) {
@@ -433,10 +470,10 @@
         gform = new GForm();
         jar = $("#j-ar");
         configs = {
-            filterBy:       "",
-            filterVal:      "",
-            searchBy:       "",
-            searchVal:      "",
+            filterBy:       [],
+            filterVal:      [],
+            searchBy:       [],
+            searchVal:      [],
             currentPage:    1,
             listCount:      5,
             orderBy:        "",
@@ -451,12 +488,9 @@
             });
         }
 
-        gform.init({
-            hideErrors: false
-        });
-
         getItems();
         applyFilter();
+        filterToggleHandler();
         listCountHandler();
         paginationHandler();
 
@@ -466,15 +500,15 @@
 
         forEach({
             search: function () {
-                searchHandler();
                 filterHandler();
+                searchHandler();
+            },
+            order: function () {
+                orderHandler();
             },
             status: function () {
                 actionHandler();
                 statusHandler();
-            },
-            order: function () {
-                orderHandler();
             }
         }, function (v, k) {
             if (uconfigs.handlers[k]) {
@@ -497,5 +531,5 @@
         return new App();
     }
 
-    window.App = App;
+    window.GApp = App;
 }());
