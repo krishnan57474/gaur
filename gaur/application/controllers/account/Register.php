@@ -96,6 +96,28 @@ class Register extends CI_Controller
     }
 
     /**
+     * Validate username and email
+     *
+     * @return  bool
+     */
+    private function _validate_user()
+    {
+        $this->load->model('users/users', NULL, TRUE);
+
+        if ($this->users->is_username_exists($this->finputs['username']))
+        {
+            $this->errors[] = 'Username is already in use!';
+        }
+
+        if ($this->users->is_email_exists($this->finputs['email']))
+        {
+            $this->errors[] = 'E-mail address is already in use!';
+        }
+
+        return !$this->errors;
+    }
+
+    /**
      * Validate user inputs
      *
      * @return  bool
@@ -109,49 +131,31 @@ class Register extends CI_Controller
         {
             $this->finputs[$field] = form_input($field);
 
-            if (!$this->finputs[$field])
+            if ($this->finputs[$field] === '')
             {
-                $this->errors[] = 'Please fill all required fields';
+                $this->errors[] = 'Please fill all required fields!';
                 return FALSE;
             }
         }
 
         if (preg_match('#[^a-zA-Z0-9]#', $this->finputs['username'])
-            || !preg_match('#[^0-9]#', $this->finputs['username']))
+            || !preg_match('#[a-zA-Z]#', $this->finputs['username']))
         {
-            $this->errors[] = 'Username does not appear to be valid. Allowed characters [a-zA-Z0-9]';
+            $this->errors[] = 'Username does not appear to be valid!';
         }
-        elseif (strlen($this->finputs['username']) < 4
+        elseif (strlen($this->finputs['username']) < 3
             || strlen($this->finputs['username']) > 32)
         {
-            $this->errors[] = 'Username must be between 4 and 32 characters';
-        }
-        else
-        {
-            $this->load->model('users/users', NULL, TRUE);
-
-            if ($this->users->is_username_exists($this->finputs['username']))
-            {
-                $this->errors[] = 'Username is already in use';
-            }
+            $this->errors[] = 'Username must be between 3 and 32 characters!';
         }
 
-        if (mb_strlen($this->finputs['email']) > 254
-            || !filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
+        if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'E-mail address does not appear to be valid';
+            $this->errors[] = 'Email address does not apear to be valid!';
         }
-        else
+        elseif(mb_strlen($this->finputs['email']) > 254)
         {
-            if (!isset($this->users))
-            {
-                $this->load->model('users/users', NULL, TRUE);
-            }
-
-            if ($this->users->is_email_exists($this->finputs['email']))
-            {
-                $this->errors[] = 'E-mail address is already in use';
-            }
+            $this->errors[] = 'Email address must be lessthan 255 characters!';
         }
 
         return !$this->errors;
@@ -166,7 +170,8 @@ class Register extends CI_Controller
      */
     private function _aaction_submit(&$fdata)
     {
-        if (!$this->_validate())
+        if (!$this->_validate()
+            || !$this->_validate_user())
         {
             $this->session->mark_as_flash('csrf-ar');
             session_write_close();
@@ -201,16 +206,17 @@ class Register extends CI_Controller
             'expire'  => '0000-00-00 00:00:00'
         ));
 
+        $data = array();
+        $data['to']         = $this->finputs['email'];
+        $data['subject']    = 'Activate your account';
+        $data['username']   = $this->finputs['username'];
+        $data['token']      = $token;
+
         // send email verification
-        $this->mail->account_activation(array(
-            'subject'  => 'Activate your account',
-            'username' => $this->finputs['username'],
-            'email'    => $this->finputs['email'],
-            'token'    => $token
-        ));
+        $this->mail->send('email/default/account/email/activation', $data);
 
         $fdata['data'] = array(
-            'Congratulations! your new account has been successfully created!',
+            'Congratulations! your new account has been successfully created.',
             'A confirmation has been sent to the provided e-mail address. You will need to follow the instructions in that message in order to gain access to the site.'
         );
     }
