@@ -67,32 +67,6 @@ class User extends CI_Model
     }
 
     /**
-     * Account login
-     *
-     * @param   string  username
-     * @param   string  password
-     *
-     * @return  int
-     */
-    public function login($username, $password)
-    {
-        $qry = 'SELECT `id`, `password`
-                FROM `' . $this->db->dbprefix('users') . '`
-                WHERE `username` = ' . $this->db->escape($username)
-                . ' AND `status` = 1
-                    AND `activation` = 1';
-
-        $user = $this->db->query($qry)->row_array();
-
-        if (!$user || !password_verify($password, $user['password']))
-        {
-            return 0;
-        }
-
-        return $user['id'];
-    }
-
-    /**
      * Activate user account
      *
      * @param   int     user id
