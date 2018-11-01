@@ -151,7 +151,7 @@ class View extends CI_Controller
 
         if ($status)
         {
-            $fdata['data'] = 'Verification email sent successfully';
+            $fdata['data'] = 'Verification email has been sent successfully';
         }
         else
         {

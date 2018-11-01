@@ -117,16 +117,16 @@ class Contact extends CI_Controller
 
         if (mb_strlen($this->finputs['name']) > 20)
         {
-            $this->errors[] = 'Name must be lessthan 21 characters!';
+            $this->errors[] = 'Name must be less than 21 characters!';
         }
 
         if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'Email address does not apear to be valid!';
+            $this->errors[] = 'Email address does not appear to be valid!';
         }
         elseif(mb_strlen($this->finputs['email']) > 254)
         {
-            $this->errors[] = 'Email address must be lessthan 255 characters!';
+            $this->errors[] = 'Email address must be less than 255 characters!';
         }
 
         if (preg_match('#[^0-9]#', $this->finputs['phone']))
@@ -140,7 +140,7 @@ class Contact extends CI_Controller
 
         if (mb_strlen($this->finputs['message']) > 1024)
         {
-            $this->errors[] = 'Message must be lessthan 1025 characters!';
+            $this->errors[] = 'Message must be less than 1025 characters!';
         }
 
         return !$this->errors;

@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit;
 class Users extends CI_Model
 {
     /**
-     * Username existance check
+     * Username existence check
      *
      * @param   string  username
      *
@@ -62,7 +62,7 @@ class Users extends CI_Model
     }
 
     /**
-     * Email address existance check
+     * Email address existence check
      *
      * @param   string  email address
      *

@@ -109,17 +109,17 @@ class Forgot extends CI_Controller
 
         if ($this->finputs['email'] === '')
         {
-            $this->errors[] = 'Please enter your e-mail address!';
+            $this->errors[] = 'Please enter your email address!';
             return FALSE;
         }
 
         if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'Email address does not apear to be valid!';
+            $this->errors[] = 'Email address does not appear to be valid!';
         }
         elseif(mb_strlen($this->finputs['email']) > 254)
         {
-            $this->errors[] = 'Email address must be lessthan 255 characters!';
+            $this->errors[] = 'Email address must be less than 255 characters!';
         }
         else
         {
@@ -127,7 +127,7 @@ class Forgot extends CI_Controller
 
             if (!$this->users->is_active($this->finputs['email']))
             {
-                $this->errors[] = 'Unable to sent confirmation to the provided e-mail address!';
+                $this->errors[] = 'Unable to sent confirmation to the provided email address!';
             }
         }
 
@@ -183,7 +183,7 @@ class Forgot extends CI_Controller
 
         if ($status)
         {
-            $fdata['data'] = 'Congratulations! a password reset has been sent to the provided e-mail address.';
+            $fdata['data'] = 'Congratulations! a password reset has been sent to the provided email address.';
         }
         else
         {

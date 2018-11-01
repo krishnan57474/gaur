@@ -257,7 +257,7 @@ class Fupload
 
             if (!$file_ext || !isset($allowed_filetypes[$file_ext]))
             {
-                $this->upload_error = 'Unable to upload the file ' . $_attach['name'] . '. The filetype you are attempting to upload is not allowed.';
+                $this->upload_error = 'Unable to upload the file ' . $_attach['name'] . '. The file type you are attempting to upload is not allowed.';
                 break;
             }
 
@@ -277,7 +277,7 @@ class Fupload
             // validate file extension
             if (!$mime_ext)
             {
-                $this->upload_error = 'Unable to upload the file ' . $_attach['name'] . '. The filetype you are attempting to upload is not allowed.';
+                $this->upload_error = 'Unable to upload the file ' . $_attach['name'] . '. The file type you are attempting to upload is not allowed.';
                 break;
             }
         }

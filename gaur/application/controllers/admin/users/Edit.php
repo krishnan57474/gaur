@@ -153,7 +153,7 @@ class Edit extends CI_Controller
         if ($this->finputs['email'] !== $user['email']
             && $this->users->is_email_exists($this->finputs['email']))
         {
-            $this->errors[] = 'E-mail address is already in use!';
+            $this->errors[] = 'Email address is already in use!';
         }
 
         return !$this->errors;
@@ -198,11 +198,11 @@ class Edit extends CI_Controller
 
         if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL))
         {
-            $this->errors[] = 'Email address does not apear to be valid!';
+            $this->errors[] = 'Email address does not appear to be valid!';
         }
         elseif(mb_strlen($this->finputs['email']) > 254)
         {
-            $this->errors[] = 'Email address must be lessthan 255 characters!';
+            $this->errors[] = 'Email address must be less than 255 characters!';
         }
 
         if ($this->finputs['password'] !== ''

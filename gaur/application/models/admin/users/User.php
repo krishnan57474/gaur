@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit;
 class User extends CI_Model
 {
     /**
-     * Admin existance check
+     * Admin existence check
      *
      * @param   int     user id
      *
@@ -141,7 +141,7 @@ class User extends CI_Model
     }
 
     /**
-     * User existance check
+     * User existence check
      *
      * @param   int     user id
      *
