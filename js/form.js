@@ -8,7 +8,7 @@
 
     function poverride(key, fnc, args) {
         Form.prototype[key] = fnc;
-        fnc.apply(undefined, args);
+        return fnc.apply(undefined, args);
     }
 
     function getTransitionDuration(elm) {
@@ -87,7 +87,7 @@
         };
 
         init();
-        poverride("progress", progress, arguments);
+        return poverride("progress", progress, arguments);
     };
 
     showErrors = function () {
@@ -185,7 +185,7 @@
         };
 
         init();
-        poverride("showErrors", showErrors, arguments);
+        return poverride("showErrors", showErrors, arguments);
     };
 
     isValidFile = function () {
@@ -219,7 +219,7 @@
             return true;
         };
 
-        poverride("isValidFile", isValidFile, arguments);
+        return poverride("isValidFile", isValidFile, arguments);
     };
 
     submit = function () {
@@ -287,7 +287,7 @@
             });
         };
 
-        poverride("submit", submit, arguments);
+        return poverride("submit", submit, arguments);
     };
 
     function init() {
