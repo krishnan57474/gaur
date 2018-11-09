@@ -253,7 +253,7 @@
                     getJitem(v).addClass("d-none");
                 });
             }
-        });
+        }, true);
     }
 
 
