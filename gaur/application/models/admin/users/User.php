@@ -151,7 +151,7 @@ class User extends CI_Model
     {
         $qry = 'SELECT `id`
                 FROM `' . $this->db->dbprefix('users') . '`
-                WHERE `id` = ' . $this->db->escape($id);
+                WHERE `id` = ' . $id;
 
         return ($this->db->query($qry)->num_rows() ? TRUE : FALSE);
     }
