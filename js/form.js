@@ -167,7 +167,6 @@
             btnElm = getBtnFrg();
             defaultError = ["Invalid request. Please refresh the page or try again later!"];
             errorElm = $(".j-error", jar);
-            errorElmPosition = errorElm.offset() ? errorElm.offset().top : 0;
             transitionDuration = getTransitionDuration(listElm);
             isAutoHideErrors = (errorElm.attr("data-show-errors") === undefined);
 
@@ -181,6 +180,11 @@
 
             errorElm.addClass("d-none").children().remove();
             errorElm.append(getErrorsFrg(errors)).removeClass("d-none");
+
+            if (errorElmPosition === undefined) {
+                errorElmPosition = errorElm.offset() ? errorElm.offset().top : 0;
+            }
+
             $("html, body").animate({ scrollTop: errorElmPosition });
         };
 
