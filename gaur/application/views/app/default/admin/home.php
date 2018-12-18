@@ -136,7 +136,6 @@ $this->load->view('app/default/common/head_top');
         function processQueue() {
             if (callbacksQueue.length) {
                 setTimeout(function () {
-                    gform.lock = false;
                     callbacksQueue.pop()();
                 }, 1000);
             } else {
