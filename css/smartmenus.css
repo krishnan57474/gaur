@@ -108,7 +108,7 @@
 .sm {
     box-sizing: border-box;
     position: relative;
-    z-index: 9999;
+    z-index: 1;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
