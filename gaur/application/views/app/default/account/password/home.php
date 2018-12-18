@@ -72,7 +72,7 @@ $this->load->view('app/default/common/head_top');
                     <div class="card-header">Change password</div>
                     <div id="j-ar" class="card-body">
                         <ul class="list-unstyled j-error d-none"></ul>
-                        <p class="alert alert-success j-success m-auto d-none"></p>
+                        <p class="alert alert-success j-success mx-auto d-none"></p>
 
                         <form method="post" onsubmit="return false">
                             <div class="form-group">

@@ -68,7 +68,7 @@ $this->load->view('app/default/common/head_top');
                     <li class="breadcrumb-item active">Edit</li>
                 </ol>
 
-                <div id="j-ar" class="sblock m-auto">
+                <div id="j-ar" class="sblock mx-auto">
                     <ul class="list-unstyled j-error d-none"></ul>
                     <p class="alert alert-success j-success d-none"></p>
 

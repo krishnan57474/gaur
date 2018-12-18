@@ -61,7 +61,7 @@ $this->load->view('app/default/common/head_top');
     <main class="container">
         <div class="row">
             <div class="col-sm-12">
-                <div id="j-ar" class="sblock m-auto">
+                <div id="j-ar" class="sblock mx-auto">
                     <h1 class="text-center">Login</h1>
 
                     <ul class="list-unstyled j-error d-none"></ul>

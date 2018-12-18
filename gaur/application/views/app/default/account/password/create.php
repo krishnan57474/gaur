@@ -61,7 +61,7 @@ $this->load->view('app/default/common/head_top');
     <main class="container">
         <div class="row">
             <div class="col-sm-12">
-                <div id="j-ar" class="sblock m-auto">
+                <div id="j-ar" class="sblock mx-auto">
                     <h1 class="text-center">Create Password</h1>
 
                     <p class="alert alert-info j-info">Congratulations! your account has been successfully created. Please enter your password below.</p>
