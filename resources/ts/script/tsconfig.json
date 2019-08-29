@@ -1,0 +1,13 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "script.js"
+    },
+    "files": [
+        "window.d.ts",
+        "cache.ts",
+        "css.ts",
+        "js.ts",
+        "init.ts"
+    ]
+}

@@ -1,0 +1,43 @@
+##
+# Specify a default charset
+#
+AddDefaultCharset utf-8
+
+RewriteEngine On
+
+##
+# Redirect from http to https
+#
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+##
+# Redirect from non www to www
+#
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+##
+# Redirect from www to non www
+#
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ %{REQUEST_SCHEME}://%1%{REQUEST_URI} [L,R=301]
+
+##
+# Redirect trailing slashes
+#
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ %1 [L,R=301]
+
+##
+# Remove index.php from url
+#
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+##
+# Prevent directory access
+#
+Options -Indexes

@@ -1,0 +1,29 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "app.js"
+    },
+    "files": [
+        "../jquery/index.d.ts",
+        "window.d.ts",
+        "gform.d.ts",
+        "vars.d.ts",
+        "vars.ts",
+        "jitems.ts",
+        "confirm.ts",
+        "status.ts",
+        "pagination_frg.ts",
+        "pagination.ts",
+        "items.ts",
+        "order.ts",
+        "list_count.ts",
+        "validate_search.ts",
+        "search.ts",
+        "filter.ts",
+        "ufilter.ts",
+        "configs.ts",
+        "application.ts",
+        "gapp.ts",
+        "init.ts"
+    ]
+}

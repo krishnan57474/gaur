@@ -1,0 +1,21 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "form.js"
+    },
+    "files": [
+        "../jquery/index.d.ts",
+        "ajax.d.ts",
+        "validate_file.d.ts",
+        "window.d.ts",
+        "transition.ts",
+        "progress.ts",
+        "errors_frg.ts",
+        "errors.ts",
+        "validate_file.ts",
+        "ajax.ts",
+        "form.ts",
+        "gform.ts",
+        "init.ts"
+    ]
+}
