@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Gaur;
 
 use CodeIgniter\{
-    Controller as CI_Controller,
+    Controller as CIController,
     HTTP\RequestInterface,
     HTTP\ResponseInterface
 };
 use Config\Services;
 use Psr\Log\LoggerInterface;
 
-class Controller extends CI_Controller
+abstract class Controller extends CIController
 {
     /**
      * Helpers to be loaded automatically
@@ -30,6 +30,25 @@ class Controller extends CI_Controller
      * @var \CodeIgniter\Session\Session
      */
     protected $session;
+
+    /**
+     * Default page for this controller
+     *
+     * @return void
+     */
+    abstract protected function index(): void;
+
+    /**
+     * Remap method calls
+     *
+     * @param string ...$args list of arguments
+     *
+     * @return void
+     */
+    public function _remap(string ...$args): void
+    {
+        $this->index(...$args);
+    }
 
     /**
      * Initialize controller
