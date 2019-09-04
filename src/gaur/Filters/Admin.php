@@ -49,7 +49,7 @@ class Admin
         if (in_array($input->post('orderby'), $config['order_fields'], true)) {
             $order = [
                 'order' => $input->post('orderby'),
-                'sort'  => (bool)$input->post('sortby') ? 'DESC' : 'ASC'
+                'sort'  => ($input->post('sortby') ? 'DESC' : 'ASC')
             ];
         }
 
@@ -121,7 +121,11 @@ class Admin
      *
      * @return array|null
      */
-    protected function getFields(array $keys, array $vals, array $afields): ?array
+    protected function getFields(
+        array $keys,
+        array $vals,
+        array $afields
+    ): ?array
     {
         $data = [
             'by'  => [],
@@ -135,6 +139,10 @@ class Admin
             }
         }
 
-        return $data['by'] ? $data : null;
+        if (!$data['by']) {
+            $data = null;
+        }
+
+        return $data;
     }
 }
