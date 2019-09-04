@@ -119,7 +119,7 @@ class FileUpload
             return [];
         }
 
-        // validate file size
+        // Validate file size
         $eindex = $this->validateSize($files, $config['size']);
 
         if ($eindex) {
@@ -128,7 +128,7 @@ class FileUpload
             return [];
         }
 
-        // validate file type
+        // Validate file type
         $eindex = $this->validateType($files, $config['types']);
 
         if ($eindex) {
@@ -139,7 +139,7 @@ class FileUpload
 
         $mfiles = [];
 
-        if (!preg_match('/\/$/', $config['path'])) {
+        if (substr($config['path'], -1) !== '/') {
             $config['path'] .= '/';
         }
 
