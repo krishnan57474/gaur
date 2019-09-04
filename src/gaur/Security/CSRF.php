@@ -70,6 +70,6 @@ class CSRF
             $ptoken = (new Input())->post($_SESSION[$name][0]);
         }
 
-        return $stoken === $ptoken;
+        return ($stoken === $ptoken);
     }
 }

@@ -52,9 +52,8 @@ trait ValidateTrait
 
             $fileExt = strtolower($fileExt);
 
-            // validate file extension
-            if (!in_array($fileExt, $atypes, true)
-            ) {
+            // Validate file extension
+            if (!in_array($fileExt, $atypes, true)) {
                 $eindex = $k + 1;
                 break;
             }
@@ -62,7 +61,7 @@ trait ValidateTrait
             $mimeType = finfo_file($finfo, $v['tmp_name']);
             $mimeExt  = $this->getMimeExtension($mimeType);
 
-            // validate mime type
+            // Validate mime type
             if (!in_array($fileExt, $mimeExt, true)) {
                 $eindex = $k + 1;
                 break;
