@@ -1,0 +1,155 @@
+html {
+    font-size: 14px;
+}
+
+/* menu */
+.g-menu-state,
+.g-menu-toggle,
+.g-sub-menu {
+    display: none;
+}
+
+.g-menu-toggle {
+    padding: 0.5em;
+    position: relative;
+}
+
+.g-menu-icon {
+    bottom: 0;
+    font-family: Icons;
+    margin: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
+
+.g-menu-toggle .g-menu-icon::after {
+    content: "\e09b";
+}
+
+.g-menu-state:checked ~ .g-menu-toggle .g-menu-icon::after {
+    content: "\e0db";
+}
+
+.g-main-menu,
+.g-sub-menu {
+    background: #fff;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.g-main-menu li {
+    border-bottom: 1px solid #ddd;
+}
+
+.g-main-menu li:last-child {
+    border-bottom: none;
+}
+
+.g-menu-item,
+.g-main-menu a {
+    color: #444;
+    display: block;
+    padding: 1em;
+    position: relative;
+}
+
+.g-menu-icon,
+.g-menu-item:hover,
+.g-menu-item:focus,
+.g-main-menu a:hover,
+.g-main-menu a:focus {
+    background: rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.g-main-menu .active {
+    color: #d23600;
+}
+
+@media (max-width:575px) {
+    .g-main-menu {
+        display: none;
+    }
+
+    .g-menu-toggle,
+    .g-menu-state:checked ~ .g-main-menu,
+    .g-menu-state:checked ~ .g-sub-menu {
+        display: block;
+    }
+
+    .g-sub-menu {
+        margin-left: 1em;
+    }
+
+    .g-sub-menu li:first-child {
+        border-top: 1px solid #ddd;
+    }
+
+    .g-menu-item .g-menu-icon::after,
+    .g-menu-state ~ a .g-menu-icon::after {
+        content: "\e0aa";
+    }
+
+    .g-menu-state:checked ~ .g-menu-item .g-menu-icon::after,
+    .g-menu-state:checked ~ a .g-menu-icon::after {
+        content: "\e09d";
+    }
+}
+
+@media (min-width:576px) {
+    .g-menu-icon {
+        padding: 1em 0.5em;
+    }
+
+    .g-main-menu::after {
+        clear: both;
+        content: "";
+        display: block;
+    }
+
+    .g-main-menu li {
+        position: relative;
+    }
+
+    .g-main-menu > li {
+        border-bottom: none;
+        float: left;
+    }
+
+    .g-menu li:hover > .g-sub-menu {
+        display: block;
+    }
+
+    .g-sub-menu {
+        border: 1px solid #ddd;
+        left: 0;
+        min-width: 10em;
+        position: absolute;
+        top: 100%;
+        z-index: 1;
+    }
+
+    .g-sub-menu .g-sub-menu {
+        left: 100%;
+        top: 0;
+    }
+
+    .g-menu-item,
+    .g-menu-state ~ a {
+        padding-right: 2.5em;
+    }
+
+    .g-menu-item .g-menu-icon::after,
+    .g-menu-state ~ a .g-menu-icon::after {
+        content: "\e034";
+    }
+
+    .g-sub-menu .g-menu-item .g-menu-icon::after,
+    .g-sub-menu .g-menu-state ~ a .g-menu-icon::after {
+        content: "\e036";
+    }
+}
