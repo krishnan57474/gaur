@@ -1,0 +1,27 @@
+parameters:
+    level: max
+
+    paths:
+        - gaur
+        - application/Controllers
+        - application/Data
+        - application/Models
+        - application/Views/app
+        - application/Views/email
+
+    autoload_files:
+        - application/Helpers/csp_helper.php
+        - application/Helpers/html_helper.php
+
+    ignoreErrors:
+        -
+            message: '#Cannot call method (getRowArray|getResultArray)#'
+            path: application/Models
+
+        -
+            message: '#Undefined variable: .(csrf|user|filterConfig|filter|items)#'
+            path: application/Views/app
+
+        -
+            message: '#Undefined variable: .(username|token|subject|colors|inputs)#'
+            path: application/Views/email
