@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace Gaur\Filters;
 
-use Gaur\HTTP\Input;
+use Gaur\{
+    Filters\Config,
+    HTTP\Input
+};
 
 class Admin
 {
     /**
      * Filter user inputs
      *
-     * $config fields
-     *
-     * array  filter_fields allowed filter fields
-     * array  order_fields  allowed order fields
-     * array  search_fields allowed search fields
-     *
      * @param string $name   page name
-     * @param array  $config filter configuration
+     * @param Config $config filter configuration
      *
      * @return array
      */
-    public function filter(string $name, array $config): array
+    public function filter(string $name, Config $config): array
     {
         $input = new Input();
         $name  = 'admin-filter-' . $name;
@@ -37,16 +34,16 @@ class Admin
         $filter = $this->getFields(
             $input->postArray('filterby'),
             $input->postArray('filterval'),
-            $config['filter_fields']
+            $config->filterFields
         );
 
         $search = $this->getFields(
             $input->postArray('searchby'),
             $input->postArray('searchval'),
-            $config['search_fields']
+            $config->searchFields
         );
 
-        if (in_array($input->post('orderby'), $config['order_fields'], true)) {
+        if (key_exists($input->post('orderby'), $config->orderFields)) {
             $order = [
                 'order' => $input->post('orderby'),
                 'sort'  => ($input->post('sortby') ? 'DESC' : 'ASC')
@@ -133,7 +130,7 @@ class Admin
         ];
 
         foreach ($keys as $k => $v) {
-            if (in_array($v, $afields, true)) {
+            if (key_exists($v, $afields)) {
                 $data['by'][$k]  = $v;
                 $data['val'][$k] = $vals[$k] ?? '';
             }
