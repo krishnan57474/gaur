@@ -16,8 +16,6 @@ trait FileTrait
      */
     protected function getNewFilename(string $path, string $fileExt): string
     {
-        $fileExt = '.' . $fileExt;
-
         do {
             $filename = md5(uniqid((string)mt_rand(), true)) . $fileExt;
         } while (file_exists($path . $filename));
@@ -36,6 +34,7 @@ trait FileTrait
     protected function moveFile(array $file, string $path): string
     {
         $fileExt  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $fileExt  = '.' . $fileExt;
         $filename = $this->getNewFilename($path, $fileExt);
 
         if (!@copy($file['tmp_name'], $path . $filename)
