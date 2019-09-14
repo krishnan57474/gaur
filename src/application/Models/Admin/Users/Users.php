@@ -37,7 +37,11 @@ class Users extends Model
         }
 
         foreach ($search['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` REGEXP ' . $this->db->escape(preg_quote($search['val'][$k]));
+            $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
+        }
+
+        if ($search) {
+            $qry .= ' ESCAPE \'!\'';
         }
 
         if ($order) {
@@ -71,7 +75,11 @@ class Users extends Model
         }
 
         foreach ($search['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` REGEXP ' . $this->db->escape(preg_quote($search['val'][$k]));
+            $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
+        }
+
+        if ($search) {
+            $qry .= ' ESCAPE \'!\'';
         }
 
         return $this->db->query($qry)->getRowArray()['total'] ?? 0;
