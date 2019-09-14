@@ -21,10 +21,18 @@ $status = [
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Home</a></li>
-                    <li class="breadcrumb-item"><a href="admin">Admin</a></li>
-                    <li class="breadcrumb-item"><a href="admin/users">Users</a></li>
-                    <li class="breadcrumb-item active">View</li>
+                    <li class="breadcrumb-item">
+                        <a href="">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="admin">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="admin/users">Users</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        View
+                    </li>
                 </ol>
             </div>
             <div class="col-sm-6 mb-2">

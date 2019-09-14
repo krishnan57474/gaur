@@ -16,9 +16,15 @@
             </div>
             <div class="col-sm-8 col-md-9">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Home</a></li>
-                    <li class="breadcrumb-item"><a href="account">Account</a></li>
-                    <li class="breadcrumb-item active">Password</li>
+                    <li class="breadcrumb-item">
+                        <a href="">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="account">Account</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Password
+                    </li>
                 </ol>
 
                 <div class="card">

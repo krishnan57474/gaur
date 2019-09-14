@@ -28,16 +28,14 @@
                         <input class="form-control" name="password" type="password" required>
                     </div>
 
-                    <div class="form-group">
-                        <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
-                        <div class="form-row align-items-center">
-                            <div class="col-5">
-                                <input class="btn btn-block btn-primary" type="submit" value="Sign In">
-                            </div>
-                            <div class="col-7 text-right">
-                                <span class="oi oi-lock-unlocked"></span>
-                                <a href="account/password/forgot">Forgot Password</a>
-                            </div>
+                    <div class="form-row align-items-center form-group">
+                        <div class="col-5">
+                            <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
+                            <input class="btn btn-block btn-primary" type="submit" value="Sign In">
+                        </div>
+                        <div class="col-7 text-right">
+                            <span class="oi oi-lock-unlocked"></span>
+                            <a href="account/password/forgot">Forgot Password</a>
                         </div>
                     </div>
 

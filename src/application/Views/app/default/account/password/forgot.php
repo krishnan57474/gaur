@@ -23,16 +23,14 @@
                         <input class="form-control" name="identity" type="text" required>
                     </div>
 
-                    <div class="form-group">
-                        <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
-                        <div class="form-row align-items-center">
-                            <div class="col-5">
-                                <input class="btn btn-block btn-primary" type="submit" value="Reset">
-                            </div>
-                            <div class="col-7 text-right">
-                                <span class="oi oi-account-login"></span>
-                                <a href="account/login">Sign In</a>
-                            </div>
+                    <div class="form-row align-items-center form-group">
+                        <div class="col-5">
+                            <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
+                            <input class="btn btn-block btn-primary" type="submit" value="Reset">
+                        </div>
+                        <div class="col-7 text-right">
+                            <span class="oi oi-account-login"></span>
+                            <a href="account/login">Sign In</a>
                         </div>
                     </div>
                 </form>

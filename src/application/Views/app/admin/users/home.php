@@ -13,9 +13,15 @@
         <div class="row align-items-center">
             <div class="col-sm-6">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Home</a></li>
-                    <li class="breadcrumb-item"><a href="admin">Admin</a></li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item">
+                        <a href="">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="admin">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Users
+                    </li>
                 </ol>
             </div>
             <div class="col-sm-6 mb-2">
@@ -117,6 +123,8 @@
 
         <div class="row">
             <div class="col-sm-12">
+                <ul class="list-unstyled j-error d-none" data-show-errors></ul>
+
                 <div class="table-responsive">
                     <div class="g-table table table-bordered table-hover text-center">
                         <div class="g-colgroup">
@@ -157,8 +165,6 @@
                         <div class="g-tbody" data-jitem="items"></div>
                     </div>
                 </div>
-
-                <ul class="list-unstyled j-error d-none" data-show-errors></ul>
 
                 <div data-jitem="loading" class="text-center">
                     <div class="spinner-border text-secondary mb-3"></div>
@@ -209,14 +215,27 @@
         function init() {
             var configs = {
                 context:     $("#j-ar"),
-                filterBy:    <?php echo $filter['filter'] ? json_encode($filter['filter']['by']) : '[]'; ?>,
-                filterVal:   <?php echo $filter['filter'] ? json_encode($filter['filter']['val']) : '[]'; ?>,
-                searchBy:    <?php echo $filter['search'] ? json_encode($filter['search']['by']) : '[]'; ?>,
-                searchVal:   <?php echo $filter['search'] ? json_encode($filter['search']['val']) : '[]'; ?>,
-                currentPage: <?php echo $filter['current_page']; ?>,
-                listCount:   <?php echo $filter['count']; ?>,
-                orderBy:     "<?php echo $filter['order']['order'] ?? ''; ?>",
-                sortBy:      <?php echo (int)(($filter['order']['sort'] ?? '') === 'DESC'); ?>
+
+                <?php if ($filter['filter']): ?>
+                filterBy:    <?= json_encode($filter['filter']['by']) ?>,
+                filterVal:   <?= json_encode($filter['filter']['val']) ?>,
+                <?php else: ?>
+                filterBy:    [],
+                filterVal:   [],
+                <?php endif; ?>
+
+                <?php if ($filter['search']): ?>
+                searchBy:    <?= json_encode($filter['search']['by']) ?>,
+                searchVal:   <?= json_encode($filter['search']['val']) ?>,
+                <?php else: ?>
+                searchBy:    [],
+                searchVal:   [],
+                <?php endif; ?>
+
+                currentPage: <?= $filter['current_page'] ?>,
+                listCount:   <?= $filter['count'] ?>,
+                orderBy:     "<?= $filter['order']['order'] ?? '' ?>",
+                sortBy:      <?= (int)(($filter['order']['sort'] ?? '') === 'DESC') ?>
             };
 
             [

@@ -13,10 +13,18 @@
         <div class="row">
             <div class="col-sm-12">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Home</a></li>
-                    <li class="breadcrumb-item"><a href="admin">Admin</a></li>
-                    <li class="breadcrumb-item"><a href="admin/users">Users</a></li>
-                    <li class="breadcrumb-item active">Add</li>
+                    <li class="breadcrumb-item">
+                        <a href="">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="admin">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="admin/users">Users</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        Add
+                    </li>
                 </ol>
             </div>
         </div>
@@ -26,7 +34,7 @@
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
 
-                <form method="post" onsubmit="return false">
+                <form method="post">
                     <div class="form-group">
                         <label>Username <span class="text-danger">*</span></label>
                         <input class="form-control" name="username" type="text" required>
@@ -57,15 +65,13 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <input name="<?php echo $csrf['name']; ?>" type="hidden" value="<?php echo $csrf['hash']; ?>">
-                        <div class="form-row">
-                            <div class="col">
-                                <input class="btn btn-block btn-primary" type="submit" value="Create">
-                            </div>
-                            <div class="col">
-                                <a class="btn btn-block btn-secondary" href="admin/users">Cancel</a>
-                            </div>
+                    <div class="form-row form-group">
+                        <div class="col">
+                            <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
+                            <input class="btn btn-block btn-primary" type="submit" value="Create">
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-block btn-secondary" href="admin/users">Cancel</a>
                         </div>
                     </div>
                 </form>
