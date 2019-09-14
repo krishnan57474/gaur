@@ -18,27 +18,21 @@ class Config
      *
      * @var array
      */
-    public $connectSrc = [
-        '\'self\''
-    ];
+    public $connectSrc = [];
 
     /**
      * Default policy for loading content
      *
      * @var array
      */
-    public $defaultSrc = [
-        '\'none\''
-    ];
+    public $defaultSrc = [];
 
     /**
      * Valid sources of fonts
      *
      * @var array
      */
-    public $fontSrc = [
-        'https://cdn.jsdelivr.net'
-    ];
+    public $fontSrc = [];
 
     /**
      * Valid sources of form action
@@ -52,9 +46,7 @@ class Config
      *
      * @var array
      */
-    public $imgSrc = [
-        '\'self\''
-    ];
+    public $imgSrc = [];
 
     /**
      * Valid sources of audio, video
@@ -82,18 +74,12 @@ class Config
      *
      * @var array
      */
-    public $scriptSrc = [
-        '\'self\'',
-        'https://cdn.jsdelivr.net'
-    ];
+    public $scriptSrc = [];
 
     /**
      * Valid sources of stylesheets
      *
      * @var array
      */
-    public $styleSrc = [
-        '\'self\'',
-        'https://cdn.jsdelivr.net'
-    ];
+    public $styleSrc = [];
 }
