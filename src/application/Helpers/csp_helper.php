@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use Gaur\Security\{
-    ContentSecurityPolicy,
-    ContentSecurityPolicy\Config
-};
+use App\Data\Security\CSPConfig;
+use Gaur\Security\ContentSecurityPolicy;
 
 /**
  * Get content security policy
@@ -14,7 +12,7 @@ use Gaur\Security\{
  */
 function getCsp(): string
 {
-    $config = new Config();
+    $config = new CSPConfig();
     $csp    = new ContentSecurityPolicy();
     $nonce  = $csp->getNonce();
 
