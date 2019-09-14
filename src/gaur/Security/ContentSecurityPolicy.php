@@ -23,13 +23,9 @@ class ContentSecurityPolicy
      *
      * @return string
      */
-    public function get(Config $config = null): string
+    public function get(Config $config): string
     {
         $csp = '';
-
-        if (is_null($config)) {
-            $config = new Config();
-        }
 
         foreach (new ArrayObject($config) as $k => $v) {
             if (!$v) {
