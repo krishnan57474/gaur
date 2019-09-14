@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin\Users;
 
+use App\Data\Users\FilterConfig;
 use App\Models\Admin\Users\{
     User,
     Users
 };
-use App\Data\Users\FilterConfig;
 use Gaur\{
     Controller,
     Controller\AjaxControllerTrait,

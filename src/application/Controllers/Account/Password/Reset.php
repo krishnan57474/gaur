@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controllers\Account\Password;
 
-use App\Models\Users\UserReset;
 use App\Data\Users\UserResetType;
+use App\Models\Users\UserReset;
 use Gaur\{
     Controller,
     Controller\AjaxControllerTrait,

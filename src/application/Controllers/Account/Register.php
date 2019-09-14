@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controllers\Account;
 
+use App\Data\Users\UserResetType;
 use App\Models\Users\{
     User,
     UserReset
 };
-use App\Data\Users\UserResetType;
 use Gaur\{
     Controller,
     Controller\AjaxControllerTrait,

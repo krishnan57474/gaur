@@ -12,6 +12,40 @@ use Gaur\{
 class Admin
 {
     /**
+     * Get fields
+     *
+     * @param array $keys    keys list
+     * @param array $vals    values list
+     * @param array $afields allowed fields
+     *
+     * @return array|null
+     */
+    protected function getFields(
+        array $keys,
+        array $vals,
+        array $afields
+    ): ?array
+    {
+        $data = [
+            'by'  => [],
+            'val' => []
+        ];
+
+        foreach ($keys as $k => $v) {
+            if (key_exists($v, $afields)) {
+                $data['by'][$k]  = $v;
+                $data['val'][$k] = $vals[$k] ?? '';
+            }
+        }
+
+        if (!$data['by']) {
+            $data = null;
+        }
+
+        return $data;
+    }
+
+    /**
      * Filter user inputs
      *
      * @param string $name   page name
@@ -107,39 +141,5 @@ class Admin
         }
 
         return $_SESSION[$name];
-    }
-
-    /**
-     * Get fields
-     *
-     * @param array $keys    keys list
-     * @param array $vals    values list
-     * @param array $afields allowed fields
-     *
-     * @return array|null
-     */
-    protected function getFields(
-        array $keys,
-        array $vals,
-        array $afields
-    ): ?array
-    {
-        $data = [
-            'by'  => [],
-            'val' => []
-        ];
-
-        foreach ($keys as $k => $v) {
-            if (key_exists($v, $afields)) {
-                $data['by'][$k]  = $v;
-                $data['val'][$k] = $vals[$k] ?? '';
-            }
-        }
-
-        if (!$data['by']) {
-            $data = null;
-        }
-
-        return $data;
     }
 }

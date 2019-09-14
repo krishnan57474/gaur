@@ -138,10 +138,16 @@ class User extends Model
      */
     public function update(int $id, array $data): void
     {
+        $password = '';
+
+        if ($data['password'] !== '') {
+            $password = ', `password`= ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT));
+        }
+
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
                 SET `username` = ' . $this->db->escape($data['username'])
                     . ', `email` = ' . $this->db->escape($data['email'])
-                    . (($data['password'] !== '') ? ', `password`= ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT)) : '')
+                    . $password
                     . ', `status`= ' . $data['status']
                     . ', `admin`= ' . $data['admin']
                 . ' WHERE `id` = ' . $id;

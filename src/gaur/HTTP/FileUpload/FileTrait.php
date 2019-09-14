@@ -9,12 +9,12 @@ trait FileTrait
     /**
      * Get non existing file name
      *
-     * @param string $path    path to check
      * @param string $fileExt file extension
+     * @param string $path    path to check
      *
      * @return string
      */
-    protected function getNewFilename(string $path, string $fileExt): string
+    protected function getNewFilename(string $fileExt, string $path): string
     {
         do {
             $filename = md5(uniqid((string)mt_rand(), true)) . $fileExt;
@@ -35,7 +35,7 @@ trait FileTrait
     {
         $fileExt  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $fileExt  = '.' . $fileExt;
-        $filename = $this->getNewFilename($path, $fileExt);
+        $filename = $this->getNewFilename($fileExt, $path);
 
         if (!@copy($file['tmp_name'], $path . $filename)
             && !@move_uploaded_file($file['tmp_name'], $path . $filename)
