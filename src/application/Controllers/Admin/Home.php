@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin;
 
-use App\Models\Users\User;
 use Gaur\{
     Controller,
     HTTP\Response
