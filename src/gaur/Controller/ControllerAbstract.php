@@ -25,13 +25,6 @@ abstract class ControllerAbstract extends Controller
     ];
 
     /**
-     * Session object
-     *
-     * @var \CodeIgniter\Session\Session
-     */
-    protected $session;
-
-    /**
      * Initialize controller
      *
      * @param RequestInterface  $request  request object
@@ -48,6 +41,6 @@ abstract class ControllerAbstract extends Controller
     {
         parent::initController($request, $response, $logger);
 
-        $this->session = Services::session();
+        Services::session();
     }
 }
