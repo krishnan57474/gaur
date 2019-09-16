@@ -74,7 +74,7 @@ class Activation extends Controller
 
         // Password create verification
         $_SESSION['password_create'] = $reset['uid'];
-        $this->session->markAsFlashdata('password_create');
+        session()->markAsFlashdata('password_create');
         session_write_close();
 
         $response['data'] = [

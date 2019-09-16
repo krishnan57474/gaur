@@ -31,7 +31,7 @@ class Update extends Controller
         }
 
         // Keep verification
-        $this->session->keepFlashdata('password_update');
+        session()->keepFlashdata('password_update');
 
         if ($this->isAjaxRequest()) {
             return;

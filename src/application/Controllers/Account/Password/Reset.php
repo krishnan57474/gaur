@@ -74,7 +74,7 @@ class Reset extends Controller
 
         // Password update verification
         $_SESSION['password_update'] = $reset['uid'];
-        $this->session->markAsFlashdata('password_update');
+        session()->markAsFlashdata('password_update');
         session_write_close();
 
         $response['data'] = [

@@ -31,7 +31,7 @@ class Create extends Controller
         }
 
         // Keep verification
-        $this->session->keepFlashdata('password_create');
+        session()->keepFlashdata('password_create');
 
         if ($this->isAjaxRequest()) {
             return;

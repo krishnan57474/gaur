@@ -31,7 +31,7 @@ class Login extends Controller
         }
 
         // Keep login redirect
-        $this->session->keepFlashdata('login_redirect');
+        session()->keepFlashdata('login_redirect');
 
         if ($this->isAjaxRequest()) {
             return;
