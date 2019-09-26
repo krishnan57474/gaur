@@ -4,10 +4,21 @@ declare(strict_types=1);
 
 namespace Gaur;
 
-use Gaur\Controller\ControllerAbstract;
+use CodeIgniter\Controller as BaseController;
+use Config\Services;
 
-abstract class Controller extends ControllerAbstract
+abstract class Controller extends BaseController
 {
+    /**
+     * Helpers to be loaded automatically
+     *
+     * @var array
+     */
+    protected $helpers = [
+        'csp',
+        'html'
+    ];
+
     /**
      * Default page for this controller
      *
@@ -24,6 +35,8 @@ abstract class Controller extends ControllerAbstract
      */
     public function _remap(string ...$args): void
     {
+        Services::session();
+
         $this->index(...$args);
     }
 }
