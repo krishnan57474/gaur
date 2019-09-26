@@ -7,7 +7,7 @@ class Progress {
     protected static getProgressBarFrg(): JQuery<HTMLDivElement> {
         const progressBarFrg: JQuery<HTMLDivElement> = $(document.createElement("div"));
 
-        progressBarFrg.attr("class", "progress-bar bg-warning");
+        progressBarFrg.attr("class", "progress-bar progress-bar-striped progress-bar-animated");
 
         return progressBarFrg;
     }
@@ -17,7 +17,7 @@ class Progress {
 
         progressFrg.attr("class", "progress fixed-top");
         progressFrg.css({
-            height: "3px",
+            height: "6px",
             width: 0
         });
 
