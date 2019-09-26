@@ -60,10 +60,6 @@ class Reset extends Controller
         if (!$reset
             || strtotime($reset['expire']) < time()
         ) {
-            if ($reset) {
-                $userReset->remove($reset['id']);
-            }
-
             $response['errors'] = [
                 'Oops! verification failed. Invalid verification code or expired verification code.'
             ];
