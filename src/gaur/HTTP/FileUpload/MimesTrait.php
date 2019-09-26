@@ -22,7 +22,7 @@ trait MimesTrait
     ];
 
     /**
-     * Get extension appropiate for a mime type
+     * Get extension appropriate for a mime type
      *
      * @param string $mimeType mime type
      *
