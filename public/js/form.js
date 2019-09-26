@@ -9,14 +9,14 @@
         }
         Progress.getProgressBarFrg = function () {
             var progressBarFrg = $(document.createElement("div"));
-            progressBarFrg.attr("class", "progress-bar bg-warning");
+            progressBarFrg.attr("class", "progress-bar progress-bar-striped progress-bar-animated");
             return progressBarFrg;
         };
         Progress.getProgressFrg = function () {
             var progressFrg = $(document.createElement("div"));
             progressFrg.attr("class", "progress fixed-top");
             progressFrg.css({
-                height: "3px",
+                height: "6px",
                 width: 0
             });
             return progressFrg;
@@ -165,12 +165,12 @@
                 args.error([error]);
             }
             else {
-                Errors.show([error], args.context);
+                Errors.show([error], args.context || $());
             }
         };
         ValidateFile.toBytes = function (unit) {
-            var units = "bkmgtpezy", size = parseFloat(unit.replace(/[^\d.]/g, "")), uprefix = unit.replace(/[\d.]/g, "").toLowerCase();
-            var uindex = units.indexOf(uprefix[0]);
+            var units = "bkmgtpezy", size = parseFloat(unit), uprefix = unit.substr(-2, 1).toLowerCase();
+            var uindex = units.indexOf(uprefix);
             if (uindex < 0) {
                 uindex = 0;
             }
@@ -240,9 +240,7 @@
                 uconfigs.load();
             }
             handlers.progress(false);
-            if (!uconfigs.ignoreErrors) {
-                handlers.error("");
-            }
+            handlers.error("");
             this.lock = false;
         };
         Ajax.onSuccess = function (uconfigs, handlers, response, status) {
@@ -253,7 +251,7 @@
             if (status === "success" && response.status && !response.errors) {
                 uconfigs.success(response.data || "");
             }
-            else if (!uconfigs.ignoreErrors) {
+            else {
                 handlers.error(response.errors || "");
             }
             this.lock = false;
@@ -277,7 +275,7 @@
         function Form() {
         }
         Form.prototype.error = function (errors, context) {
-            Errors.show(errors, context);
+            Errors.show(errors, context || $());
         };
         Form.prototype.isValidFile = function (args) {
             return ValidateFile.isValid(args);

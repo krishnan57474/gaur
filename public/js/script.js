@@ -9,7 +9,9 @@
         ImportCache.exists = function (url) {
             return this.caches.indexOf(url) > -1;
         };
-        ImportCache.caches = [];
+        ImportCache.reset = function () {
+            this.caches = [];
+        };
         return ImportCache;
     }());
     var ImportCss = (function () {
@@ -44,6 +46,7 @@
         };
         ImportCss.init = function () {
             var elmsList = document.querySelectorAll(".j-acss"), firstChild = this.getFirstChild(), length = elmsList.length;
+            ImportCache.reset();
             for (var i = 0; i < length; i++) {
                 this.import(elmsList[i], firstChild);
             }
@@ -99,6 +102,7 @@
             var _this = this;
             var fileSrc = elm.getAttribute("data-src") || "", integrity = elm.getAttribute("data-integrity") || "", skipQueue = elm.hasAttribute("data-skip-queue"), callback = function () { return _this.processQueue(scripts); };
             if (ImportCache.exists(fileSrc)) {
+                callback();
                 return;
             }
             ImportCache.add(fileSrc);
@@ -118,6 +122,7 @@
         };
         ImportJs.init = function () {
             var scripts = this.getScripts();
+            ImportCache.reset();
             this.processQueue(scripts);
         };
         return ImportJs;

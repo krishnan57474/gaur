@@ -72,8 +72,12 @@
                     action: "changeStatus",
                     id: elm.closest(".g-tr").attr("data-id") || ""
                 },
-                success: function () {
+                success: function (rstatus) {
                     var status = !elm.hasClass("text-success");
+                    if (!rstatus) {
+                        Confirm.hide();
+                        return;
+                    }
                     if (status) {
                         elm.addClass("oi-check text-success").removeClass("oi-x text-danger");
                     }
@@ -306,7 +310,7 @@
             if (elm.tagName === "SPAN") {
                 elm = elm.parentElement || elm;
             }
-            if (configs.lock && elm.tagName !== "DIV" && !$(elm).attr("data-id")) {
+            if (configs.lock || elm.tagName !== "DIV" || !$(elm).attr("data-id")) {
                 return;
             }
             this.filter($(elm));
@@ -520,7 +524,7 @@
                     .eq(k)
                     .children()
                     .first()
-                    .addClass("hide")
+                    .addClass("d-none")
                     .parent()
                     .find("[data-item='" + v + "']")
                     .removeClass("d-none")
@@ -558,9 +562,6 @@
                     configs[k] = uconfigs[k];
                 }
             }
-            configs.lock = false;
-            configs.totalItems = 0;
-            configs.totalPage = 0;
         };
         Configs.init = function () {
             configs = {
