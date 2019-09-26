@@ -45,6 +45,8 @@ class ImportCss {
             firstChild: Node = this.getFirstChild(),
             length: number = elmsList.length;
 
+        ImportCache.reset();
+
         for (let i: number = 0; i < length; i++) {
             this.import(elmsList[i], firstChild);
         }
