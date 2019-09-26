@@ -7,8 +7,13 @@ class Status {
                 action: "changeStatus",
                 id: elm.closest(".g-tr").attr("data-id") || ""
             },
-            success: () => {
+            success: (rstatus) => {
                 const status: boolean = !elm.hasClass("text-success");
+
+                if (!rstatus) {
+                    Confirm.hide();
+                    return;
+                }
 
                 if (status) {
                     elm.addClass("oi-check text-success").removeClass("oi-x text-danger");
