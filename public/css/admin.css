@@ -2,6 +2,10 @@ html {
     font-size: 14px;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 /* menu */
 .g-menu-state,
 .g-menu-toggle,
