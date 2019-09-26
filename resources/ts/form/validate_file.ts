@@ -6,16 +6,16 @@ class ValidateFile {
         if (args.error) {
             args.error([error]);
         } else {
-            Errors.show([error], args.context);
+            Errors.show([error], args.context || $());
         }
     }
 
     protected static toBytes(unit: string): number {
         const units: string = "bkmgtpezy",
-            size: number = parseFloat(unit.replace(/[^\d.]/g, "")),
-            uprefix: string = unit.replace(/[\d.]/g, "").toLowerCase();
+            size: number = parseFloat(unit),
+            uprefix: string = unit.substr(-2, 1).toLowerCase();
 
-        let uindex: number = units.indexOf(uprefix[0]);
+        let uindex: number = units.indexOf(uprefix);
 
         if (uindex < 0) {
             uindex = 0;
