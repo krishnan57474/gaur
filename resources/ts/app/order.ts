@@ -25,7 +25,7 @@ class Order {
             elm = elm.parentElement || elm;
         }
 
-        if (configs.lock && elm.tagName !== "DIV" && !$(elm).attr("data-id")) {
+        if (configs.lock || elm.tagName !== "DIV" || !$(elm).attr("data-id")) {
             return;
         }
 
