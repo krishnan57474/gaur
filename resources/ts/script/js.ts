@@ -72,6 +72,7 @@ class ImportJs {
             callback: VoidFunction = () => this.processQueue(scripts);
 
         if (ImportCache.exists(fileSrc)) {
+            callback();
             return;
         }
 
@@ -97,6 +98,8 @@ class ImportJs {
 
     public static init(): void {
         const scripts: Array<HTMLScriptElement> = this.getScripts();
+
+        ImportCache.reset();
 
         this.processQueue(scripts);
     }
