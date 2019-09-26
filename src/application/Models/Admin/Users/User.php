@@ -28,7 +28,7 @@ class User extends Model
     /**
      * Add user
      *
-     * @param array $data user informations
+     * @param array $data user information
      *
      * @return void
      */
@@ -36,13 +36,13 @@ class User extends Model
     {
         $qry = 'INSERT INTO `' . $this->db->prefixTable('users') . '`(`username`, `email`, `password`, `status`, `activation`, `admin`, `date_added`)
                 VALUES ('
-                    . $this->db->escape($data['username']) . ', '
-                    . $this->db->escape($data['email']) . ', '
-                    . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT)) . ', '
-                    . '1, '
-                    . '1, '
-                    . $data['admin'] . ', '
-                    . $this->db->escape(date('Y-m-d H:i:s'))
+                    . $this->db->escape($data['username'])
+                    . ', ' . $this->db->escape($data['email'])
+                    . ', ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT))
+                    . ', 1'
+                    . ', 1'
+                    . ', ' . $data['admin']
+                    . ', ' . $this->db->escape(date('Y-m-d H:i:s'))
                 . ')';
 
         $this->db->query($qry);
@@ -132,7 +132,7 @@ class User extends Model
      * Update user info
      *
      * @param int   $id   user id
-     * @param array $data user informations
+     * @param array $data user information
      *
      * @return void
      */
@@ -141,7 +141,9 @@ class User extends Model
         $password = '';
 
         if ($data['password'] !== '') {
-            $password = ', `password`= ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT));
+            $password = ', `password`= ' . $this->db->escape(
+                password_hash($data['password'], PASSWORD_DEFAULT)
+            );
         }
 
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`

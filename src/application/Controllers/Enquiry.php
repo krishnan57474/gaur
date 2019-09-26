@@ -79,6 +79,8 @@ class Enquiry extends Controller
      */
     protected function sendMail(): bool
     {
+        helper('xhtml');
+
         $inputs      = array_slice($this->finputs, 0);
         $attachments = [];
         $path        = 'assets/enquiry/';
@@ -96,7 +98,12 @@ class Enquiry extends Controller
             'attachments' => $attachments
         ];
 
-        return (new Mail())->send('email/default/contact', $data);
+        $status = (new Mail())->send(
+            'email/default/contact',
+            $data
+        );
+
+        return $status;
     }
 
     /**
@@ -123,7 +130,7 @@ class Enquiry extends Controller
         if ($uerror) {
             $this->errors[] = $uerror;
         } elseif (!$this->finputs['attach']) {
-            $this->errors[] = 'No attachment found';
+            $this->errors[] = 'No attachment found!';
         }
 
         return !$this->errors;

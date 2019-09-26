@@ -21,16 +21,16 @@ class Config
     public $filterValues = [];
 
     /**
-     * Allowed search fields
-     *
-     * @var array
-     */
-    public $searchFields = [];
-
-    /**
      * Allowed order fields
      *
      * @var array
      */
     public $orderFields = [];
+
+    /**
+     * Allowed search fields
+     *
+     * @var array
+     */
+    public $searchFields = [];
 }

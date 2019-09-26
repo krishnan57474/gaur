@@ -76,13 +76,20 @@ class Contact extends Controller
      */
     protected function sendMail(): bool
     {
+        helper('xhtml');
+
         $data = [
             'to'      => 'contact@example.com',
             'subject' => 'Contact enquiry',
             'inputs'  => $this->finputs
         ];
 
-        return (new Mail())->send('email/default/contact', $data);
+        $status = (new Mail())->send(
+            'email/default/contact',
+            $data
+        );
+
+        return $status;
     }
 
     /**

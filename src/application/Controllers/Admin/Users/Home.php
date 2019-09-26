@@ -46,18 +46,45 @@ class Home extends Controller
         $filter = (new Admin())->get(__CLASS__);
         session_write_close();
 
+        $currentPage = 1;
+
+        if ($filter['offset']) {
+            $currentPage = ($filter['offset'] / $filter['count']) + 1;
+        }
+
         $data = [];
 
         $data['filter']                 = $filter;
-        $data['filter']['current_page'] = 1;
-
-        if ($filter['offset']) {
-            $data['filter']['current_page'] = ($filter['offset'] / $filter['count']) + 1;
-        }
+        $data['filter']['current_page'] = $currentPage;
 
         $data['filterConfig'] = new FilterConfig();
 
         echo view('app/admin/users/home', $data);
+    }
+
+    /**
+     * Toggle user status
+     *
+     * @param array $response ajax response
+     *
+     * @return void
+     */
+    protected function aactionChangeStatus(array &$response): void
+    {
+        $user = new User();
+        $id   = (int)(new Input())->post('id');
+
+        if (!$user->exists($id)) {
+            $response['status'] = false;
+            return;
+        }
+
+        if ($_SESSION['user_id'] === $id) {
+            return;
+        }
+
+        $user->changeStatus($id);
+        $response['data'] = true;
     }
 
     /**
@@ -114,30 +141,5 @@ class Home extends Controller
             $filter['filter'],
             $filter['search']
         );
-    }
-
-    /**
-     * Toggle user status
-     *
-     * @param array $response ajax response
-     *
-     * @return void
-     */
-    protected function aactionChangeStatus(array &$response)
-    {
-        $user = new User();
-        $id   = (int)(new Input())->post('id');
-
-        if (!$user->exists($id)) {
-            $response['status'] = 0;
-            return;
-        }
-
-        if ($_SESSION['user_id'] === $id) {
-            return;
-        }
-
-        $user->changeStatus($id);
-        $response['data'] = 1;
     }
 }

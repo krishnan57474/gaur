@@ -28,7 +28,7 @@ class User extends Model
     /**
      * Add user
      *
-     * @param array $data user informations
+     * @param array $data user information
      *
      * @return int
      */
@@ -36,13 +36,13 @@ class User extends Model
     {
         $qry = 'INSERT INTO `' . $this->db->prefixTable('users') . '`(`username`, `email`, `password`, `status`, `activation`, `admin`, `date_added`)
                 VALUES ('
-                    . $this->db->escape($data['username']) . ', '
-                    . $this->db->escape($data['email']) . ', '
-                    . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT)) . ', '
-                    . '0, '
-                    . '0, '
-                    . '0, '
-                    . $this->db->escape(date('Y-m-d H:i:s'))
+                    . $this->db->escape($data['username'])
+                    . ', ' . $this->db->escape($data['email'])
+                    . ', ' . $this->db->escape(password_hash($data['password'], PASSWORD_DEFAULT))
+                    . ', 0'
+                    . ', 0'
+                    . ', 0'
+                    . ', ' . $this->db->escape(date('Y-m-d H:i:s'))
                 . ')';
 
         $this->db->query($qry);

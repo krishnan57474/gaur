@@ -158,7 +158,7 @@ class Add extends Controller
     {
         $user = new User();
 
-        // Normalise chars
+        // Normalize input
         $this->finputs['username'] = strtolower($this->finputs['username']);
         $this->finputs['email']    = mb_strtolower($this->finputs['email']);
 

@@ -46,8 +46,7 @@ class View extends Controller
             return;
         }
 
-        $id   = (int)$id;
-        $user = (new User())->get($id);
+        $user = (new User())->get((int)$id);
 
         if (!$user) {
             (new Response())->pageNotFound();
@@ -73,7 +72,7 @@ class View extends Controller
         $user = new User();
 
         if (!$user->exists($id)) {
-            $response['status'] = 0;
+            $response['status'] = false;
             return;
         }
 

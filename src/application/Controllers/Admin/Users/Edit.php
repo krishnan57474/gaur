@@ -48,8 +48,7 @@ class Edit extends Controller
             return;
         }
 
-        $id   = (int)$id;
-        $user = (new User())->get($id);
+        $user = (new User())->get((int)$id);
 
         if (!$user) {
             (new Response())->pageNotFound();
@@ -86,7 +85,7 @@ class Edit extends Controller
         $id   = (int)$this->request->uri->getSegment(4);
 
         if (!$user->exists($id)) {
-            $response['status'] = 0;
+            $response['status'] = false;
             return;
         }
 
@@ -97,7 +96,7 @@ class Edit extends Controller
             return;
         }
 
-        // Add user
+        // Update user
         $user->update($id, $this->finputs);
 
         $response['data'] = [
@@ -201,7 +200,7 @@ class Edit extends Controller
         $id       = (int)$this->request->uri->getSegment(4);
         $userInfo = $user->get($id);
 
-        // Normalise chars
+        // Normalize input
         $this->finputs['username'] = strtolower($this->finputs['username']);
         $this->finputs['email']    = mb_strtolower($this->finputs['email']);
 

@@ -33,6 +33,25 @@ class FileUpload
     protected $errorMessage;
 
     /**
+     * Get upload error
+     *
+     * @return string
+     */
+    public function getError(): string
+    {
+        $error = '';
+
+        if ($this->errorMessage) {
+            $error .= 'Unable to upload the file ';
+            $error .= $this->errorFilename;
+            $error .= '. ';
+            $error .= $this->errorMessage;
+        }
+
+        return $error;
+    }
+
+    /**
      * Get uploaded files
      *
      * @param string $afield    attachment field name
@@ -67,25 +86,6 @@ class FileUpload
         }
 
         return $files;
-    }
-
-    /**
-     * Get upload error
-     *
-     * @return string
-     */
-    public function getError(): string
-    {
-        $error = '';
-
-        if ($this->errorMessage) {
-            $error .= 'Unable to upload the file ';
-            $error .= $this->errorFilename;
-            $error .= '. ';
-            $error .= $this->errorMessage;
-        }
-
-        return $error;
     }
 
     /**

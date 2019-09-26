@@ -40,6 +40,17 @@ class FilterConfig extends Config
     ];
 
     /**
+     * Allowed order fields
+     *
+     * @var array
+     */
+    public $orderFields = [
+        'id'           => 'ID',
+        'last_visited' => 'Last Visited',
+        'status'       => 'Status'
+    ];
+
+    /**
      * Allowed search fields
      *
      * @var array
@@ -48,18 +59,5 @@ class FilterConfig extends Config
         'id'       => 'ID',
         'username' => 'Username',
         'email'    => 'Email'
-    ];
-
-    /**
-     * Allowed order fields
-     *
-     * @var array
-     */
-    public $orderFields = [
-        'id'           => 'ID',
-        'username'     => 'Username',
-        'email'        => 'Email',
-        'last_visited' => 'Last Visited',
-        'status'       => 'Status'
     ];
 }

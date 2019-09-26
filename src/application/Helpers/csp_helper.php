@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Data\Security\CSPConfig;
+use App\Data\Security\CspConfig;
 use Gaur\Security\ContentSecurityPolicy;
 
 /**
@@ -12,7 +12,7 @@ use Gaur\Security\ContentSecurityPolicy;
  */
 function getCsp(): string
 {
-    $config = new CSPConfig();
+    $config = new CspConfig();
     $csp    = new ContentSecurityPolicy();
     $nonce  = $csp->getNonce();
 

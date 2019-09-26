@@ -6,7 +6,7 @@ namespace App\Data\Security;
 
 use Gaur\Security\ContentSecurityPolicy\Config;
 
-class CSPConfig extends Config
+class CspConfig extends Config
 {
     /**
      * Valid sources of AJAX, WebSocket
