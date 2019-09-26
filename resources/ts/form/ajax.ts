@@ -52,10 +52,7 @@ class Ajax {
         }
 
         handlers.progress(false);
-
-        if (!uconfigs.ignoreErrors) {
-            handlers.error("");
-        }
+        handlers.error("");
 
         this.lock = false;
     }
@@ -74,7 +71,7 @@ class Ajax {
 
         if (status === "success" && response.status && !response.errors) {
             uconfigs.success(response.data || "");
-        } else if (!uconfigs.ignoreErrors) {
+        } else {
             handlers.error(response.errors || "");
         }
 

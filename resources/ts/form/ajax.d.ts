@@ -13,7 +13,6 @@ interface AjaxUserConfigsInterface {
     context: JQuery<HTMLElement>;
     data: Record<string, string | number | Array<string>>;
     error?: (errors: Array<string> | string) => void;
-    ignoreErrors?: boolean;
     load?: VoidFunction;
     progress?: (status: boolean) => void;
     success: (data: string | Array<string>) => void;
