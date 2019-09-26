@@ -16,10 +16,12 @@ class Model
     /**
      * Initialize model
      *
+     * @param string $group database connection group
+     *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $group = null)
     {
-        $this->db = db_connect();
+        $this->db = db_connect($group);
     }
 }
