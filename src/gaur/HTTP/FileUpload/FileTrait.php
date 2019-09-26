@@ -56,10 +56,9 @@ trait FileTrait
     protected function toBytes(string $unit): float
     {
         $units   = 'bkmgtpezy';
-        $size    = (float)preg_replace('/[^\d.]/', '', $unit);
-        $uprefix = preg_replace('/[\d.]/', '', $unit);
-        $uprefix = strtolower($uprefix[0] ?? 'b');
-        $uindex  = strpos($units, $uprefix);
+        $size    = (float)$unit;
+        $uprefix = substr($unit, -2, 1);
+        $uindex  = strpos($units, strtolower($uprefix ?: 'b'));
 
         if (is_bool($uindex)) {
             $uindex = 0;
