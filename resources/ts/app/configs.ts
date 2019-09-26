@@ -7,10 +7,6 @@ class Configs {
                 configs[k] = uconfigs[k];
             }
         }
-
-        configs.lock = false;
-        configs.totalItems = 0;
-        configs.totalPage = 0;
     }
 
     public static init(): void {
