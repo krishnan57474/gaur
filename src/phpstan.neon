@@ -12,10 +12,15 @@ parameters:
     autoload_files:
         - application/Helpers/csp_helper.php
         - application/Helpers/html_helper.php
+        - application/Helpers/xhtml_helper.php
 
     ignoreErrors:
         -
             message: '#Cannot call method (getRowArray|getResultArray)#'
+            path: application/Models
+
+        -
+            message: '#Binary operation "." between string and array<string>\\|string results in an error.#'
             path: application/Models
 
         -
