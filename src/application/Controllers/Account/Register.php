@@ -124,6 +124,8 @@ class Register extends Controller
      */
     protected function sendMail(string $token): bool
     {
+        helper('xhtml');
+
         $data = [
             'to'       => $this->finputs['email'],
             'subject'  => 'Activate your account',
@@ -192,7 +194,7 @@ class Register extends Controller
     {
         $user = new User();
 
-        // Normalise chars
+        // Normalize input
         $this->finputs['username'] = strtolower($this->finputs['username']);
         $this->finputs['email']    = mb_strtolower($this->finputs['email']);
 

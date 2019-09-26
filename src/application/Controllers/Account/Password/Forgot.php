@@ -121,6 +121,8 @@ class Forgot extends Controller
      */
     protected function sendMail(string $username, string $token): bool
     {
+        helper('xhtml');
+
         $data = [
             'to'       => $this->finputs['email'],
             'subject'  => 'Password reset request',
