@@ -28,7 +28,7 @@ class Ufilter {
                 .eq(k)
                 .children()
                 .first()
-                .addClass("hide")
+                .addClass("d-none")
                 .parent()
                 .find("[data-item='" + v + "']")
                 .removeClass("d-none")
