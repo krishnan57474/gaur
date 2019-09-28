@@ -142,14 +142,8 @@
                                     <span class="small oi oi-elevator"></span>
                                     ID
                                 </div>
-                                <div class="g-th cursor-pointer text-left" data-id="username">
-                                    <span class="small oi oi-elevator"></span>
-                                    Username
-                                </div>
-                                <div class="g-th cursor-pointer text-left" data-id="email">
-                                    <span class="small oi oi-elevator"></span>
-                                    Email
-                                </div>
+                                <div class="g-th text-left">Username</div>
+                                <div class="g-th text-left">Email</div>
                                 <div class="g-th cursor-pointer" data-id="last_visited">
                                     <span class="small oi oi-elevator"></span>
                                     Last Visited
