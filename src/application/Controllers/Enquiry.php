@@ -6,16 +6,16 @@ namespace App\Controllers;
 
 use Gaur\{
     Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\FileUpload,
+    Controller\AjaxUploadControllerTrait,
     HTTP\Input,
+    HTTP\UploadCache,
     Mail\Mail,
     Security\CSRF
 };
 
 class Enquiry extends Controller
 {
-    use AjaxControllerTrait;
+    use AjaxUploadControllerTrait;
 
     /**
      * Default page for this controller
@@ -30,8 +30,10 @@ class Enquiry extends Controller
 
         $data = [];
 
+        (new UploadCache(__CLASS__))->create();
+
         // 60 minutes
-        $data['csrf'] = (new CSRF())->create(__CLASS__, 60);
+        $data['csrf'] = (new CSRF(__CLASS__))->create(60);
         session_write_close();
 
         echo view('app/default/enquiry', $data);
@@ -46,19 +48,24 @@ class Enquiry extends Controller
      */
     protected function aactionSubmit(array &$response): void
     {
-        $csrf = new CSRF();
+        $csrf = new CSRF(__CLASS__);
 
-        if (!$csrf->validate(__CLASS__)) {
+        if (!$csrf->validate()) {
             $response['status'] = false;
             return;
         }
 
-        if (!$this->validateInput()
-            || !$this->validateAttachment()
-        ) {
+        if (!$this->validateInput()) {
+            $this->removeAttachment(__CLASS__);
             $response['errors'] = $this->errors;
             return;
         }
+
+        $this->assembleAttachment(
+            __CLASS__,
+            'attach',
+            FCPATH . 'assets/enquiry/'
+        );
 
         if ($this->sendMail()) {
             $response['data'] = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config('Config\App')->siteName;
@@ -68,8 +75,59 @@ class Enquiry extends Controller
             ];
         }
 
-        $csrf->remove(__CLASS__);
+        $csrf->remove();
         session_write_close();
+    }
+
+    /**
+     * Ajax file upload
+     *
+     * @param array $response ajax response
+     *
+     * @return void
+     */
+    protected function aactionUpload(array &$response): void
+    {
+        if (!(new CSRF(__CLASS__))->validate()) {
+            $response['status'] = false;
+            return;
+        }
+
+        $uploadCache = new UploadCache(__CLASS__);
+        $uploadCount = count($uploadCache->get());
+        $uploadLimit = 1;
+        $afield      = 'attach';
+
+        $this->finputs[$afield] = null;
+
+        if ($uploadCount + 1 <= $uploadLimit) {
+            $this->validateAttachment(
+                $afield,
+                [
+                    'count' => 1,
+                    'index' => false,
+                    'name'  => $afield,
+                    'size'  => '10MB',
+                    'types' => ['jpeg', 'jpg', 'png']
+                ]
+            );
+        } else {
+            $this->errors[] = 'Maximum number of files exceeded';
+        }
+
+        if ($this->finputs[$afield]) {
+            $uploadCache->add(
+                $uploadCount,
+                $this->finputs[$afield][0]
+            );
+        } elseif ($this->errors) {
+            $this->removeAttachment(__CLASS__);
+            $response['errors'] = $this->errors;
+        }
+
+        session_write_close();
+
+        $response['data'] = !$this->errors;
     }
 
     /**
@@ -104,36 +162,6 @@ class Enquiry extends Controller
         );
 
         return $status;
-    }
-
-    /**
-     * Validate attachment
-     *
-     * @return bool
-     */
-    protected function validateAttachment(): bool
-    {
-        $fileUpload = new FileUpload();
-        $config     = [
-            'count' => 1,
-            'index' => false,
-            'name'  => 'attach',
-            'path'  => FCPATH . 'assets/enquiry/',
-            'size'  => '10MB',
-            'types' => ['jpeg', 'jpg', 'png']
-        ];
-
-        $this->finputs['attach'] = $fileUpload->upload($config);
-
-        $uerror = $fileUpload->getError();
-
-        if ($uerror) {
-            $this->errors[] = $uerror;
-        } elseif (!$this->finputs['attach']) {
-            $this->errors[] = 'No attachment found!';
-        }
-
-        return !$this->errors;
     }
 
     /**
@@ -183,6 +211,11 @@ class Enquiry extends Controller
 
         if (mb_strlen($this->finputs['message']) > 1024) {
             $this->errors[] = 'Message must be less than 1025 characters!';
+            goto exitValidation;
+        }
+
+        if (!(new UploadCache(__CLASS__))->get()) {
+            $this->errors[] = 'No attachment found!';
             goto exitValidation;
         }
 
