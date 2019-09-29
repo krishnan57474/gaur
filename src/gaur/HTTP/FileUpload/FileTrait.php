@@ -7,23 +7,6 @@ namespace Gaur\HTTP\FileUpload;
 trait FileTrait
 {
     /**
-     * Get non existing file name
-     *
-     * @param string $fileExt file extension
-     * @param string $path    path to check
-     *
-     * @return string
-     */
-    protected function getNewFilename(string $fileExt, string $path): string
-    {
-        do {
-            $filename = md5(uniqid((string)mt_rand(), true)) . $fileExt;
-        } while (file_exists($path . $filename));
-
-        return $filename;
-    }
-
-    /**
      * Move uploaded file
      *
      * @param array  $file file to move
