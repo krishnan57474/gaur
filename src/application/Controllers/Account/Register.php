@@ -42,7 +42,7 @@ class Register extends Controller
         $data = [];
 
         // 60 minutes
-        $data['csrf'] = (new CSRF())->create(__CLASS__, 60);
+        $data['csrf'] = (new CSRF(__CLASS__))->create(60);
         session_write_close();
 
         echo view('app/default/account/register', $data);
@@ -57,9 +57,9 @@ class Register extends Controller
      */
     protected function aactionSubmit(array &$response): void
     {
-        $csrf = new CSRF();
+        $csrf = new CSRF(__CLASS__);
 
-        if (!$csrf->validate(__CLASS__)) {
+        if (!$csrf->validate()) {
             $response['status'] = false;
             return;
         }
@@ -91,7 +91,7 @@ class Register extends Controller
             'A confirmation has been sent to the provided email address. You will need to follow the instructions in that message in order to gain access to the site.'
         ];
 
-        $csrf->remove(__CLASS__);
+        $csrf->remove();
         session_write_close();
     }
 

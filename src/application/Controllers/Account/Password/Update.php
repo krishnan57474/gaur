@@ -40,7 +40,7 @@ class Update extends Controller
         $data = [];
 
         // 60 minutes
-        $data['csrf'] = (new CSRF())->create(__CLASS__, 60);
+        $data['csrf'] = (new CSRF(__CLASS__))->create(60);
         session_write_close();
 
         echo view('app/default/account/password/update', $data);
@@ -55,9 +55,9 @@ class Update extends Controller
      */
     protected function aactionSubmit(array &$response): void
     {
-        $csrf = new CSRF();
+        $csrf = new CSRF(__CLASS__);
 
-        if (!$csrf->validate(__CLASS__)) {
+        if (!$csrf->validate()) {
             $response['status'] = false;
             return;
         }
@@ -78,7 +78,7 @@ class Update extends Controller
         ];
 
         unset($_SESSION['password_update']);
-        $csrf->remove(__CLASS__);
+        $csrf->remove();
         session_write_close();
     }
 

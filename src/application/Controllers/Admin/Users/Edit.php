@@ -59,7 +59,7 @@ class Edit extends Controller
         $data['user'] = $user;
 
         // 60 minutes
-        $data['csrf'] = (new CSRF())->create(__CLASS__, 60);
+        $data['csrf'] = (new CSRF(__CLASS__))->create(60);
         session_write_close();
 
         echo view('app/admin/users/edit', $data);
@@ -74,9 +74,9 @@ class Edit extends Controller
      */
     protected function aactionSubmit(array &$response): void
     {
-        $csrf = new CSRF();
+        $csrf = new CSRF(__CLASS__);
 
-        if (!$csrf->validate(__CLASS__)) {
+        if (!$csrf->validate()) {
             $response['status'] = false;
             return;
         }
@@ -104,7 +104,7 @@ class Edit extends Controller
             'admin/users'
         ];
 
-        $csrf->remove(__CLASS__);
+        $csrf->remove();
         session_write_close();
     }
 
