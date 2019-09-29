@@ -89,6 +89,23 @@ class FileUpload
     }
 
     /**
+     * Get non existing file name
+     *
+     * @param string $fileExt file extension with dot
+     * @param string $path    path to check with trailing slashes
+     *
+     * @return string
+     */
+    public function getNewFilename(string $fileExt, string $path): string
+    {
+        do {
+            $filename = md5(uniqid((string)mt_rand(), true)) . $fileExt;
+        } while (file_exists($path . $filename));
+
+        return $filename;
+    }
+
+    /**
      * Move uploaded files to new location
      *
      * $config fields
