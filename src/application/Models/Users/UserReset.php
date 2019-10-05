@@ -19,10 +19,10 @@ class UserReset extends Model
     {
         $qry = 'INSERT INTO `' . $this->db->prefixTable('user_resets') . '`(`uid`, `token`, `type`, `expire`)
                 VALUES ('
-                    . $data['uid'] . ', '
-                    . $this->db->escape($data['token']) . ', '
-                    . $data['type'] . ', '
-                    . $this->db->escape($data['expire'])
+                    . $data['uid']
+                    . ', ' . $this->db->escape($data['token'])
+                    . ', ' . $data['type']
+                    . ', ' . $this->db->escape($data['expire'])
                 . ')';
 
         $this->db->query($qry);
