@@ -16,13 +16,14 @@ class UploadCache
     /**
      * Load initial values
      *
-     * @param string $name page name
+     * @param string $name   page name
+     * @param string $afield attachment field name
      *
      * @return void
      */
-    public function __construct(string $name)
+    public function __construct(string $name, string $afield)
     {
-        $this->name = 'upload-' . $name;
+        $this->name = 'upload-' . $name . $afield;
     }
 
     /**
