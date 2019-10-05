@@ -30,7 +30,7 @@ class Enquiry extends Controller
 
         $data = [];
 
-        (new UploadCache(__CLASS__))->create();
+        (new UploadCache(__CLASS__, 'attach'))->create();
 
         // 60 minutes
         $data['csrf'] = (new CSRF(__CLASS__))->create(60);
@@ -48,7 +48,8 @@ class Enquiry extends Controller
      */
     protected function aactionSubmit(array &$response): void
     {
-        $csrf = new CSRF(__CLASS__);
+        $csrf   = new CSRF(__CLASS__);
+        $afield = 'attach';
 
         if (!$csrf->validate()) {
             $response['status'] = false;
@@ -56,14 +57,14 @@ class Enquiry extends Controller
         }
 
         if (!$this->validateInput()) {
-            $this->removeAttachment(__CLASS__);
+            $this->removeAttachment(__CLASS__, $afield);
             $response['errors'] = $this->errors;
             return;
         }
 
         $this->assembleAttachment(
             __CLASS__,
-            'attach',
+            $afield,
             FCPATH . 'assets/enquiry/'
         );
 
@@ -93,10 +94,10 @@ class Enquiry extends Controller
             return;
         }
 
-        $uploadCache = new UploadCache(__CLASS__);
+        $afield      = 'attach';
+        $uploadCache = new UploadCache(__CLASS__, $afield);
         $uploadCount = count($uploadCache->get());
         $uploadLimit = 1;
-        $afield      = 'attach';
 
         $this->finputs[$afield] = null;
 
@@ -121,7 +122,7 @@ class Enquiry extends Controller
                 $this->finputs[$afield][0]
             );
         } elseif ($this->errors) {
-            $this->removeAttachment(__CLASS__);
+            $this->removeAttachment(__CLASS__, $afield);
             $response['errors'] = $this->errors;
         }
 
@@ -214,7 +215,7 @@ class Enquiry extends Controller
             goto exitValidation;
         }
 
-        if (!(new UploadCache(__CLASS__))->get()) {
+        if (!(new UploadCache(__CLASS__, 'attach'))->get()) {
             $this->errors[] = 'No attachment found!';
             goto exitValidation;
         }

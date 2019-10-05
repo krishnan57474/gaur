@@ -31,7 +31,7 @@ trait AjaxUploadControllerTrait
     {
         $spath = config('Config\Paths')->writableDirectory . '/uploads/';
 
-        $uploadCache = new UploadCache($name);
+        $uploadCache = new UploadCache($name, $afield);
         $fileUpload  = new FileUpload();
 
         $this->finputs[$afield] = [];
@@ -52,15 +52,16 @@ trait AjaxUploadControllerTrait
     /**
      * Remove attachment
      *
-     * @param string $name page name
+     * @param string $name   page name
+     * @param string $afield attachment field name
      *
      * @return void
      */
-    protected function removeAttachment(string $name): void
+    protected function removeAttachment(string $name, string $afield): void
     {
         $path = config('Config\Paths')->writableDirectory . '/uploads/';
 
-        $uploadCache = new UploadCache($name);
+        $uploadCache = new UploadCache($name, $afield);
 
         foreach ($uploadCache->get() as $filename) {
             unlink($path . $filename);
