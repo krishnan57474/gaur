@@ -129,8 +129,8 @@
                     <div class="g-table table table-bordered table-hover text-center">
                         <div class="g-colgroup">
                             <div class="g-col g-w-70"></div>
-                            <div class="g-col"></div>
-                            <div class="g-col"></div>
+                            <div class="g-col g-w-200"></div>
+                            <div class="g-col g-w-200"></div>
                             <div class="g-col g-w-200"></div>
                             <div class="g-col g-w-100"></div>
                             <div class="g-col g-w-70"></div>
