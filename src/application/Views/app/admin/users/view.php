@@ -19,7 +19,7 @@ $status = [
 
     <main class="container mb-3" id="j-ar">
         <div class="row align-items-center">
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="">Home</a>
@@ -35,7 +35,7 @@ $status = [
                     </li>
                 </ol>
             </div>
-            <div class="col-sm-6 mb-2">
+            <div class="col-md-6 mb-2">
                 <div class="row no-gutters">
                     <?php if (!$user['activation']): ?>
                     <div class="col mb-2 mr-1 offset-lg-3">
@@ -63,23 +63,19 @@ $status = [
         </div>
 
         <?php if (!$user['activation']): ?>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="alert alert-warning text-center text-sm-left d-none j-confirm">
-                    <div class="row align-items-center">
-                        <div class="col-sm-6 mb-2 mb-sm-0">Confirm change activation</div>
-                        <div class="col-sm-6 text-sm-right">
-                            <button type="button" class="btn btn-success j-confirm-change">Confirm</button>
-                            <button type="button" class="btn btn-secondary j-confirm-toggle">Cancel</button>
-                        </div>
-                    </div>
+        <div class="alert alert-warning text-center text-sm-left d-none j-confirm">
+            <div class="row align-items-center">
+                <div class="col-sm-6 mb-2 mb-sm-0">Confirm change activation</div>
+                <div class="col-sm-6 text-sm-right">
+                    <button type="button" class="btn btn-success j-confirm-change">Confirm</button>
+                    <button type="button" class="btn btn-secondary j-confirm-toggle">Cancel</button>
                 </div>
             </div>
         </div>
         <?php endif; ?>
 
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">User details</div>
                     <div class="card-body pb-0">

@@ -11,10 +11,10 @@
 
     <main class="container mb-3">
         <div class="row">
-            <div class="col-sm-4 col-md-3">
+            <div class="col-md-3">
                 <?= view('app/default/common/account_menu') ?>
             </div>
-            <div class="col-sm-8 col-md-9">
+            <div class="col-md-9">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="">Home</a>

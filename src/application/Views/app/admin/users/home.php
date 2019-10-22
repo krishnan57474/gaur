@@ -11,7 +11,7 @@
 
     <main id="j-ar" class="container mb-3">
         <div class="row align-items-center">
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="">Home</a>
@@ -24,7 +24,7 @@
                     </li>
                 </ol>
             </div>
-            <div class="col-sm-6 mb-2">
+            <div class="col-md-6 mb-2">
                 <div class="row no-gutters">
                     <div class="col offset-lg-6 mb-2 mr-1">
                         <a href="admin/users/add" class="btn btn-block btn-primary">
@@ -122,7 +122,7 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <ul class="list-unstyled j-error d-none" data-show-errors></ul>
 
                 <div class="table-responsive">
@@ -171,7 +171,7 @@
 
         <div data-jitem="footer" class="row d-none">
             <div class="col-md-6">
-                <ul data-jitem="pagination" class="pagination flex-wrap flex-sm-nowrap"></ul>
+                <ul data-jitem="pagination" class="pagination flex-wrap flex-md-nowrap"></ul>
             </div>
 
             <div class="col-md-6 text-right">

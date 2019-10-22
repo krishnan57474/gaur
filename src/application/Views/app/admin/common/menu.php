@@ -1,6 +1,6 @@
-    <header class="container border-bottom mb-3 mt-sm-2 pb-sm-2">
+    <header class="container border-bottom mb-3 mt-md-2 pb-md-2">
         <div class="row align-items-center">
-            <div class="col-sm-3 d-none d-sm-block">
+            <div class="col-md-3 d-none d-md-block">
                 <div class="text-center">
                     <a href="" class="h1 mb-0">
                         <?= config('Config\App')->siteName ?>
@@ -8,7 +8,7 @@
                 </div>
             </div>
 
-            <nav class="col-sm-9 g-menu">
+            <nav class="col-md-9 g-menu">
                 <input class="g-menu-state" id="menu-state" type="checkbox">
 
                 <div class="g-menu-toggle">
