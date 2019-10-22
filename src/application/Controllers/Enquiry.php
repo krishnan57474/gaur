@@ -30,8 +30,6 @@ class Enquiry extends Controller
 
         $data = [];
 
-        (new UploadCache(__CLASS__, 'attach'))->create();
-
         // 60 minutes
         $data['csrf'] = (new CSRF(__CLASS__))->create(60);
         session_write_close();

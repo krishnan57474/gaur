@@ -44,16 +44,6 @@ class UploadCache
     }
 
     /**
-     * Create upload cache
-     *
-     * @return void
-     */
-    public function create(): void
-    {
-        $_SESSION[$this->name] = [];
-    }
-
-    /**
      * Get upload cache
      *
      * @return array
