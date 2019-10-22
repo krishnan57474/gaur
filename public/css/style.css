@@ -71,16 +71,6 @@ html {
 }
 
 @media (max-width:575px) {
-    .g-main-menu {
-        display: none;
-    }
-
-    .g-menu-toggle,
-    .g-menu-state:checked ~ .g-main-menu,
-    .g-menu-state:checked ~ .g-sub-menu {
-        display: block;
-    }
-
     .g-sub-menu {
         margin-left: 1em;
     }
@@ -97,6 +87,22 @@ html {
     .g-menu-state:checked ~ .g-menu-item .g-menu-icon::after,
     .g-menu-state:checked ~ a .g-menu-icon::after {
         content: "\e09d";
+    }
+}
+
+@media (max-width:767px) {
+    .g-main-menu {
+        display: none;
+    }
+
+    .g-menu-toggle,
+    .g-menu-state:checked ~ .g-main-menu,
+    .g-menu-state:checked ~ .g-sub-menu {
+        display: block;
+    }
+
+    .g-menu-toggle .g-menu-icon {
+        padding: 1em;
     }
 }
 
