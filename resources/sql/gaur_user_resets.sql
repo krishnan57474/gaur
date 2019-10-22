@@ -6,4 +6,4 @@ CREATE TABLE `gaur_user_resets` (
   `expire` datetime NULL,
   PRIMARY KEY (`id`),
   KEY `token` (`token`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
