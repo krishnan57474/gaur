@@ -89,7 +89,7 @@ class FileUpload
     }
 
     /**
-     * Get non existing file name
+     * Get non existing filename
      *
      * @param string $fileExt file extension with dot
      * @param string $path    path to check with trailing slashes
