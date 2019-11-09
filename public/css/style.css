@@ -102,7 +102,10 @@ html {
     }
 
     .g-menu-toggle .g-menu-icon {
+        bottom: unset;
         padding: 1em;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
 
@@ -136,6 +139,7 @@ html {
         min-width: 10em;
         position: absolute;
         top: 100%;
+        white-space: nowrap;
         z-index: 1;
     }
 
