@@ -121,8 +121,8 @@ class Add extends Controller
         if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = 'Email address does not appear to be valid!';
             goto exitValidation;
-        } elseif (mb_strlen($this->finputs['email']) > 254) {
-            $this->errors[] = 'Email address must be less than 255 characters!';
+        } elseif (mb_strlen($this->finputs['email']) > 128) {
+            $this->errors[] = 'Email address must be less than 129 characters!';
             goto exitValidation;
         }
 

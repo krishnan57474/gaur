@@ -98,7 +98,7 @@ class Login extends Controller
         ) {
             $this->errors[] = 'Incorrect login!';
         } elseif ($this->finputs['email'] !== ''
-            && mb_strlen($this->finputs['email']) > 254
+            && mb_strlen($this->finputs['email']) > 128
         ) {
             $this->errors[] = 'Incorrect login!';
         }

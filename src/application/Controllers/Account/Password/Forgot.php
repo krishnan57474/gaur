@@ -151,7 +151,7 @@ class Forgot extends Controller
         ) {
             $this->errors[] = 'Unable to sent confirmation!';
         } elseif ($this->finputs['email'] !== ''
-            && mb_strlen($this->finputs['email']) > 254
+            && mb_strlen($this->finputs['email']) > 128
         ) {
             $this->errors[] = 'Unable to sent confirmation!';
         }
