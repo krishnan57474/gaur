@@ -14,7 +14,7 @@ html {
 }
 
 .g-menu-toggle {
-    padding: 0.5em;
+    padding: 0.5em 3.5em 0.5em 0.5em;
     position: relative;
 }
 
@@ -59,6 +59,11 @@ html {
     display: block;
     padding: 1em;
     position: relative;
+}
+
+.g-menu-state ~ .g-menu-item,
+.g-menu-state ~ a {
+    padding-right: 3.5em;
 }
 
 .g-menu-icon,
@@ -152,7 +157,7 @@ html {
         top: 0;
     }
 
-    .g-menu-item,
+    .g-menu-state ~ .g-menu-item,
     .g-menu-state ~ a {
         padding-right: 2.5em;
     }
