@@ -6,7 +6,11 @@ html {
     cursor: pointer;
 }
 
-/* menu */
+.g-fw-900 {
+    font-weight: 900;
+}
+
+/* menu*/
 .g-menu-state,
 .g-menu-toggle,
 .g-sub-menu {
@@ -19,8 +23,8 @@ html {
 }
 
 .g-menu-icon {
-    bottom: 0;
-    font-family: Icons;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
     margin: 0;
     padding: 1em;
     position: absolute;
@@ -30,11 +34,11 @@ html {
 }
 
 .g-menu-toggle .g-menu-icon::after {
-    content: "\e09b";
+    content: "\f0c9";
 }
 
 .g-menu-state:checked ~ .g-menu-toggle .g-menu-icon::after {
-    content: "\e0db";
+    content: "\f00d";
 }
 
 .g-main-menu,
@@ -47,39 +51,52 @@ html {
 
 .g-main-menu li {
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 .g-main-menu li:last-child {
     border-bottom: none;
 }
 
-.g-menu-item,
-.g-main-menu a {
+.g-main-menu a,
+.g-menu-item {
     color: #444;
     display: block;
     padding: 1em;
-    position: relative;
-}
-
-.g-menu-state ~ .g-menu-item,
-.g-menu-state ~ a {
-    padding-right: 3.5em;
 }
 
 .g-menu-icon,
-.g-menu-item:hover,
-.g-menu-item:focus,
 .g-main-menu a:hover,
-.g-main-menu a:focus {
+.g-menu-item:hover,
+.g-main-menu a:focus,
+.g-menu-item:focus {
     background: rgba(0, 0, 0, 0.1);
     outline: none;
+}
+
+.g-menu-state ~ a,
+.g-menu-state ~ .g-menu-item {
+    padding-right: 3.5em;
 }
 
 .g-main-menu .active {
     color: #d23600;
 }
 
-@media (max-width:575px) {
+@media (max-width: 575px) {
+    .g-menu-state ~ .g-menu-icon::after {
+        content: "\f067";
+    }
+
+    .g-menu-state:checked ~ .g-menu-icon::after {
+        content: "\f068";
+    }
+
+    .g-menu-state:checked ~ .g-main-menu,
+    .g-menu-state:checked ~ .g-sub-menu {
+        display: block;
+    }
+
     .g-sub-menu {
         margin-left: 1em;
     }
@@ -87,58 +104,20 @@ html {
     .g-sub-menu li:first-child {
         border-top: 1px solid #ddd;
     }
-
-    .g-menu-item .g-menu-icon::after,
-    .g-menu-state ~ a .g-menu-icon::after {
-        content: "\e0aa";
-    }
-
-    .g-menu-state:checked ~ .g-menu-item .g-menu-icon::after,
-    .g-menu-state:checked ~ a .g-menu-icon::after {
-        content: "\e09d";
-    }
 }
 
-@media (max-width:767px) {
-    .g-main-menu {
-        display: none;
-    }
-
-    .g-menu-toggle,
-    .g-menu-state:checked ~ .g-main-menu,
-    .g-menu-state:checked ~ .g-sub-menu {
-        display: block;
-    }
-
-    .g-menu-toggle .g-menu-icon {
-        bottom: unset;
-        padding: 1em;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-}
-
-@media (min-width:576px) {
-    .g-menu-icon {
-        padding: 1em 0.5em;
-    }
-
-    .g-main-menu::after {
-        clear: both;
-        content: "";
-        display: block;
-    }
-
-    .g-main-menu li {
-        position: relative;
+@media (min-width: 576px) {
+    .g-main-menu,
+    .g-menu-state:checked ~ .g-main-menu {
+        display: flex;
+        flex-flow: row wrap;
     }
 
     .g-main-menu > li {
         border-bottom: none;
-        float: left;
     }
 
-    .g-menu li:hover > .g-sub-menu {
+    .g-main-menu li:hover > .g-sub-menu {
         display: block;
     }
 
@@ -157,23 +136,49 @@ html {
         top: 0;
     }
 
-    .g-menu-state ~ .g-menu-item,
-    .g-menu-state ~ a {
+    .g-menu-state ~ a,
+    .g-menu-state ~ .g-menu-item {
         padding-right: 2.5em;
     }
 
-    .g-menu-item .g-menu-icon::after,
-    .g-menu-state ~ a .g-menu-icon::after {
-        content: "\e034";
+    .g-menu-state ~ .g-menu-icon::after {
+        content: "\f078";
     }
 
-    .g-sub-menu .g-menu-item .g-menu-icon::after,
-    .g-sub-menu .g-menu-state ~ a .g-menu-icon::after {
-        content: "\e036";
+    .g-sub-menu .g-menu-state ~ .g-menu-icon::after {
+        content: "\f054";
+    }
+
+    .g-menu-icon {
+        padding: 1em 0.5em;
     }
 }
 
-/* table */
+@media (max-width: 767px) {
+    .g-menu-toggle {
+        display: block;
+    }
+
+    .g-menu-toggle .g-menu-icon {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .g-main-menu {
+        display: none;
+    }
+
+    .g-menu-state ~ a,
+    .g-menu-state ~ .g-menu-item {
+        padding-right: 3.5em;
+    }
+
+    .g-menu-icon {
+        padding: 1em;
+    }
+}
+
+/* table*/
 .g-table {
     display: table;
     table-layout: fixed;
@@ -236,7 +241,7 @@ html {
     border-right: 1px solid #dee2e6;
 }
 
-/* width */
+/* width*/
 .g-w-70 {
     width: 70px;
 }
@@ -255,4 +260,8 @@ html {
 
 .g-w-250 {
     width: 250px;
+}
+
+.g-w-300 {
+    width: 300px;
 }

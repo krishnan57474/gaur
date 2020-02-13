@@ -200,7 +200,7 @@
         Ajax.getConfigs = function (uconfigs, handlers) {
             var _this = this;
             var configs = {
-                method: "POST",
+                method: uconfigs.method || "POST",
                 url: uconfigs.url || location.href,
                 error: function () { return _this.onError(uconfigs, handlers); },
                 data: uconfigs.data

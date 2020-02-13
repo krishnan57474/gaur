@@ -79,10 +79,10 @@
                         return;
                     }
                     if (status) {
-                        elm.addClass("oi-check text-success").removeClass("oi-x text-danger");
+                        elm.addClass("fa-check text-success").removeClass("fa-times text-danger");
                     }
                     else {
-                        elm.addClass("oi-x text-danger").removeClass("oi-check text-success");
+                        elm.addClass("fa-times text-danger").removeClass("fa-check text-success");
                     }
                     Confirm.hide();
                 }
@@ -319,10 +319,10 @@
             if (!elm) {
                 elm = $("[data-id='" + configs.orderBy + "']", Jitems.get("order"));
             }
-            elm.children().addClass("oi-sort-" + (configs.sortBy ? "descending" : "ascending"));
+            elm.children().addClass("fa-sort-amount-down" + (configs.sortBy ? "" : "-alt"));
         };
         Order.clear = function () {
-            $("span", Jitems.get("order")).removeClass("oi-sort-ascending oi-sort-descending");
+            $("span", Jitems.get("order")).removeClass("fa-sort-amount-down fa-sort-amount-down-alt");
         };
         Order.init = function () {
             var _this = this;
