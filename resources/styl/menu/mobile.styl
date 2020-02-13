@@ -1,0 +1,29 @@
+/* mobile only */
+@media (max-width: 575px) {
+    .g-menu-state {
+        ~ .g-menu-icon::after {
+            content: "\f067";
+        }
+
+        &:checked {
+            ~ .g-menu-icon::after {
+                content: "\f068";
+            }
+
+            ~ .g-main-menu,
+            ~ .g-sub-menu {
+                display: block;
+            }
+        }
+    }
+
+    .g-sub-menu {
+        margin-left: 1em;
+
+        li {
+            &:first-child {
+                border-top: 1px solid #ddd;
+            }
+        }
+    }
+}

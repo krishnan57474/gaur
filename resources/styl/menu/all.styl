@@ -1,0 +1,82 @@
+/* mobile, tablet, desktop */
+.g-menu-state {
+    display: none;
+}
+
+.g-menu-toggle {
+    @extends .g-menu-state;
+
+    padding: 0.5em 3.5em 0.5em 0.5em;
+    position: relative;
+}
+
+.g-menu-icon {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+
+    /.g-menu-toggle &::after {
+        content: "\f0c9";
+    }
+
+    /.g-menu-state:checked ~ .g-menu-toggle &::after {
+        content: "\f00d";
+    }
+}
+
+.g-main-menu {
+    &,
+    /.g-sub-menu {
+        background: #fff;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        border-bottom: 1px solid #ddd;
+        position: relative;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    a {
+        color: #444;
+        display: block;
+        padding: 1em;
+
+        /.g-menu-icon,
+        &:hover,
+        &:focus {
+            background: rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+    }
+
+    /.g-menu-state ~ a {
+        padding-right: 3.5em;
+    }
+
+    .active {
+        color: #d23600;
+    }
+}
+
+.g-menu-item {
+    @extends .g-main-menu a;
+
+    /.g-menu-state ~ & {
+        @extends .g-menu-state ~ a;
+    }
+}
+
+.g-sub-menu {
+    @extends .g-menu-state;
+}

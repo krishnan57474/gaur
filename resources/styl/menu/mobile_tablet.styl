@@ -1,0 +1,26 @@
+/* mobile, tablet */
+@media (max-width: 767px) {
+    .g-menu-toggle {
+        display: block;
+
+        .g-menu-icon {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+
+    .g-main-menu {
+        display: none;
+    }
+
+    .g-menu-state {
+        ~ a,
+        ~ .g-menu-item {
+            padding-right: 3.5em;
+        }
+    }
+
+    .g-menu-icon {
+        padding: 1em;
+    }
+}

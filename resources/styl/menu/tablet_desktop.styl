@@ -1,0 +1,54 @@
+/* tablet, desktop */
+@media (min-width: 576px) {
+    .g-main-menu {
+        &,
+        .g-menu-state:checked ~ & {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+        > li {
+            border-bottom: none;
+        }
+
+        li {
+            &:hover > .g-sub-menu {
+                display: block;
+            }
+        }
+    }
+
+    .g-sub-menu {
+        border: 1px solid #ddd;
+        left: 0;
+        min-width: 10em;
+        position: absolute;
+        top: 100%;
+        white-space: nowrap;
+        z-index: 1;
+
+        .g-sub-menu {
+            left: 100%;
+            top: 0;
+        }
+    }
+
+    .g-menu-state {
+        ~ a,
+        ~ .g-menu-item {
+            padding-right: 2.5em;
+        }
+
+        ~ .g-menu-icon::after {
+            content: "\f078";
+        }
+
+        /.g-sub-menu & ~ .g-menu-icon::after {
+            content: "\f054";
+        }
+    }
+
+    .g-menu-icon {
+        padding: 1em 0.5em;
+    }
+}
