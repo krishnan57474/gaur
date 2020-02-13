@@ -6,7 +6,7 @@ class Ajax {
         handlers: AjaxHandlersInterface
     ): JQuery.AjaxSettings {
         const configs: JQuery.AjaxSettings = {
-            method: "POST",
+            method: uconfigs.method || "POST",
             url: uconfigs.url || location.href,
             error: () => this.onError(uconfigs, handlers),
             data: uconfigs.data
