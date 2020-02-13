@@ -16,9 +16,9 @@ class Status {
                 }
 
                 if (status) {
-                    elm.addClass("oi-check text-success").removeClass("oi-x text-danger");
+                    elm.addClass("fa-check text-success").removeClass("fa-times text-danger");
                 } else {
-                    elm.addClass("oi-x text-danger").removeClass("oi-check text-success");
+                    elm.addClass("fa-times text-danger").removeClass("fa-check text-success");
                 }
 
                 Confirm.hide();

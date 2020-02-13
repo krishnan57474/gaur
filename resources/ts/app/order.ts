@@ -37,11 +37,11 @@ class Order {
             elm = $("[data-id='" + configs.orderBy + "']", Jitems.get("order"));
         }
 
-        elm.children().addClass("oi-sort-" + (configs.sortBy ? "descending" : "ascending"));
+        elm.children().addClass("fa-sort-amount-down" + (configs.sortBy ? "" : "-alt"));
     }
 
     public static clear(): void {
-        $("span", Jitems.get("order")).removeClass("oi-sort-ascending oi-sort-descending");
+        $("span", Jitems.get("order")).removeClass("fa-sort-amount-down fa-sort-amount-down-alt");
     }
 
     public static init(): void {

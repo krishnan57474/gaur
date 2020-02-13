@@ -1,7 +1,7 @@
     <div class="card mb-3 j-list-menu">
         <div class="card-header d-flex d-md-none justify-content-between j-list-menu-toggle">
             <div class="j-list-menu-title">&nbsp;</div>
-            <span class="oi oi-menu"></span>
+            <span class="fas fa-bars"></span>
         </div>
 
         <div class="list-group list-group-flush d-none d-md-block j-list-menu-list">

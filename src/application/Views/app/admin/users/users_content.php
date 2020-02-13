@@ -1,8 +1,8 @@
 <?php
 
 $status = [
-    'oi oi-x text-danger',
-    'oi oi-check text-success'
+    'fas fa-times text-danger',
+    'fas fa-check text-success'
 ];
 
 foreach ($items as $item):
@@ -19,16 +19,16 @@ foreach ($items as $item):
         <?php endif; ?>
     </div>
     <div class="g-td">
-        <button type="button" data-item="status" class="btn btn-link p-0 <?= $status[$item['status']] ?>"></button>
+        <button type="button" data-item="status" class="btn btn-link p-0 g-fw-900 <?= $status[$item['status']] ?>"></button>
     </div>
     <div class="g-td">
         <a href="admin/users/edit/<?= $item['id'] ?>">
-            <span class="oi oi-pencil"></span>
+            <span class="fas fa-edit"></span>
         </a>
     </div>
     <div class="g-td">
         <a href="admin/users/view/<?= $item['id'] ?>">
-            <span class="oi oi-link-intact"></span>
+            <span class="fas fa-link"></span>
         </a>
     </div>
 </div>

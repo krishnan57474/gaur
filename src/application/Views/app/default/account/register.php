@@ -36,7 +36,7 @@
                             <input class="btn btn-block btn-primary" type="submit" value="Sign Up">
                         </div>
                         <div class="col-7 text-sm-right">
-                            <span class="oi oi-account-login"></span>
+                            <span class="fas fa-sign-in-alt"></span>
                             <a href="account/login">Already have an account</a>
                         </div>
                     </div>

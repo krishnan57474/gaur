@@ -22,13 +22,13 @@
                 <ul class="g-main-menu">
                     <li>
                         <a href="admin/users">
-                            <span class="oi oi-people"></span>
+                            <span class="fas fa-users"></span>
                             Users
                         </a>
                     </li>
                     <li>
                         <a href="account/logout">
-                            <span class="oi oi-account-logout"></span>
+                            <span class="fas fa-sign-out-alt"></span>
                             Logout
                         </a>
                     </li>

@@ -22,45 +22,45 @@
                 <ul class="g-main-menu">
                     <li>
                         <a href="">
-                            <span class="oi oi-home"></span>
+                            <span class="fas fa-home"></span>
                             Home
                         </a>
                     </li>
                     <li>
                         <a href="contact">
-                            <span class="oi oi-envelope-closed"></span>
+                            <span class="fas fa-envelope"></span>
                             Contact
                         </a>
                     </li>
                     <li>
                         <a href="enquiry">
-                            <span class="oi oi-envelope-closed"></span>
+                            <span class="fas fa-envelope"></span>
                             Enquiry
                         </a>
                     </li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <li>
                         <a href="account">
-                            <span class="oi oi-person"></span>
+                            <span class="fas fa-user"></span>
                             Account
                         </a>
                     </li>
                     <li>
                         <a href="account/logout">
-                            <span class="oi oi-account-logout"></span>
+                            <span class="fas fa-sign-out-alt"></span>
                             Logout
                         </a>
                     </li>
                     <?php else: ?>
                     <li>
                         <a href="account/login">
-                            <span class="oi oi-account-login"></span>
+                            <span class="fas fa-sign-in-alt"></span>
                             Login
                         </a>
                     </li>
                     <li>
                         <a href="account/register">
-                            <span class="oi oi-person"></span>
+                            <span class="fas fa-user"></span>
                             Register
                         </a>
                     </li>

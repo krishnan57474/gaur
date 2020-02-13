@@ -1,8 +1,8 @@
 <?php
 
 $status = [
-    'oi oi-x text-danger',
-    'oi oi-check text-success'
+    'fas fa-times text-danger',
+    'fas fa-check text-success'
 ];
 
 ?>
@@ -40,7 +40,7 @@ $status = [
                     <?php if (!$user['activation']): ?>
                     <div class="col mb-2 mr-1 offset-lg-3">
                         <button type="button" class="btn btn-block btn-success j-confirm-toggle">
-                            <span class="oi oi-check"></span>
+                            <span class="fas fa-check"></span>
                             Activate
                         </button>
                     </div>
@@ -48,13 +48,13 @@ $status = [
 
                     <div class="col mb-2 mr-1<?php if ($user['activation']): ?> offset-lg-6<?php endif; ?>">
                         <a href="admin/users/edit/<?= $user['id'] ?>" class="btn btn-block btn-primary">
-                            <span class="oi oi-pencil"></span>
+                            <span class="fas fa-edit"></span>
                             Edit
                         </a>
                     </div>
                     <div class="col mb-2">
                         <a href="admin/users" class="btn btn-block btn-secondary">
-                            <span class="oi oi-arrow-left"></span>
+                            <span class="fas fa-long-arrow-alt-left"></span>
                             Back
                         </a>
                     </div>

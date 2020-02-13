@@ -34,7 +34,7 @@
                             <input class="btn btn-block btn-primary" type="submit" value="Sign In">
                         </div>
                         <div class="col-7 text-right">
-                            <span class="oi oi-lock-unlocked"></span>
+                            <span class="fas fa-unlock"></span>
                             <a href="account/password/forgot">Forgot Password</a>
                         </div>
                     </div>

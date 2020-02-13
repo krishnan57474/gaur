@@ -28,13 +28,13 @@
                 <div class="row no-gutters">
                     <div class="col offset-lg-6 mb-2 mr-1">
                         <a href="admin/users/add" class="btn btn-block btn-primary">
-                            <span class="oi oi-pencil"></span>
+                            <span class="fas fa-plus"></span>
                             Add
                         </a>
                     </div>
                     <div class="col mb-2">
                         <button type="button" data-jitem="filter" class="btn btn-block btn-secondary">
-                            <span class="oi oi-magnifying-glass"></span>
+                            <span class="fas fa-filter"></span>
                             Filter
                         </button>
                     </div>
@@ -97,13 +97,13 @@
                 <div class="row no-gutters">
                     <div class="col col-sm-12 mb-1 mr-1">
                         <button data-action="search" type="button" class="btn btn-block btn-success">
-                            <span class="oi oi-magnifying-glass"></span>
+                            <span class="fas fa-search"></span>
                             Search
                         </button>
                     </div>
                     <div class="col col-sm-12 mb-1">
                         <button data-action="reset" type="button" class="btn btn-block btn-danger">
-                            <span class="oi oi-x"></span>
+                            <span class="fas fa-times"></span>
                             Clear
                         </button>
                     </div>
@@ -139,17 +139,17 @@
                         <div class="g-thead bg-light">
                             <div class="g-tr" data-jitem="order">
                                 <div class="g-th cursor-pointer" data-id="id">
-                                    <span class="small oi oi-elevator"></span>
+                                    <span class="fas fa-sort"></span>
                                     ID
                                 </div>
                                 <div class="g-th text-left">Username</div>
                                 <div class="g-th text-left">Email</div>
                                 <div class="g-th cursor-pointer" data-id="last_visited">
-                                    <span class="small oi oi-elevator"></span>
+                                    <span class="fas fa-sort"></span>
                                     Last Visited
                                 </div>
                                 <div class="g-th cursor-pointer" data-id="status">
-                                    <span class="small oi oi-elevator"></span>
+                                    <span class="fas fa-sort"></span>
                                     Status
                                 </div>
                                 <div class="g-th">Edit</div>

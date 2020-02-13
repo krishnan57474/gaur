@@ -29,7 +29,7 @@
                             <input class="btn btn-block btn-primary" type="submit" value="Reset">
                         </div>
                         <div class="col-7 text-right">
-                            <span class="oi oi-account-login"></span>
+                            <span class="fas fa-sign-in-alt"></span>
                             <a href="account/login">Sign In</a>
                         </div>
                     </div>
