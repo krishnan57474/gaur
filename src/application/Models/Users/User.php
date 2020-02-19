@@ -18,8 +18,8 @@ class User extends Model
     public function activate(int $id): void
     {
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
-                SET `status`= 1,
-                    `activation`= 1
+                SET `status` = 1,
+                    `activation` = 1
                 WHERE `id` = ' . $id;
 
         $this->db->query($qry);
@@ -155,7 +155,7 @@ class User extends Model
     public function updateLastVisit(int $id): void
     {
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
-                SET `last_visited`= ' . $this->db->escape(date('Y-m-d H:i:s'))
+                SET `last_visited` = ' . $this->db->escape(date('Y-m-d H:i:s'))
                 . ' WHERE `id` = ' . $id;
 
         $this->db->query($qry);
@@ -172,7 +172,7 @@ class User extends Model
     public function updatePassword(int $id, string $password): void
     {
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
-                SET `password`= ' . $this->db->escape(password_hash($password, PASSWORD_DEFAULT))
+                SET `password` = ' . $this->db->escape(password_hash($password, PASSWORD_DEFAULT))
                 . ' WHERE `id` = ' . $id;
 
         $this->db->query($qry);

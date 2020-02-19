@@ -18,8 +18,8 @@ class User extends Model
     public function activate(int $id): void
     {
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
-                SET `status`= 1,
-                    `activation`= 1
+                SET `status` = 1,
+                    `activation` = 1
                 WHERE `id` = ' . $id;
 
         $this->db->query($qry);
@@ -58,7 +58,7 @@ class User extends Model
     public function changeStatus(int $id): void
     {
         $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
-                SET `status`= NOT `status`
+                SET `status` = NOT `status`
                 WHERE `id` = ' . $id;
 
         $this->db->query($qry);
@@ -141,7 +141,7 @@ class User extends Model
         $password = '';
 
         if ($data['password'] !== '') {
-            $password = ', `password`= ' . $this->db->escape(
+            $password = ', `password` = ' . $this->db->escape(
                 password_hash($data['password'], PASSWORD_DEFAULT)
             );
         }
@@ -150,8 +150,8 @@ class User extends Model
                 SET `username` = ' . $this->db->escape($data['username'])
                     . ', `email` = ' . $this->db->escape($data['email'])
                     . $password
-                    . ', `status`= ' . $data['status']
-                    . ', `admin`= ' . $data['admin']
+                    . ', `status` = ' . $data['status']
+                    . ', `admin` = ' . $data['admin']
                 . ' WHERE `id` = ' . $id;
 
         $this->db->query($qry);
