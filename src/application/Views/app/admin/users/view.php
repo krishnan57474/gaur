@@ -36,9 +36,9 @@ $status = [
                 </ol>
             </div>
             <div class="col-md-6 mb-2">
-                <div class="row no-gutters">
+                <div class="form-row row-cols-2 row-cols-sm-3 row-cols-lg-4 justify-content-end">
                     <?php if (!$user['activation']): ?>
-                    <div class="col mb-2 mr-1 offset-lg-3">
+                    <div class="col mb-2">
                         <button type="button" class="btn btn-block btn-success j-confirm-toggle">
                             <span class="fas fa-check"></span>
                             Activate
@@ -46,7 +46,7 @@ $status = [
                     </div>
                     <?php endif; ?>
 
-                    <div class="col mb-2 mr-1<?php if ($user['activation']): ?> offset-lg-6<?php endif; ?>">
+                    <div class="col mb-2">
                         <a href="admin/users/edit/<?= $user['id'] ?>" class="btn btn-block btn-primary">
                             <span class="fas fa-edit"></span>
                             Edit

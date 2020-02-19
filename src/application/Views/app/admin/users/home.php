@@ -25,8 +25,8 @@
                 </ol>
             </div>
             <div class="col-md-6 mb-2">
-                <div class="row no-gutters">
-                    <div class="col offset-lg-6 mb-2 mr-1">
+                <div class="form-row row-cols-2 row-cols-sm-3 row-cols-lg-4 justify-content-end">
+                    <div class="col mb-2">
                         <a href="admin/users/add" class="btn btn-block btn-primary">
                             <span class="fas fa-plus"></span>
                             Add
@@ -126,7 +126,7 @@
                 <ul class="list-unstyled j-error d-none" data-show-errors></ul>
 
                 <div class="table-responsive">
-                    <div class="g-table table table-bordered table-hover text-center">
+                    <div class="g-table table table-bordered text-center">
                         <div class="g-colgroup">
                             <div class="g-col g-w-70"></div>
                             <div class="g-col g-w-200"></div>
