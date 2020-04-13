@@ -1,10 +1,12 @@
 class ImportJs {
     protected static asyncQueue(): void {
-        if (!window._jq) {
+        if (!Array.isArray(window._jq)) {
             return;
         }
 
-        window._jq.forEach((callback: VoidFunction) => callback());
+        for (const callback of window._jq) {
+            callback();
+        }
 
         window._jq = null;
     }
@@ -12,6 +14,7 @@ class ImportJs {
     protected static getFrg(
         fileSrc: string,
         integrity: string,
+        type: string,
         callback?: VoidFunction
     ): HTMLScriptElement {
         const script: HTMLScriptElement = document.createElement("script");
@@ -24,6 +27,10 @@ class ImportJs {
             script.crossOrigin = "anonymous";
         }
 
+        if (type) {
+            script.type = type;
+        }
+
         if (callback) {
             script.onload = callback;
         }
@@ -32,17 +39,15 @@ class ImportJs {
     }
 
     protected static getScripts(): Array<HTMLScriptElement> {
-        const elmsList: NodeListOf<HTMLScriptElement> = document.querySelectorAll(".j-ajs"),
-            length: number = elmsList.length,
+        const elmsList: HTMLCollectionOf<HTMLScriptElement> = document.getElementsByClassName(
+                "j-ajs"
+            ) as HTMLCollectionOf<HTMLScriptElement>,
             orderedScripts: Array<Array<HTMLScriptElement>> = [],
             scripts: Array<HTMLScriptElement> = [],
             unorderedScripts: Array<HTMLScriptElement> = [];
 
-        let elm: HTMLScriptElement, order: number;
-
-        for (let i: number = 0; i < length; i++) {
-            elm = elmsList[i];
-            order = Number(elm.getAttribute("data-order"));
+        for (const elm of Array.from(elmsList)) {
+            let order: number = Number(elm.getAttribute("data-order"));
 
             if (order) {
                 order -= 1;
@@ -57,50 +62,47 @@ class ImportJs {
             }
         }
 
-        orderedScripts.forEach((e: Array<HTMLScriptElement>) => scripts.push(...e));
+        for (const elms of orderedScripts) {
+            scripts.push(...elms);
+        }
 
         scripts.push(...unorderedScripts);
-        scripts.reverse();
 
         return scripts;
     }
 
-    protected static import(elm: HTMLScriptElement, scripts: Array<HTMLScriptElement>): void {
-        const fileSrc: string = elm.getAttribute("data-src") || "",
-            integrity: string = elm.getAttribute("data-integrity") || "",
-            skipQueue = elm.hasAttribute("data-skip-queue"),
-            callback: VoidFunction = () => this.processQueue(scripts);
+    protected static import(elm: HTMLScriptElement): Promise<void> {
+        return new Promise((callback) => {
+            const fileSrc: string = elm.getAttribute("data-src") || "",
+                integrity: string = elm.getAttribute("data-integrity") || "",
+                type: string = elm.getAttribute("data-type") || "",
+                skipQueue = elm.hasAttribute("data-skip-queue");
 
-        if (ImportCache.exists(fileSrc)) {
-            callback();
-            return;
-        }
+            if (ImportCache.exists(fileSrc)) {
+                callback();
+                return;
+            }
 
-        ImportCache.add(fileSrc);
-        document.head.appendChild(
-            this.getFrg(fileSrc, integrity, skipQueue ? undefined : callback)
-        );
+            ImportCache.add(fileSrc);
+            document.head.appendChild(
+                this.getFrg(fileSrc, integrity, type, skipQueue ? undefined : callback)
+            );
 
-        if (skipQueue) {
-            callback();
-        }
+            if (skipQueue) {
+                callback();
+            }
+        });
     }
 
-    protected static processQueue(scripts: Array<HTMLScriptElement>): void {
-        const elm: HTMLScriptElement | undefined = scripts.pop();
-
-        if (elm) {
-            this.import(elm, scripts);
-        } else {
-            this.asyncQueue();
-        }
-    }
-
-    public static init(): void {
+    public static async init(): Promise<void> {
         const scripts: Array<HTMLScriptElement> = this.getScripts();
 
         ImportCache.reset();
 
-        this.processQueue(scripts);
+        for (const elm of scripts) {
+            await this.import(elm);
+        }
+
+        this.asyncQueue();
     }
 }
