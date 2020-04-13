@@ -73,8 +73,8 @@
     })();
     </script>
 
-    <script type="text/x-async-css" data-src="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.12.1/css/all.min.css" data-integrity="sha384-v8BU367qNbs/aIZIxuivaU55N5GPF89WBerHoGA4QTcbUjYiLQtKdrfXnqAcXyTv" class="j-acss"></script>
+    <script type="text/x-async-css" data-src="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.13.0/css/all.min.css" data-integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" class="j-acss"></script>
 
-    <script type="text/x-async-js" data-src="https://cdn.jsdelivr.net/gh/jquery/jquery@3.4.1/dist/jquery.min.js" data-integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" data-order="1" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="https://cdn.jsdelivr.net/gh/jquery/jquery@3.5.0/dist/jquery.min.js" data-integrity="sha384-LVoNJ6yst/aLxKvxwp6s2GAabqPczfWh6xzm38S/YtjUyZ+3aTKOnD/OJVGYLZDl" data-order="1" class="j-ajs"></script>
 
-    <script async src="js/script.js"></script>
+    <script async type="module" src="js/script.js"></script>
