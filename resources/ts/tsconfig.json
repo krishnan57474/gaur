@@ -1,26 +1,21 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "none",
-        "removeComments": true,
-
-        "strict": true,
-        "noImplicitAny": true,
-        "strictNullChecks": true,
-        "noImplicitThis": true,
-        "alwaysStrict": true,
-
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-
         "extendedDiagnostics": true,
         "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "DOM",
+            "ES2015",
+            "ES2017"
+        ],
+        "module": "None",
         "noEmitHelpers": true,
         "noEmitOnError": true,
-        "strictBindCallApply": true,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": true
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
+        "strict": true,
+        "target": "ES2017"
     }
 }
