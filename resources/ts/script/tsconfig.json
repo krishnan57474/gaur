@@ -1,8 +1,8 @@
 {
-    "extends": "../tsconfig.json",
     "compilerOptions": {
         "outFile": "script.js"
     },
+    "extends": "../tsconfig.json",
     "files": [
         "window.d.ts",
         "cache.ts",
