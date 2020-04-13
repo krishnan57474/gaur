@@ -14,10 +14,7 @@ abstract class Controller extends BaseController
      *
      * @var array
      */
-    protected $helpers = [
-        'csp',
-        'html'
-    ];
+    protected $preloadHelpers = [];
 
     /**
      * Default page for this controller
@@ -36,6 +33,13 @@ abstract class Controller extends BaseController
     public function _remap(string ...$args): void
     {
         Services::session();
+
+        $helpers = [
+            'csp',
+            'html'
+        ];
+
+        helper(array_merge($helpers, $this->preloadHelpers));
 
         $this->index(...$args);
     }
