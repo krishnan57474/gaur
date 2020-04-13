@@ -8,6 +8,8 @@ $status = [
 ?>
     <?= view('app/admin/common/head_top') ?>
 
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+
     <title>View a user - <?= config('Config\App')->siteName ?></title>
 
     <!-- meta for search engines -->

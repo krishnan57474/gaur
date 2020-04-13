@@ -1,5 +1,7 @@
     <?= view('app/admin/common/head_top') ?>
 
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+
     <title>Users - <?= config('Config\App')->siteName ?></title>
 
     <!-- meta for search engines -->
