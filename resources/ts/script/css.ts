@@ -41,14 +41,15 @@ class ImportCss {
     }
 
     public static init(): void {
-        const elmsList: NodeListOf<HTMLScriptElement> = document.querySelectorAll(".j-acss"),
-            firstChild: Node = this.getFirstChild(),
-            length: number = elmsList.length;
+        const elmsList: HTMLCollectionOf<HTMLScriptElement> = document.getElementsByClassName(
+                "j-acss"
+            ) as HTMLCollectionOf<HTMLScriptElement>,
+            firstChild: Node = this.getFirstChild();
 
         ImportCache.reset();
 
-        for (let i: number = 0; i < length; i++) {
-            this.import(elmsList[i], firstChild);
+        for (const elm of Array.from(elmsList)) {
+            this.import(elm, firstChild);
         }
     }
 }
