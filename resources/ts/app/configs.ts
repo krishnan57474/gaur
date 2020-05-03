@@ -1,17 +1,9 @@
 class Configs {
     public static initialized: boolean;
 
-    public static apply(uconfigs: UserConfigsInterface): void {
-        for (const k in uconfigs) {
-            if (Object.prototype.hasOwnProperty.call(configs, k)) {
-                configs[k] = uconfigs[k];
-            }
-        }
-    }
-
     public static init(): void {
         configs = {
-            context: $(),
+            context: document.body,
             filterBy: [],
             filterVal: [],
             searchBy: [],
@@ -20,10 +12,36 @@ class Configs {
             listCount: 5,
             orderBy: "",
             sortBy: 0,
+            url: "",
 
             lock: false,
             totalItems: 0,
             totalPage: 0
         };
+    }
+
+    static normalize(): void {
+        configs.filterBy = this.toArray(configs.filterBy);
+        configs.filterVal = this.toArray(configs.filterVal);
+        configs.searchBy = this.toArray(configs.searchBy);
+        configs.searchVal = this.toArray(configs.searchVal);
+
+        if (configs.url.substr(-1) === "/") {
+            configs.url = configs.url.substr(0, configs.url.length - 1);
+        }
+    }
+
+    static toArray(obj: Array<string> | Record<number, string>): Array<string> {
+        const aobj: Array<string> = [];
+
+        if (Array.isArray(obj)) {
+            return obj;
+        }
+
+        for (const [k, v] of Object.entries(obj)) {
+            aobj[Number(k)] = v;
+        }
+
+        return aobj;
     }
 }
