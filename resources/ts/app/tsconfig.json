@@ -1,11 +1,11 @@
 {
-    "extends": "../tsconfig.json",
     "compilerOptions": {
         "outFile": "app.js"
     },
+    "extends": "../tsconfig.json",
     "files": [
-        "../jquery/index.d.ts",
         "window.d.ts",
+        "../form/ajax.d.ts",
         "gform.d.ts",
         "vars.d.ts",
         "vars.ts",
