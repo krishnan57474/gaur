@@ -1,8 +1,6 @@
 class Items {
-    protected static getInputs(): Record<string, string | number | Array<string>> {
-        const uinputs: Record<string, string | number | Array<string>> = {
-            "j-ar": "r",
-            action: "getItems",
+    protected static getInputs(): Record<string, number | string | Array<string>> {
+        const uinputs: Record<string, number | string | Array<string>> = {
             filterby: configs.filterBy,
             filterval: configs.filterVal,
             searchby: configs.searchBy,
@@ -17,20 +15,21 @@ class Items {
     }
 
     protected static onLoad(): void {
-        configs.lock = false;
+        const elmsList: Array<string> = ["loading", "noitems", "items", "footer"];
 
-        ["loading", "noitems", "items", "footer"].forEach((v) => Jitems.get(v).addClass("d-none"));
+        for (const e of elmsList) {
+            Jitems.get(e).classList.add("d-none");
+        }
     }
 
-    protected static onSuccess(rdata: string): void {
-        if (!rdata) {
-            Jitems.get("noitems").removeClass("d-none");
+    protected static onSuccess(content: string): void {
+        if (!content) {
+            Jitems.get("noitems").classList.remove("d-none");
             return;
         }
 
-        Jitems.get("items")
-            .html(rdata)
-            .removeClass("d-none");
+        Jitems.get("items").innerHTML = content;
+        Jitems.get("items").classList.remove("d-none");
 
         if (configs.totalPage) {
             Pagination.build();
@@ -42,14 +41,29 @@ class Items {
     public static get(): void {
         configs.lock = true;
 
-        gform.submit(
-            {
-                context: configs.context,
-                data: this.getInputs(),
-                load: this.onLoad,
-                success: this.onSuccess
-            },
-            true
-        );
+        gform
+            .request("get", configs.url)
+            .data(this.getInputs())
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+                const {errors, data} = response;
+
+                configs.lock = false;
+                this.onLoad();
+
+                if (errors) {
+                    gform.error(errors, configs.context);
+                    return;
+                }
+
+                let content: string = "";
+
+                if (data && "content" in data && typeof data.content === "string") {
+                    content = data.content;
+                }
+
+                this.onSuccess(content);
+            });
     }
 }

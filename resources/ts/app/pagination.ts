@@ -39,58 +39,63 @@ class Pagination {
         return currentPage;
     }
 
-    protected static handler(e: JQuery.ClickEvent): void {
-        const elm: HTMLElement = e.target;
+    protected static handler(e: MouseEvent): void {
+        const elm: HTMLElement = e.target as HTMLElement;
 
         if (configs.lock || elm.tagName !== "BUTTON") {
             return;
         }
 
-        configs.currentPage = this.getPage($(elm).text());
+        configs.currentPage = this.getPage(elm.textContent || "");
         Items.get();
     }
 
     public static build(): void {
-        Jitems.get("pagination")
-            .children()
-            .remove();
+        for (const elm of Array.from(Jitems.get("pagination").children)) {
+            elm.remove();
+        }
 
         if (configs.totalPage > 1) {
-            Jitems.get("pagination").append(
+            Jitems.get("pagination").appendChild(
                 PaginationFrg.get(configs.totalPage, configs.currentPage)
             );
         }
 
-        Jitems.get("footer").removeClass("d-none");
+        Jitems.get("footer").classList.remove("d-none");
     }
 
     public static get(): void {
-        gform.submit(
-            {
-                context: configs.context,
-                data: {
-                    "j-ar": "r",
-                    action: "getTotal"
-                },
-                success: (total: string): void => {
-                    if (!total) {
-                        return;
-                    }
+        configs.lock = true;
 
-                    configs.totalItems = Number(total);
-                    Jitems.get("total").text(configs.totalItems);
+        gform
+            .request("get", configs.url + "/total")
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+                const {errors, data} = response;
 
-                    configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
-                    this.build();
+                configs.lock = false;
+
+                if (errors) {
+                    gform.error(errors, configs.context);
+                    return;
                 }
-            },
-            true
-        );
+
+                if (!data || !("total" in data)) {
+                    return;
+                }
+
+                configs.totalItems = Number(data.total);
+                Jitems.get("total").textContent = String(configs.totalItems);
+
+                configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
+                this.build();
+            });
     }
 
     public static init(): void {
         PaginationFrg.init();
 
-        Jitems.get("pagination").on("click", (e: JQuery.ClickEvent) => this.handler(e));
+        Jitems.get("pagination").addEventListener("click", (e: MouseEvent) => this.handler(e));
     }
 }

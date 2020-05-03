@@ -1,43 +1,56 @@
 class Status {
-    protected static change(elm: JQuery<HTMLElement>): void {
-        gform.submit({
-            context: configs.context,
-            data: {
-                "j-ar": "r",
-                action: "changeStatus",
-                id: elm.closest(".g-tr").attr("data-id") || ""
-            },
-            success: (rstatus) => {
-                const status: boolean = !elm.hasClass("text-success");
+    protected static change(elm: HTMLElement): void {
+        const rowElm = elm.closest(".g-tr") as HTMLElement,
+            id: string = rowElm.getAttribute("data-id") || "0";
 
-                if (!rstatus) {
-                    Confirm.hide();
+        configs.lock = true;
+
+        gform
+            .request("post", configs.url + "/" + id + "/status", true)
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+                const {errors} = response;
+
+                configs.lock = false;
+
+                if (errors) {
+                    gform.error(errors, configs.context);
                     return;
                 }
 
-                if (status) {
-                    elm.addClass("fa-check text-success").removeClass("fa-times text-danger");
-                } else {
-                    elm.addClass("fa-times text-danger").removeClass("fa-check text-success");
-                }
-
-                Confirm.hide();
-            }
-        });
+                this.toggleStatus(elm);
+            });
     }
 
-    protected static handler(e: JQuery.ClickEvent): void {
-        const elm: HTMLElement = e.target;
+    protected static handler(e: MouseEvent): void {
+        const elm: HTMLElement = e.target as HTMLElement;
 
-        if (configs.lock || elm.tagName !== "BUTTON" || $(elm).attr("data-item") !== "status") {
+        if (
+            configs.lock ||
+            elm.tagName !== "BUTTON" ||
+            elm.getAttribute("data-item") !== "status"
+        ) {
             return;
         }
 
-        Confirm.add(() => this.change($(elm)));
+        Confirm.add(() => this.change(elm));
         Confirm.show("Confirm change status");
     }
 
+    protected static toggleStatus(elm: HTMLElement): void {
+        const status: boolean = !elm.classList.contains("text-success");
+
+        if (status) {
+            elm.classList.add("fa-check", "text-success");
+            elm.classList.remove("fa-times", "text-danger");
+        } else {
+            elm.classList.add("fa-times", "text-danger");
+            elm.classList.remove("fa-check", "text-success");
+        }
+    }
+
     public static init(): void {
-        Jitems.get("items").on("click", (e: JQuery.ClickEvent) => this.handler(e));
+        Jitems.get("items").addEventListener("click", (e: MouseEvent) => this.handler(e));
     }
 }
