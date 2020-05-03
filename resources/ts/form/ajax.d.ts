@@ -1,22 +1,22 @@
-interface AjaxHandlersInterface {
-    error: (errors: Array<string> | string) => void;
-    progress: (status: boolean) => void;
+type AjaxConfigDataType = Record<
+    string,
+    Array<number | string> | File | Record<string, number | string> | number | string
+>;
+
+type AjaxResponseDataType =
+    | Array<Record<string, Array<string> | string>>
+    | Record<string, Array<string> | string>;
+
+interface AjaxConfigInterface {
+    data: AjaxConfigDataType;
+    events: Record<string, Function>;
+    headers: Record<string, string>;
+    method: string;
+    upload: boolean;
+    url: string;
 }
 
 interface AjaxResponseInterface {
-    data?: string | Array<string>;
+    data?: AjaxResponseDataType;
     errors?: Array<string>;
-    status: boolean;
-}
-
-interface AjaxUserConfigsInterface {
-    context: JQuery<HTMLElement>;
-    data: Record<string, string | number | Array<string>>;
-    error?: (errors: Array<string> | string) => void;
-    load?: VoidFunction;
-    method?: string;
-    progress?: (status: boolean) => void;
-    success: (data: string | Array<string>) => void;
-    upload?: boolean;
-    url?: string;
 }
