@@ -1,6 +1,6 @@
 class Form {
-    public error(errors: Array<string> | string, context: JQuery<HTMLElement>): void {
-        Errors.show(errors, context || $());
+    public error(errors: Array<string> | string, context: HTMLElement): void {
+        Errors.show(Array.isArray(errors) ? errors : [errors], context);
     }
 
     public isValidFile(args: ValidateFileInterface): boolean {
@@ -15,7 +15,7 @@ class Form {
         }
     }
 
-    public submit(uconfigs: AjaxUserConfigsInterface, ignoreLock?: boolean): void {
-        Ajax.submit(uconfigs, ignoreLock || false);
+    public request(method: string, url: string, ignoreLock?: boolean): Ajax {
+        return new Ajax(method, url, ignoreLock || false);
     }
 }
