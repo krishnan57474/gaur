@@ -1,627 +1,636 @@
-(function ($) {
-    "use strict";
-    var configs, gform;
-    var Jitems = (function () {
-        function Jitems() {
+"use strict";
+let configs, gform;
+class Jitems {
+    static get(key) {
+        if (!this.caches[key]) {
+            this.caches[key] = Array.from(document.querySelectorAll("[data-jitem='" + key + "']"));
         }
-        Jitems.get = function (key) {
-            if (!this.caches[key]) {
-                this.caches[key] = $("[data-jitem='" + key + "']", configs.context);
-            }
-            return this.caches[key];
-        };
-        Jitems.init = function () {
-            this.caches = Object.create(null);
-        };
-        return Jitems;
-    }());
-    var Confirm = (function () {
-        function Confirm() {
+        return this.caches[key][0];
+    }
+    static getAll(key) {
+        if (!this.caches[key]) {
+            this.caches[key] = Array.from(document.querySelectorAll("[data-jitem='" + key + "']"));
         }
-        Confirm.handler = function (e) {
-            var elm = e.target;
-            var action = "";
-            if (elm.tagName === "BUTTON") {
-                action = $(elm).attr("data-action") || "";
-            }
-            switch (action) {
-                case "confirm":
-                    if (this.action) {
-                        this.action.call(undefined);
-                    }
-                    this.action = null;
-                    break;
-                case "cancel":
-                    this.hide();
-                    this.action = null;
-                    break;
-            }
-        };
-        Confirm.add = function (action) {
-            this.action = action;
-        };
-        Confirm.hide = function () {
-            Jitems.get("confirm").addClass("d-none");
-        };
-        Confirm.init = function () {
-            var _this = this;
-            Jitems.get("confirm").on("click", function (e) { return _this.handler(e); });
-        };
-        Confirm.show = function (msg) {
-            if (Jitems.get("confirm-msg").text() !== msg) {
-                Jitems.get("confirm-msg").text(msg);
-            }
-            Jitems.get("confirm").removeClass("d-none");
-            var elmPosition = Jitems.get("confirm").offset();
-            if (elmPosition) {
-                $("html, body").animate({
-                    scrollTop: elmPosition.top
-                });
-            }
-        };
-        return Confirm;
-    }());
-    var Status = (function () {
-        function Status() {
+        return this.caches[key];
+    }
+    static init() {
+        this.caches = Object.create(null);
+    }
+}
+class Confirm {
+    static handler(e) {
+        const elm = e.target;
+        let action = "", callback;
+        if (elm.tagName === "BUTTON") {
+            action = elm.getAttribute("data-action") || "";
         }
-        Status.change = function (elm) {
-            gform.submit({
-                context: configs.context,
-                data: {
-                    "j-ar": "r",
-                    action: "changeStatus",
-                    id: elm.closest(".g-tr").attr("data-id") || ""
-                },
-                success: function (rstatus) {
-                    var status = !elm.hasClass("text-success");
-                    if (!rstatus) {
-                        Confirm.hide();
-                        return;
-                    }
-                    if (status) {
-                        elm.addClass("fa-check text-success").removeClass("fa-times text-danger");
-                    }
-                    else {
-                        elm.addClass("fa-times text-danger").removeClass("fa-check text-success");
-                    }
-                    Confirm.hide();
+        switch (action) {
+            case "confirm":
+                callback = this.callback;
+                this.hide();
+                this.callback = null;
+                if (callback) {
+                    callback();
                 }
-            });
-        };
-        Status.handler = function (e) {
-            var _this = this;
-            var elm = e.target;
-            if (configs.lock || elm.tagName !== "BUTTON" || $(elm).attr("data-item") !== "status") {
-                return;
-            }
-            Confirm.add(function () { return _this.change($(elm)); });
-            Confirm.show("Confirm change status");
-        };
-        Status.init = function () {
-            var _this = this;
-            Jitems.get("items").on("click", function (e) { return _this.handler(e); });
-        };
-        return Status;
-    }());
-    var PaginationFrg = (function () {
-        function PaginationFrg() {
+                break;
+            case "cancel":
+                this.hide();
+                this.callback = null;
+                break;
         }
-        PaginationFrg.getBtnFrg = function () {
-            var btnFrg = $(document.createElement("button"));
-            btnFrg.attr("type", "button");
-            btnFrg.attr("class", "page-link");
-            return btnFrg;
-        };
-        PaginationFrg.getItemFrg = function (page, isActive) {
-            var frg = this.listElm.clone().append(this.btnElm.clone().text(page));
-            if (isActive) {
-                frg.addClass("active");
-            }
-            return frg;
-        };
-        PaginationFrg.getListFrg = function () {
-            var listFrg = $(document.createElement("li"));
-            listFrg.attr("class", "page-item mb-2");
-            return listFrg;
-        };
-        PaginationFrg.get = function (totalPage, currentPage) {
-            var frg = $(document.createDocumentFragment()), sideLinksCount = 2, totalLinks = sideLinksCount * 2;
-            var paginationStart = 1, paginationEnd;
-            if (currentPage > sideLinksCount) {
-                paginationStart = currentPage - sideLinksCount;
-            }
-            paginationEnd = paginationStart + totalLinks;
-            if (paginationEnd > totalPage) {
-                paginationStart -= paginationEnd - totalPage;
-                if (paginationStart < 1) {
-                    paginationStart = 1;
-                }
-                paginationEnd = totalPage;
-            }
-            if (currentPage > 2) {
-                frg.append(this.getItemFrg("Start"));
-            }
-            if (currentPage > 1) {
-                frg.append(this.getItemFrg("Previous"));
-            }
-            paginationStart -= 1;
-            while (++paginationStart <= paginationEnd) {
-                frg.append(this.getItemFrg(paginationStart, paginationStart === currentPage));
-            }
-            if (currentPage < totalPage) {
-                frg.append(this.getItemFrg("Next"));
-            }
-            if (totalPage > totalLinks + 1 && currentPage + 1 < totalPage) {
-                frg.append(this.getItemFrg("End"));
-            }
-            return frg;
-        };
-        PaginationFrg.init = function () {
-            this.btnElm = this.getBtnFrg();
-            this.listElm = this.getListFrg();
-        };
-        return PaginationFrg;
-    }());
-    var Pagination = (function () {
-        function Pagination() {
+    }
+    static hide() {
+        Jitems.get("confirm").classList.add("d-none");
+    }
+    static add(callback) {
+        this.callback = callback;
+    }
+    static init() {
+        Jitems.get("confirm").addEventListener("click", (e) => this.handler(e));
+    }
+    static show(msg) {
+        if (Jitems.get("confirm-msg").textContent !== msg) {
+            Jitems.get("confirm-msg").textContent = msg;
         }
-        Pagination.getPage = function (page) {
-            var currentPage;
-            switch (page) {
-                case "Start": {
-                    currentPage = 1;
-                    break;
-                }
-                case "Previous": {
-                    currentPage = configs.currentPage - 1;
-                    break;
-                }
-                case "Next": {
-                    currentPage = configs.currentPage + 1;
-                    break;
-                }
-                case "End": {
-                    currentPage = configs.totalPage;
-                    break;
-                }
-                default: {
-                    currentPage = Number(page);
-                }
-            }
-            if (!currentPage || currentPage < 1) {
-                currentPage = 1;
-            }
-            if (currentPage > configs.totalPage) {
-                currentPage = configs.totalPage;
-            }
-            return currentPage;
-        };
-        Pagination.handler = function (e) {
-            var elm = e.target;
-            if (configs.lock || elm.tagName !== "BUTTON") {
-                return;
-            }
-            configs.currentPage = this.getPage($(elm).text());
-            Items.get();
-        };
-        Pagination.build = function () {
-            Jitems.get("pagination")
-                .children()
-                .remove();
-            if (configs.totalPage > 1) {
-                Jitems.get("pagination").append(PaginationFrg.get(configs.totalPage, configs.currentPage));
-            }
-            Jitems.get("footer").removeClass("d-none");
-        };
-        Pagination.get = function () {
-            var _this = this;
-            gform.submit({
-                context: configs.context,
-                data: {
-                    "j-ar": "r",
-                    action: "getTotal"
-                },
-                success: function (total) {
-                    if (!total) {
-                        return;
-                    }
-                    configs.totalItems = Number(total);
-                    Jitems.get("total").text(configs.totalItems);
-                    configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
-                    _this.build();
-                }
-            }, true);
-        };
-        Pagination.init = function () {
-            var _this = this;
-            PaginationFrg.init();
-            Jitems.get("pagination").on("click", function (e) { return _this.handler(e); });
-        };
-        return Pagination;
-    }());
-    var Items = (function () {
-        function Items() {
-        }
-        Items.getInputs = function () {
-            var uinputs = {
-                "j-ar": "r",
-                action: "getItems",
-                filterby: configs.filterBy,
-                filterval: configs.filterVal,
-                searchby: configs.searchBy,
-                searchval: configs.searchVal,
-                count: configs.listCount,
-                page: configs.currentPage,
-                orderby: configs.orderBy,
-                sortby: configs.sortBy
-            };
-            return uinputs;
-        };
-        Items.onLoad = function () {
+        Jitems.get("confirm").classList.remove("d-none");
+        Jitems.get("confirm").scrollIntoView({
+            behavior: "smooth",
+            block: "end"
+        });
+    }
+}
+class Status {
+    static change(elm) {
+        const rowElm = elm.closest(".g-tr"), id = rowElm.getAttribute("data-id") || "0";
+        configs.lock = true;
+        gform
+            .request("post", configs.url + "/" + id + "/status", true)
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+            const { errors } = response;
             configs.lock = false;
-            ["loading", "noitems", "items", "footer"].forEach(function (v) { return Jitems.get(v).addClass("d-none"); });
-        };
-        Items.onSuccess = function (rdata) {
-            if (!rdata) {
-                Jitems.get("noitems").removeClass("d-none");
+            if (errors) {
+                gform.error(errors, configs.context);
                 return;
             }
-            Jitems.get("items")
-                .html(rdata)
-                .removeClass("d-none");
-            if (configs.totalPage) {
-                Pagination.build();
-            }
-            else {
-                Pagination.get();
-            }
-        };
-        Items.get = function () {
-            configs.lock = true;
-            gform.submit({
-                context: configs.context,
-                data: this.getInputs(),
-                load: this.onLoad,
-                success: this.onSuccess
-            }, true);
-        };
-        return Items;
-    }());
-    var Order = (function () {
-        function Order() {
+            this.toggleStatus(elm);
+        });
+    }
+    static handler(e) {
+        const elm = e.target;
+        if (configs.lock ||
+            elm.tagName !== "BUTTON" ||
+            elm.getAttribute("data-item") !== "status") {
+            return;
         }
-        Order.filter = function (elm) {
-            if (configs.orderBy === elm.attr("data-id")) {
-                configs.sortBy = Number(!configs.sortBy);
-            }
-            else {
-                configs.sortBy = 0;
-            }
-            configs.orderBy = elm.attr("data-id") || "";
-            configs.currentPage = 1;
-            this.clear();
-            this.apply(elm);
-            Jitems.get("orderby").val(configs.orderBy);
-            Jitems.get("sortby").val(configs.sortBy);
-            Items.get();
-        };
-        Order.handler = function (e) {
-            var elm = e.target;
-            if (elm.tagName === "SPAN") {
-                elm = elm.parentElement || elm;
-            }
-            if (configs.lock || elm.tagName !== "DIV" || !$(elm).attr("data-id")) {
-                return;
-            }
-            this.filter($(elm));
-        };
-        Order.apply = function (elm) {
-            if (!elm) {
-                elm = $("[data-id='" + configs.orderBy + "']", Jitems.get("order"));
-            }
-            elm.children().addClass("fa-sort-amount-down" + (configs.sortBy ? "" : "-alt"));
-        };
-        Order.clear = function () {
-            $("span", Jitems.get("order")).removeClass("fa-sort-amount-down fa-sort-amount-down-alt");
-        };
-        Order.init = function () {
-            var _this = this;
-            Jitems.get("order").on("click", function (e) { return _this.handler(e); });
-        };
-        return Order;
-    }());
-    var ListCount = (function () {
-        function ListCount() {
+        Confirm.add(() => this.change(elm));
+        Confirm.show("Confirm change status");
+    }
+    static toggleStatus(elm) {
+        const status = !elm.classList.contains("text-success");
+        if (status) {
+            elm.classList.add("fa-check", "text-success");
+            elm.classList.remove("fa-times", "text-danger");
         }
-        ListCount.handler = function () {
-            if (configs.lock) {
-                Jitems.get("listcount").val(configs.listCount);
+        else {
+            elm.classList.add("fa-times", "text-danger");
+            elm.classList.remove("fa-check", "text-success");
+        }
+    }
+    static init() {
+        Jitems.get("items").addEventListener("click", (e) => this.handler(e));
+    }
+}
+class PaginationFrg {
+    static getBtnFrg() {
+        const btnFrg = document.createElement("button");
+        btnFrg.setAttribute("type", "button");
+        btnFrg.setAttribute("class", "page-link");
+        return btnFrg;
+    }
+    static getItemFrg(page, isActive) {
+        const listFrg = this.listElm.cloneNode(true), btnFrg = this.btnElm.cloneNode(true);
+        btnFrg.textContent = String(page);
+        listFrg.appendChild(btnFrg);
+        if (isActive) {
+            listFrg.classList.add("active");
+        }
+        return listFrg;
+    }
+    static getListFrg() {
+        const listFrg = document.createElement("li");
+        listFrg.setAttribute("class", "page-item mb-2");
+        return listFrg;
+    }
+    static get(totalPage, currentPage) {
+        const frg = document.createDocumentFragment(), sideLinksCount = 2, totalLinks = sideLinksCount * 2;
+        let paginationStart = 1, paginationEnd;
+        if (currentPage > sideLinksCount) {
+            paginationStart = currentPage - sideLinksCount;
+        }
+        paginationEnd = paginationStart + totalLinks;
+        if (paginationEnd > totalPage) {
+            paginationStart -= paginationEnd - totalPage;
+            if (paginationStart < 1) {
+                paginationStart = 1;
+            }
+            paginationEnd = totalPage;
+        }
+        if (currentPage > 2) {
+            frg.appendChild(this.getItemFrg("Start", false));
+        }
+        if (currentPage > 1) {
+            frg.appendChild(this.getItemFrg("Previous", false));
+        }
+        paginationStart -= 1;
+        while (++paginationStart <= paginationEnd) {
+            frg.appendChild(this.getItemFrg(paginationStart, paginationStart === currentPage));
+        }
+        if (currentPage < totalPage) {
+            frg.appendChild(this.getItemFrg("Next", false));
+        }
+        if (totalPage > totalLinks + 1 && currentPage + 1 < totalPage) {
+            frg.appendChild(this.getItemFrg("End", false));
+        }
+        return frg;
+    }
+    static init() {
+        this.btnElm = this.getBtnFrg();
+        this.listElm = this.getListFrg();
+    }
+}
+class Pagination {
+    static getPage(page) {
+        let currentPage;
+        switch (page) {
+            case "Start": {
+                currentPage = 1;
+                break;
+            }
+            case "Previous": {
+                currentPage = configs.currentPage - 1;
+                break;
+            }
+            case "Next": {
+                currentPage = configs.currentPage + 1;
+                break;
+            }
+            case "End": {
+                currentPage = configs.totalPage;
+                break;
+            }
+            default: {
+                currentPage = Number(page);
+            }
+        }
+        if (!currentPage || currentPage < 1) {
+            currentPage = 1;
+        }
+        if (currentPage > configs.totalPage) {
+            currentPage = configs.totalPage;
+        }
+        return currentPage;
+    }
+    static handler(e) {
+        const elm = e.target;
+        if (configs.lock || elm.tagName !== "BUTTON") {
+            return;
+        }
+        configs.currentPage = this.getPage(elm.textContent || "");
+        Items.get();
+    }
+    static build() {
+        for (const elm of Array.from(Jitems.get("pagination").children)) {
+            elm.remove();
+        }
+        if (configs.totalPage > 1) {
+            Jitems.get("pagination").appendChild(PaginationFrg.get(configs.totalPage, configs.currentPage));
+        }
+        Jitems.get("footer").classList.remove("d-none");
+    }
+    static get() {
+        configs.lock = true;
+        gform
+            .request("get", configs.url + "/total")
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+            const { errors, data } = response;
+            configs.lock = false;
+            if (errors) {
+                gform.error(errors, configs.context);
                 return;
             }
-            configs.listCount = Number(Jitems.get("listcount").val());
-            configs.currentPage = 1;
+            if (!data || !("total" in data)) {
+                return;
+            }
+            configs.totalItems = Number(data.total);
+            Jitems.get("total").textContent = String(configs.totalItems);
             configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
-            Items.get();
+            this.build();
+        });
+    }
+    static init() {
+        PaginationFrg.init();
+        Jitems.get("pagination").addEventListener("click", (e) => this.handler(e));
+    }
+}
+class Items {
+    static getInputs() {
+        const uinputs = {
+            filterby: configs.filterBy,
+            filterval: configs.filterVal,
+            searchby: configs.searchBy,
+            searchval: configs.searchVal,
+            count: configs.listCount,
+            page: configs.currentPage,
+            orderby: configs.orderBy,
+            sortby: configs.sortBy
         };
-        ListCount.init = function () {
-            var _this = this;
-            Jitems.get("listcount").on("change", function () { return _this.handler(); });
-        };
-        return ListCount;
-    }());
-    var ValidateSearch = (function () {
-        function ValidateSearch() {
+        return uinputs;
+    }
+    static onLoad() {
+        const elmsList = ["loading", "noitems", "items", "footer"];
+        for (const e of elmsList) {
+            Jitems.get(e).classList.add("d-none");
         }
-        ValidateSearch.isValidFilter = function () {
-            var isValid = true;
-            var items = Jitems.get("filterby"), length = items.length;
-            for (var i = 0; i < length; i++) {
-                if (items.eq(i).val() &&
-                    !Jitems.get("filterval")
-                        .eq(i)
-                        .val()) {
-                    Jitems.get("filterval")
-                        .eq(i)
-                        .addClass("is-invalid");
-                    isValid = false;
-                    break;
-                }
-            }
-            return isValid;
-        };
-        ValidateSearch.isValidOrder = function () {
-            var isValid = true;
-            if (Jitems.get("orderby").val() && !Jitems.get("sortby").val()) {
-                Jitems.get("sortby").addClass("is-invalid");
-                isValid = false;
-            }
-            else if (Jitems.get("sortby").val() && !Jitems.get("orderby").val()) {
-                Jitems.get("orderby").addClass("is-invalid");
-                isValid = false;
-            }
-            return isValid;
-        };
-        ValidateSearch.isValidSearch = function () {
-            var isValid = true;
-            var items = Jitems.get("searchval"), length = items.length;
-            for (var i = 0; i < length; i++) {
-                if (items.eq(i).val() &&
-                    !Jitems.get("searchby")
-                        .eq(i)
-                        .val()) {
-                    Jitems.get("searchby")
-                        .eq(i)
-                        .addClass("is-invalid");
-                    isValid = false;
-                    break;
-                }
-            }
-            return isValid;
-        };
-        ValidateSearch.reset = function () {
-            $(".is-invalid", Jitems.get("ufilters")).removeClass("is-invalid");
-        };
-        return ValidateSearch;
-    }());
-    var Search = (function () {
-        function Search() {
+    }
+    static onSuccess(content) {
+        if (!content) {
+            Jitems.get("noitems").classList.remove("d-none");
+            return;
         }
-        Search.filter = function (elm) {
-            ValidateSearch.reset();
-            if (elm.attr("data-action") === "reset") {
-                this.reset();
-            }
-            configs.filterBy = this.getValues(Jitems.get("filterby"));
-            configs.filterVal = this.getValues(Jitems.get("filterval"));
-            configs.searchBy = this.getValues(Jitems.get("searchby"));
-            configs.searchVal = this.getValues(Jitems.get("searchval"));
-            configs.orderBy = String(Jitems.get("orderby").val());
-            configs.sortBy = Number(Jitems.get("sortby").val());
-            configs.currentPage = 1;
-            configs.totalPage = 0;
-            Order.clear();
-            if (configs.orderBy) {
-                Order.apply();
-            }
-            Items.get();
-        };
-        Search.getValues = function (elms) {
-            var vals = [];
-            elms.map(function (_k, v) { return vals.push(String($(v).val())); });
-            return vals;
-        };
-        Search.handler = function (e) {
-            var elm = e.target;
-            if (configs.lock || elm.tagName !== "BUTTON") {
+        Jitems.get("items").innerHTML = content;
+        Jitems.get("items").classList.remove("d-none");
+        if (configs.totalPage) {
+            Pagination.build();
+        }
+        else {
+            Pagination.get();
+        }
+    }
+    static get() {
+        configs.lock = true;
+        gform
+            .request("get", configs.url)
+            .data(this.getInputs())
+            .on("progress", gform.progress)
+            .send()
+            .then((response) => {
+            const { errors, data } = response;
+            configs.lock = false;
+            this.onLoad();
+            if (errors) {
+                gform.error(errors, configs.context);
                 return;
             }
-            switch ($(elm).attr("data-action")) {
-                case "search":
-                    if (!this.isValid()) {
-                        break;
-                    }
-                    this.filter($(elm));
-                    break;
-                case "reset":
-                    this.filter($(elm));
-                    break;
+            let content = "";
+            if (data && "content" in data && typeof data.content === "string") {
+                content = data.content;
             }
-        };
-        Search.isValid = function () {
-            var valid = true;
-            ValidateSearch.reset();
-            if (!ValidateSearch.isValidFilter() ||
-                !ValidateSearch.isValidSearch() ||
-                !ValidateSearch.isValidOrder()) {
-                valid = false;
-            }
-            return valid;
-        };
-        Search.reset = function () {
-            Jitems.get("filterby").val("");
-            Jitems.get("filterby").trigger("change");
-            Jitems.get("searchby").val("");
-            Jitems.get("searchval").val("");
-            Jitems.get("orderby").val("");
-            Jitems.get("sortby").val("");
-        };
-        Search.init = function () {
-            var _this = this;
-            Jitems.get("ufilters").on("click", function (e) { return _this.handler(e); });
-        };
-        return Search;
-    }());
-    var Filter = (function () {
-        function Filter() {
+            this.onSuccess(content);
+        });
+    }
+}
+class Order {
+    static filter(elm) {
+        const orderbyElm = Jitems.get("orderby"), sortbyElm = Jitems.get("sortby");
+        if (configs.orderBy === elm.getAttribute("data-id")) {
+            configs.sortBy = 1;
         }
-        Filter.handler = function (e) {
-            var elm = e.target, index = Jitems.get("filterby").index(elm), fbyElm = Jitems.get("filterby").eq(index), fvalElm = Jitems.get("filterval").eq(index);
-            fvalElm.children().addClass("d-none");
-            if (fbyElm.val()) {
-                $("[data-item='" + fbyElm.val() + "']", fvalElm)
-                    .removeClass("d-none")
-                    .first()
-                    .prop("selected", true);
-            }
-            else {
-                fvalElm
-                    .children()
-                    .first()
-                    .removeClass("d-none")
-                    .prop("selected", true);
-            }
-        };
-        Filter.init = function () {
-            var _this = this;
-            Jitems.get("filterby").on("change", function (e) { return _this.handler(e); });
-        };
-        return Filter;
-    }());
-    var Ufilter = (function () {
-        function Ufilter() {
+        else {
+            configs.sortBy = 0;
         }
-        Ufilter.apply = function () {
-            if (configs.filterBy.length) {
-                this.applyFilter();
+        configs.orderBy = elm.getAttribute("data-id") || "";
+        configs.currentPage = 1;
+        this.clear();
+        this.apply();
+        orderbyElm.value = configs.orderBy;
+        sortbyElm.value = String(configs.sortBy);
+        Items.get();
+    }
+    static handler(e) {
+        let elm = e.target;
+        if (elm.tagName === "SPAN") {
+            elm = elm.parentElement || elm;
+        }
+        if (configs.lock || !elm.getAttribute("data-id")) {
+            return;
+        }
+        this.filter(elm);
+    }
+    static apply() {
+        const elm = Jitems.get("order").querySelector("[data-id='" + configs.orderBy + "']");
+        if (!elm) {
+            return;
+        }
+        let className;
+        if (configs.sortBy) {
+            className = "fa-sort-amount-down";
+        }
+        else {
+            className = "fa-sort-amount-down-alt";
+        }
+        elm.children[0].classList.add(className);
+    }
+    static clear() {
+        for (const elm of Array.from(Jitems.get("order").querySelectorAll("span"))) {
+            elm.classList.remove("fa-sort-amount-down", "fa-sort-amount-down-alt");
+        }
+    }
+    static init() {
+        Jitems.get("order").addEventListener("click", (e) => this.handler(e));
+    }
+}
+class ListCount {
+    static handler() {
+        const listCountElm = Jitems.get("listcount");
+        if (configs.lock) {
+            listCountElm.value = String(configs.listCount);
+            return;
+        }
+        configs.listCount = Number(listCountElm.value);
+        configs.currentPage = 1;
+        configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
+        Items.get();
+    }
+    static init() {
+        Jitems.get("listcount").addEventListener("change", () => this.handler());
+    }
+}
+class ValidateSearch {
+    static isValidFilter() {
+        const filterbyElms = Jitems.getAll("filterby"), filtervalElms = Jitems.getAll("filterval"), length = filterbyElms.length;
+        let isValid = true;
+        for (let i = 0; i < length; i++) {
+            if (filterbyElms[i].value && !filtervalElms[i].value) {
+                filtervalElms[i].classList.add("is-invalid");
+                isValid = false;
+                break;
             }
-            if (configs.searchBy.length) {
-                this.applySearch();
+        }
+        return isValid;
+    }
+    static isValidOrder() {
+        const orderbyElm = Jitems.get("orderby"), sortbyElm = Jitems.get("sortby");
+        let isValid = true;
+        if (orderbyElm.value && !sortbyElm.value) {
+            sortbyElm.classList.add("is-invalid");
+            isValid = false;
+        }
+        else if (sortbyElm.value && !orderbyElm.value) {
+            orderbyElm.classList.add("is-invalid");
+            isValid = false;
+        }
+        return isValid;
+    }
+    static isValidSearch() {
+        const searchbyElms = Jitems.getAll("searchby"), searchvalElms = Jitems.getAll("searchval"), length = searchbyElms.length;
+        let isValid = true;
+        for (let i = 0; i < length; i++) {
+            if (searchbyElms[i].value && !searchvalElms[i].value) {
+                searchvalElms[i].classList.add("is-invalid");
+                isValid = false;
+                break;
             }
-            if (configs.filterBy.length || configs.searchBy.length) {
-                Jitems.get("ufilters").removeClass("d-none");
+            else if (searchvalElms[i].value && !searchbyElms[i].value) {
+                searchbyElms[i].classList.add("is-invalid");
+                isValid = false;
+                break;
             }
-            if (configs.orderBy) {
-                this.applyOrder();
-            }
-            Jitems.get("listcount").val(configs.listCount);
-        };
-        Ufilter.applyFilter = function () {
-            configs.filterBy.forEach(function (v, k) {
-                Jitems.get("filterby")
-                    .eq(k)
-                    .val(v);
-                Jitems.get("filterval")
-                    .eq(k)
-                    .children()
-                    .first()
-                    .addClass("d-none")
-                    .parent()
-                    .find("[data-item='" + v + "']")
-                    .removeClass("d-none")
-                    .filter("[value='" + configs.filterVal[k] + "']")
-                    .prop("selected", true);
-            });
-        };
-        Ufilter.applyOrder = function () {
+        }
+        return isValid;
+    }
+    static reset() {
+        const elmsList = Jitems.get("ufilters").querySelectorAll(".is-invalid");
+        for (const elm of Array.from(elmsList)) {
+            elm.classList.remove("is-invalid");
+        }
+    }
+}
+class Search {
+    static filter(elm) {
+        const orderbyElm = Jitems.get("orderby"), sortbyElm = Jitems.get("sortby");
+        ValidateSearch.reset();
+        if (elm.getAttribute("data-action") === "reset") {
+            this.reset();
+        }
+        configs.filterBy = this.getValues(Jitems.getAll("filterby"));
+        configs.filterVal = this.getValues(Jitems.getAll("filterval"));
+        configs.searchBy = this.getValues(Jitems.getAll("searchby"));
+        configs.searchVal = this.getValues(Jitems.getAll("searchval"));
+        configs.orderBy = orderbyElm.value;
+        configs.sortBy = Number(sortbyElm.value);
+        configs.currentPage = 1;
+        configs.totalPage = 0;
+        Order.clear();
+        if (configs.orderBy) {
             Order.apply();
-            Jitems.get("orderby").val(configs.orderBy);
-            Jitems.get("sortby").val(configs.sortBy);
-        };
-        Ufilter.applySearch = function () {
-            configs.searchBy.forEach(function (v, k) {
-                Jitems.get("searchby")
-                    .eq(k)
-                    .val(v);
-                Jitems.get("searchval")
-                    .eq(k)
-                    .val(configs.searchVal[k]);
-            });
-        };
-        Ufilter.init = function () {
-            Jitems.get("filter").on("click", function () { return Jitems.get("ufilters").toggleClass("d-none"); });
-            this.apply();
-        };
-        return Ufilter;
-    }());
-    var Configs = (function () {
-        function Configs() {
         }
-        Configs.apply = function (uconfigs) {
-            for (var k in uconfigs) {
-                if (Object.prototype.hasOwnProperty.call(configs, k)) {
-                    configs[k] = uconfigs[k];
+        Items.get();
+    }
+    static getValues(elms) {
+        const vals = [];
+        for (const elm of elms) {
+            vals.push(elm.value);
+        }
+        return vals;
+    }
+    static handler(e) {
+        const elm = e.target;
+        if (configs.lock || elm.tagName !== "BUTTON") {
+            return;
+        }
+        switch (elm.getAttribute("data-action")) {
+            case "search":
+                if (this.isValid()) {
+                    this.filter(elm);
                 }
-            }
-        };
-        Configs.init = function () {
-            configs = {
-                context: $(),
-                filterBy: [],
-                filterVal: [],
-                searchBy: [],
-                searchVal: [],
-                currentPage: 1,
-                listCount: 5,
-                orderBy: "",
-                sortBy: 0,
-                lock: false,
-                totalItems: 0,
-                totalPage: 0
-            };
-        };
-        return Configs;
-    }());
-    var Application = (function () {
-        function Application() {
+                break;
+            case "reset":
+                this.filter(elm);
+                break;
         }
-        Application.prototype.addConfirm = function (action) {
-            Confirm.add(action);
-        };
-        Application.prototype.hideConfirm = function () {
-            Confirm.hide();
-        };
-        Application.prototype.init = function (uconfigs) {
-            if (Configs.initialized) {
-                return;
-            }
-            Configs.initialized = true;
-            Configs.init();
-            if (uconfigs) {
-                Configs.apply(uconfigs);
-            }
-            Jitems.init();
-            Confirm.init();
-            Status.init();
-            Pagination.init();
-            Order.init();
-            ListCount.init();
-            Search.init();
-            Filter.init();
-            Ufilter.init();
-            Items.get();
-        };
-        Application.prototype.showConfirm = function (msg) {
-            Confirm.show(msg);
-        };
-        return Application;
-    }());
-    function gapp() {
-        return new Application();
     }
-    function init() {
-        $ = jQuery;
-        gform = GForm();
-        window.GApp = gapp;
+    static isValid() {
+        let valid = true;
+        ValidateSearch.reset();
+        if (!ValidateSearch.isValidFilter() ||
+            !ValidateSearch.isValidSearch() ||
+            !ValidateSearch.isValidOrder()) {
+            valid = false;
+        }
+        return valid;
     }
-    init();
-})();
+    static reset() {
+        const elmsList = [
+            ...Jitems.getAll("filterby"),
+            ...Jitems.getAll("searchby"),
+            ...Jitems.getAll("searchval"),
+            Jitems.get("orderby"),
+            Jitems.get("sortby")
+        ], filtervalElms = Jitems.getAll("filterval");
+        for (const elm of elmsList) {
+            elm.value = "";
+        }
+        for (const elm of filtervalElms) {
+            for (const e of Array.from(elm.children)) {
+                e.classList.add("d-none");
+            }
+            elm.children[0].classList.remove("d-none");
+            elm.value = "";
+        }
+    }
+    static init() {
+        Jitems.get("ufilters").addEventListener("click", (e) => this.handler(e));
+    }
+}
+class Filter {
+    static handler(e) {
+        const elm = e.target, index = Jitems.getAll("filterby").indexOf(elm), filterbyElm = Jitems.getAll("filterby")[index], filtervalElm = Jitems.getAll("filterval")[index];
+        for (const e of Array.from(filtervalElm.children)) {
+            e.classList.add("d-none");
+        }
+        if (filterbyElm.value) {
+            const elmsList = filtervalElm.querySelectorAll("[data-item='" + filterbyElm.value + "']");
+            for (const e of Array.from(elmsList)) {
+                e.classList.remove("d-none");
+            }
+            elmsList[0].selected = true;
+        }
+        else {
+            filtervalElm.children[0].classList.remove("d-none");
+            filtervalElm.value = "";
+        }
+    }
+    static init() {
+        for (const elm of Jitems.getAll("filterby")) {
+            elm.addEventListener("change", (e) => this.handler(e));
+        }
+    }
+}
+class Ufilter {
+    static apply() {
+        if (configs.filterBy.length) {
+            this.applyFilter();
+        }
+        if (configs.searchBy.length) {
+            this.applySearch();
+        }
+        if (configs.filterBy.length || configs.searchBy.length) {
+            Jitems.get("ufilters").classList.remove("d-none");
+        }
+        if (configs.orderBy) {
+            this.applyOrder();
+        }
+        Jitems.get("listcount").value = String(configs.listCount);
+    }
+    static applyFilter() {
+        const filterbyElms = Jitems.getAll("filterby"), filtervalElms = Jitems.getAll("filterval"), l = configs.filterBy.length;
+        let elmsList;
+        for (let i = 0; i < l; i++) {
+            if (!configs.filterBy[i]) {
+                continue;
+            }
+            filterbyElms[i].value = configs.filterBy[i];
+            elmsList = filtervalElms[i].querySelectorAll("[data-item='" + configs.filterBy[i] + "']");
+            for (const e of Array.from(elmsList)) {
+                e.classList.remove("d-none");
+            }
+            elmsList[0].selected = true;
+        }
+    }
+    static applyOrder() {
+        Order.apply();
+        Jitems.get("orderby").value = configs.orderBy;
+        Jitems.get("sortby").value = String(configs.sortBy);
+    }
+    static applySearch() {
+        const searchbyElms = Jitems.getAll("searchby"), searchvalElms = Jitems.getAll("searchval"), l = configs.searchBy.length;
+        for (let i = 0; i < l; i++) {
+            if (!configs.searchBy[i]) {
+                continue;
+            }
+            searchbyElms[i].value = configs.searchBy[i];
+            searchvalElms[i].value = configs.searchVal[i];
+        }
+    }
+    static init() {
+        Jitems.get("filter").addEventListener("click", () => Jitems.get("ufilters").classList.toggle("d-none"));
+        this.apply();
+    }
+}
+class Configs {
+    static init() {
+        configs = {
+            context: document.body,
+            filterBy: [],
+            filterVal: [],
+            searchBy: [],
+            searchVal: [],
+            currentPage: 1,
+            listCount: 5,
+            orderBy: "",
+            sortBy: 0,
+            url: "",
+            lock: false,
+            totalItems: 0,
+            totalPage: 0
+        };
+    }
+    static normalize() {
+        configs.filterBy = this.toArray(configs.filterBy);
+        configs.filterVal = this.toArray(configs.filterVal);
+        configs.searchBy = this.toArray(configs.searchBy);
+        configs.searchVal = this.toArray(configs.searchVal);
+        if (configs.url.substr(-1) === "/") {
+            configs.url = configs.url.substr(0, configs.url.length - 1);
+        }
+    }
+    static toArray(obj) {
+        const aobj = [];
+        if (Array.isArray(obj)) {
+            return obj;
+        }
+        for (const [k, v] of Object.entries(obj)) {
+            aobj[Number(k)] = v;
+        }
+        return aobj;
+    }
+}
+class Application {
+    confirm(msg, action) {
+        Confirm.add(action);
+        Confirm.show(msg);
+    }
+    init(uconfigs) {
+        if (Configs.initialized) {
+            return;
+        }
+        Configs.initialized = true;
+        Configs.init();
+        if (uconfigs) {
+            Object.assign(configs, uconfigs);
+        }
+        Configs.normalize();
+        Jitems.init();
+        Confirm.init();
+        Status.init();
+        Pagination.init();
+        Order.init();
+        ListCount.init();
+        Search.init();
+        Filter.init();
+        Ufilter.init();
+        Items.get();
+    }
+}
+function gapp() {
+    return new Application();
+}
+function init() {
+    gform = new GForm();
+    window.GApp = gapp;
+}
+init();
