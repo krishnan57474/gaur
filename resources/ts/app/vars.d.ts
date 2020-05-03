@@ -1,5 +1,5 @@
 interface UserConfigsInterface {
-    context: JQuery<HTMLElement>;
+    context: HTMLElement;
     currentPage: number;
     filterBy: Array<string>;
     filterVal: Array<string>;
@@ -8,7 +8,7 @@ interface UserConfigsInterface {
     searchBy: Array<string>;
     searchVal: Array<string>;
     sortBy: number;
-    [k: string]: JQuery<HTMLElement> | Array<string> | number | string | boolean;
+    url: string;
 }
 
 interface ConfigsInterface extends UserConfigsInterface {
