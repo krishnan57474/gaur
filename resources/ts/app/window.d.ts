@@ -1,3 +1,3 @@
 interface Window {
-    GApp: () => Application;
+    GApp(): Application;
 }
