@@ -1,5 +1,7 @@
-function getTransitionDuration(elm: JQuery<HTMLElement>): number {
-    const duration: Array<string> = elm.css("transition-duration").split(",");
+function getTransitionDuration(elm: HTMLElement): number {
+    const duration: Array<string> = getComputedStyle(elm)
+        .getPropertyValue("transition-duration")
+        .split(",");
 
-    return parseFloat(duration[0]) * 1000;
+    return parseFloat(duration[0] || "0") * 1000;
 }

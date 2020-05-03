@@ -1,47 +1,40 @@
 class ErrorsFrg {
-    protected static btnElm: JQuery<HTMLButtonElement>;
-    protected static defaultError: string;
-    protected static listElm: JQuery<HTMLLIElement>;
+    protected static btnElm: HTMLButtonElement;
+    protected static listElm: HTMLLIElement;
     protected static transitionDuration: number;
 
-    protected static getBtnFrg(): JQuery<HTMLButtonElement> {
-        const btnFrg: JQuery<HTMLButtonElement> = $(document.createElement("button"));
-        btnFrg.attr("type", "button");
-        btnFrg.attr("class", "close");
-        btnFrg.attr("data-ebtn", "");
-        btnFrg.text("×");
+    protected static getBtnFrg(): HTMLButtonElement {
+        const btnFrg: HTMLButtonElement = document.createElement("button");
+        btnFrg.setAttribute("type", "button");
+        btnFrg.setAttribute("class", "close");
+        btnFrg.setAttribute("data-ebtn", "");
+        btnFrg.textContent = "×";
 
         return btnFrg;
     }
 
-    protected static getListFrg(): JQuery<HTMLLIElement> {
-        const listFrg: JQuery<HTMLLIElement> = $(document.createElement("li"));
-        listFrg.attr("class", "alert alert-danger alert-dismissible fade show");
+    protected static getListFrg(): HTMLLIElement {
+        const listFrg: HTMLLIElement = document.createElement("li");
+        listFrg.setAttribute("class", "alert alert-danger alert-dismissible fade show");
 
         return listFrg;
     }
 
-    public static get(
-        errors: Array<string> | string,
-        isAutoHide: boolean
-    ): JQuery<DocumentFragment> {
-        const errorsFrg: JQuery<DocumentFragment> = $(document.createDocumentFragment()),
-            errorsList: Array<string> = Array.isArray(errors) ? errors : [this.defaultError];
+    public static get(errors: Array<string>, isAutoHide: boolean): DocumentFragment {
+        const errorsFrg: DocumentFragment = document.createDocumentFragment();
 
-        let frgClone: JQuery<HTMLLIElement>;
-
-        errorsList.forEach((e: string) => {
-            frgClone = this.listElm.clone();
-            frgClone.text(e);
+        for (const e of errors) {
+            const frgClone: HTMLLIElement = this.listElm.cloneNode(true) as HTMLLIElement;
+            frgClone.textContent = e;
 
             if (isAutoHide) {
-                frgClone.append(this.btnElm.clone());
+                frgClone.appendChild(this.btnElm.cloneNode(true));
             } else {
-                frgClone.removeClass("alert-dismissible");
+                frgClone.classList.remove("alert-dismissible");
             }
 
-            errorsFrg.append(frgClone);
-        });
+            errorsFrg.appendChild(frgClone);
+        }
 
         return errorsFrg;
     }
@@ -54,7 +47,5 @@ class ErrorsFrg {
         this.btnElm = this.getBtnFrg();
         this.listElm = this.getListFrg();
         this.transitionDuration = getTransitionDuration(this.listElm);
-
-        this.defaultError = "Invalid request. Please refresh the page or try again later!";
     }
 }

@@ -1,26 +1,54 @@
 class Errors {
-    protected static errorElms: Array<JQuery<HTMLUListElement>>;
+    protected static errorElms: Array<HTMLUListElement>;
     protected static timers: Array<number>;
 
-    protected static handler(e: JQuery.ClickEvent): void {
-        const elm: HTMLElement = e.target;
+    protected static create(errors: Array<string>, errorElm: HTMLUListElement): void {
+        const isAutoHide: boolean = !errorElm.hasAttribute("data-show-errors");
 
-        if (elm.tagName !== "BUTTON" || !elm.hasAttribute("data-ebtn")) {
+        errorElm.classList.add("d-none");
+
+        for (const elm of Array.from(errorElm.children)) {
+            elm.remove();
+        }
+
+        errorElm.appendChild(ErrorsFrg.get(errors, isAutoHide));
+        errorElm.classList.remove("d-none");
+
+        if (isAutoHide) {
+            this.setAutoHide(errorElm);
+        }
+
+        errorElm.scrollIntoView({
+            behavior: "smooth",
+            block: "end"
+        });
+    }
+
+    protected static handler(e: MouseEvent): void {
+        const elm: HTMLElement = e.target as HTMLElement;
+
+        if (!elm || elm.tagName !== "BUTTON" || !elm.hasAttribute("data-ebtn")) {
             return;
         }
 
-        this.hide($(elm).closest(".j-error"));
+        this.hide(elm.closest(".j-error"));
     }
 
-    protected static hide(errorElm: JQuery<HTMLElement>): void {
-        errorElm.children().removeClass("show");
+    protected static hide(errorElm: HTMLElement | null): void {
+        if (!errorElm) {
+            return;
+        }
 
-        setTimeout(() => errorElm.addClass("d-none"), ErrorsFrg.getTransitionDuration());
+        for (const elm of Array.from(errorElm.children)) {
+            elm.classList.remove("show");
+        }
+
+        setTimeout(() => errorElm.classList.add("d-none"), ErrorsFrg.getTransitionDuration());
     }
 
-    protected static setAutoHide(errorElm: JQuery<HTMLUListElement>): void {
+    protected static setAutoHide(errorElm: HTMLUListElement): void {
         const timer: number = setTimeout(() => {
-            if (!errorElm.hasClass("d-none")) {
+            if (!errorElm.classList.contains("d-none")) {
                 this.hide(errorElm);
             }
         }, 10000);
@@ -30,8 +58,13 @@ class Errors {
     }
 
     public static clear(): void {
-        this.timers.splice(0).forEach(clearTimeout);
-        this.errorElms.splice(0).forEach((e) => e.addClass("d-none"));
+        for (const t of this.timers.splice(0)) {
+            clearTimeout(t);
+        }
+
+        for (const elm of this.errorElms.splice(0)) {
+            elm.classList.add("d-none");
+        }
     }
 
     public static init(): void {
@@ -40,31 +73,16 @@ class Errors {
         this.errorElms = [];
         this.timers = [];
 
-        $(window).on("click", (e: JQuery.ClickEvent) => this.handler(e));
+        addEventListener("click", (e: MouseEvent) => this.handler(e));
     }
 
-    public static show(errors: Array<string> | string, context: JQuery<HTMLElement>): void {
-        const errorElm: JQuery<HTMLUListElement> = $(".j-error", context),
-            isAutoHide: boolean = errorElm.attr("data-show-errors") === undefined;
+    public static show(errors: Array<string>, context: HTMLElement): void {
+        const errorElm: HTMLUListElement | null = context.querySelector(".j-error");
 
         this.clear();
 
-        errorElm
-            .addClass("d-none")
-            .children()
-            .remove();
-        errorElm.append(ErrorsFrg.get(errors, isAutoHide)).removeClass("d-none");
-
-        const errorElmPosition: JQuery.Coordinates | undefined = errorElm.offset();
-
-        if (isAutoHide) {
-            this.setAutoHide(errorElm);
-        }
-
-        if (errorElmPosition) {
-            $("html, body").animate({
-                scrollTop: errorElmPosition.top
-            });
+        if (errorElm) {
+            this.create(errors, errorElm);
         }
     }
 }

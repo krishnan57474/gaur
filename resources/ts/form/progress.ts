@@ -1,38 +1,44 @@
 class Progress {
-    protected static progressBarElm: JQuery<HTMLDivElement>;
-    protected static progressElm: JQuery<HTMLDivElement>;
+    protected static progressBarElm: HTMLDivElement;
+    protected static progressElm: HTMLDivElement;
     protected static timer: number;
     protected static transitionDuration: number;
 
-    protected static getProgressBarFrg(): JQuery<HTMLDivElement> {
-        const progressBarFrg: JQuery<HTMLDivElement> = $(document.createElement("div"));
+    protected static getProgressBarFrg(): HTMLDivElement {
+        const progressBarFrg: HTMLDivElement = document.createElement("div");
 
-        progressBarFrg.attr("class", "progress-bar progress-bar-striped progress-bar-animated");
+        progressBarFrg.setAttribute(
+            "class",
+            "progress-bar progress-bar-striped progress-bar-animated"
+        );
 
         return progressBarFrg;
     }
 
-    protected static getProgressFrg(): JQuery<HTMLDivElement> {
-        const progressFrg: JQuery<HTMLDivElement> = $(document.createElement("div"));
+    protected static getProgressFrg(): HTMLDivElement {
+        const progressFrg: HTMLDivElement = document.createElement("div");
 
-        progressFrg.attr("class", "progress fixed-top");
-        progressFrg.css({
-            height: "6px",
-            width: 0
-        });
+        progressFrg.setAttribute("class", "progress fixed-top");
+
+        progressFrg.style.height = "6px";
+        progressFrg.style.width = "0";
 
         return progressFrg;
     }
 
     public static hide(): void {
+        const {progressBarElm, progressElm} = this;
+
         clearInterval(this.timer);
 
-        this.progressBarElm.css({width: "100%"});
+        progressBarElm.style.width = "100%";
 
         setTimeout(() => {
-            this.progressBarElm.css({width: 0});
+            progressBarElm.style.width = "0";
 
-            setTimeout(() => this.progressElm.css({width: 0}), this.transitionDuration);
+            setTimeout(() => {
+                progressElm.style.width = "0";
+            }, this.transitionDuration);
         }, 1000);
     }
 
@@ -43,25 +49,24 @@ class Progress {
         this.timer = 0;
         this.transitionDuration = getTransitionDuration(this.progressBarElm);
 
-        this.progressElm.append(this.progressBarElm);
-        $(document.body).append(this.progressElm);
+        this.progressElm.appendChild(this.progressBarElm);
+        document.body.appendChild(this.progressElm);
     }
 
     public static show(): void {
+        const {progressBarElm, progressElm} = this;
         let width: number = 5;
 
         clearInterval(this.timer);
 
-        this.progressElm.css({width: "100%"});
-        this.progressBarElm.css({width: 0});
+        progressElm.style.width = "100%";
+        progressBarElm.style.width = "0";
 
         this.timer = setInterval(() => {
             width += 5;
 
             if (width < 100) {
-                this.progressBarElm.css({
-                    width: width + "%"
-                });
+                progressBarElm.style.width = width + "%";
             } else {
                 clearInterval(this.timer);
             }
