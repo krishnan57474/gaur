@@ -1,19 +1,14 @@
 class ValidateSearch {
     public static isValidFilter(): boolean {
+        const filterbyElms: Array<HTMLSelectElement> = Jitems.getAll("filterby"),
+            filtervalElms: Array<HTMLSelectElement> = Jitems.getAll("filterval"),
+            length: number = filterbyElms.length;
+
         let isValid: boolean = true;
-        const items: JQuery<HTMLElement> = Jitems.get("filterby"),
-            length: number = items.length;
 
         for (let i: number = 0; i < length; i++) {
-            if (
-                items.eq(i).val() &&
-                !Jitems.get("filterval")
-                    .eq(i)
-                    .val()
-            ) {
-                Jitems.get("filterval")
-                    .eq(i)
-                    .addClass("is-invalid");
+            if (filterbyElms[i].value && !filtervalElms[i].value) {
+                filtervalElms[i].classList.add("is-invalid");
                 isValid = false;
                 break;
             }
@@ -23,13 +18,16 @@ class ValidateSearch {
     }
 
     public static isValidOrder(): boolean {
+        const orderbyElm: HTMLSelectElement = Jitems.get("orderby"),
+            sortbyElm: HTMLSelectElement = Jitems.get("sortby");
+
         let isValid: boolean = true;
 
-        if (Jitems.get("orderby").val() && !Jitems.get("sortby").val()) {
-            Jitems.get("sortby").addClass("is-invalid");
+        if (orderbyElm.value && !sortbyElm.value) {
+            sortbyElm.classList.add("is-invalid");
             isValid = false;
-        } else if (Jitems.get("sortby").val() && !Jitems.get("orderby").val()) {
-            Jitems.get("orderby").addClass("is-invalid");
+        } else if (sortbyElm.value && !orderbyElm.value) {
+            orderbyElm.classList.add("is-invalid");
             isValid = false;
         }
 
@@ -37,20 +35,19 @@ class ValidateSearch {
     }
 
     public static isValidSearch(): boolean {
+        const searchbyElms: Array<HTMLSelectElement> = Jitems.getAll("searchby"),
+            searchvalElms: Array<HTMLSelectElement> = Jitems.getAll("searchval"),
+            length: number = searchbyElms.length;
+
         let isValid: boolean = true;
-        const items: JQuery<HTMLElement> = Jitems.get("searchval"),
-            length: number = items.length;
 
         for (let i: number = 0; i < length; i++) {
-            if (
-                items.eq(i).val() &&
-                !Jitems.get("searchby")
-                    .eq(i)
-                    .val()
-            ) {
-                Jitems.get("searchby")
-                    .eq(i)
-                    .addClass("is-invalid");
+            if (searchbyElms[i].value && !searchvalElms[i].value) {
+                searchvalElms[i].classList.add("is-invalid");
+                isValid = false;
+                break;
+            } else if (searchvalElms[i].value && !searchbyElms[i].value) {
+                searchbyElms[i].classList.add("is-invalid");
                 isValid = false;
                 break;
             }
@@ -60,6 +57,12 @@ class ValidateSearch {
     }
 
     public static reset(): void {
-        $(".is-invalid", Jitems.get("ufilters")).removeClass("is-invalid");
+        const elmsList: NodeListOf<HTMLElement> = Jitems.get("ufilters").querySelectorAll(
+            ".is-invalid"
+        );
+
+        for (const elm of Array.from(elmsList)) {
+            elm.classList.remove("is-invalid");
+        }
     }
 }

@@ -1,34 +1,38 @@
 class PaginationFrg {
-    protected static btnElm: JQuery<HTMLButtonElement>;
-    protected static listElm: JQuery<HTMLLIElement>;
+    protected static btnElm: HTMLButtonElement;
+    protected static listElm: HTMLLIElement;
 
-    protected static getBtnFrg(): JQuery<HTMLButtonElement> {
-        const btnFrg: JQuery<HTMLButtonElement> = $(document.createElement("button"));
-        btnFrg.attr("type", "button");
-        btnFrg.attr("class", "page-link");
+    protected static getBtnFrg(): HTMLButtonElement {
+        const btnFrg: HTMLButtonElement = document.createElement("button");
+        btnFrg.setAttribute("type", "button");
+        btnFrg.setAttribute("class", "page-link");
 
         return btnFrg;
     }
 
-    protected static getItemFrg(page: string | number, isActive?: boolean): JQuery<HTMLLIElement> {
-        const frg = this.listElm.clone().append(this.btnElm.clone().text(page));
+    protected static getItemFrg(page: string | number, isActive: boolean): HTMLLIElement {
+        const listFrg: HTMLLIElement = this.listElm.cloneNode(true) as HTMLLIElement,
+            btnFrg: HTMLButtonElement = this.btnElm.cloneNode(true) as HTMLButtonElement;
+
+        btnFrg.textContent = String(page);
+        listFrg.appendChild(btnFrg);
 
         if (isActive) {
-            frg.addClass("active");
+            listFrg.classList.add("active");
         }
-
-        return frg;
-    }
-
-    protected static getListFrg(): JQuery<HTMLLIElement> {
-        const listFrg: JQuery<HTMLLIElement> = $(document.createElement("li"));
-        listFrg.attr("class", "page-item mb-2");
 
         return listFrg;
     }
 
-    public static get(totalPage: number, currentPage: number): JQuery<DocumentFragment> {
-        const frg: JQuery<DocumentFragment> = $(document.createDocumentFragment()),
+    protected static getListFrg(): HTMLLIElement {
+        const listFrg: HTMLLIElement = document.createElement("li");
+        listFrg.setAttribute("class", "page-item mb-2");
+
+        return listFrg;
+    }
+
+    public static get(totalPage: number, currentPage: number): DocumentFragment {
+        const frg: DocumentFragment = document.createDocumentFragment(),
             sideLinksCount: number = 2,
             totalLinks: number = sideLinksCount * 2;
 
@@ -52,25 +56,25 @@ class PaginationFrg {
         }
 
         if (currentPage > 2) {
-            frg.append(this.getItemFrg("Start"));
+            frg.appendChild(this.getItemFrg("Start", false));
         }
 
         if (currentPage > 1) {
-            frg.append(this.getItemFrg("Previous"));
+            frg.appendChild(this.getItemFrg("Previous", false));
         }
 
         paginationStart -= 1;
 
         while (++paginationStart <= paginationEnd) {
-            frg.append(this.getItemFrg(paginationStart, paginationStart === currentPage));
+            frg.appendChild(this.getItemFrg(paginationStart, paginationStart === currentPage));
         }
 
         if (currentPage < totalPage) {
-            frg.append(this.getItemFrg("Next"));
+            frg.appendChild(this.getItemFrg("Next", false));
         }
 
         if (totalPage > totalLinks + 1 && currentPage + 1 < totalPage) {
-            frg.append(this.getItemFrg("End"));
+            frg.appendChild(this.getItemFrg("End", false));
         }
 
         return frg;

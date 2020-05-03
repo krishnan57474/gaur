@@ -1,17 +1,20 @@
 class Search {
-    protected static filter(elm: JQuery<HTMLElement>): void {
+    protected static filter(elm: HTMLElement): void {
+        const orderbyElm: HTMLSelectElement = Jitems.get("orderby"),
+            sortbyElm: HTMLSelectElement = Jitems.get("sortby");
+
         ValidateSearch.reset();
 
-        if (elm.attr("data-action") === "reset") {
+        if (elm.getAttribute("data-action") === "reset") {
             this.reset();
         }
 
-        configs.filterBy = this.getValues(Jitems.get("filterby"));
-        configs.filterVal = this.getValues(Jitems.get("filterval"));
-        configs.searchBy = this.getValues(Jitems.get("searchby"));
-        configs.searchVal = this.getValues(Jitems.get("searchval"));
-        configs.orderBy = String(Jitems.get("orderby").val());
-        configs.sortBy = Number(Jitems.get("sortby").val());
+        configs.filterBy = this.getValues(Jitems.getAll("filterby"));
+        configs.filterVal = this.getValues(Jitems.getAll("filterval"));
+        configs.searchBy = this.getValues(Jitems.getAll("searchby"));
+        configs.searchVal = this.getValues(Jitems.getAll("searchval"));
+        configs.orderBy = orderbyElm.value;
+        configs.sortBy = Number(sortbyElm.value);
         configs.currentPage = 1;
         configs.totalPage = 0;
 
@@ -24,31 +27,32 @@ class Search {
         Items.get();
     }
 
-    protected static getValues(elms: JQuery<HTMLElement>): Array<string> {
+    protected static getValues(elms: Array<HTMLSelectElement>): Array<string> {
         const vals: Array<string> = [];
 
-        elms.map((_k: number, v: HTMLElement) => vals.push(String($(v).val())));
+        for (const elm of elms) {
+            vals.push(elm.value);
+        }
 
         return vals;
     }
 
-    protected static handler(e: JQuery.ClickEvent): void {
-        const elm: HTMLElement = e.target;
+    protected static handler(e: MouseEvent): void {
+        const elm: HTMLElement = e.target as HTMLElement;
 
         if (configs.lock || elm.tagName !== "BUTTON") {
             return;
         }
 
-        switch ($(elm).attr("data-action")) {
+        switch (elm.getAttribute("data-action")) {
             case "search":
-                if (!this.isValid()) {
-                    break;
+                if (this.isValid()) {
+                    this.filter(elm);
                 }
-                this.filter($(elm));
                 break;
 
             case "reset":
-                this.filter($(elm));
+                this.filter(elm);
                 break;
         }
     }
@@ -70,15 +74,30 @@ class Search {
     }
 
     protected static reset(): void {
-        Jitems.get("filterby").val("");
-        Jitems.get("filterby").trigger("change");
-        Jitems.get("searchby").val("");
-        Jitems.get("searchval").val("");
-        Jitems.get("orderby").val("");
-        Jitems.get("sortby").val("");
+        const elmsList: Array<HTMLSelectElement> = [
+                ...Jitems.getAll<HTMLSelectElement>("filterby"),
+                ...Jitems.getAll<HTMLSelectElement>("searchby"),
+                ...Jitems.getAll<HTMLSelectElement>("searchval"),
+                Jitems.get("orderby"),
+                Jitems.get("sortby")
+            ],
+            filtervalElms: Array<HTMLSelectElement> = Jitems.getAll("filterval");
+
+        for (const elm of elmsList) {
+            elm.value = "";
+        }
+
+        for (const elm of filtervalElms) {
+            for (const e of Array.from(elm.children)) {
+                e.classList.add("d-none");
+            }
+
+            elm.children[0].classList.remove("d-none");
+            elm.value = "";
+        }
     }
 
     public static init(): void {
-        Jitems.get("ufilters").on("click", (e: JQuery.ClickEvent) => this.handler(e));
+        Jitems.get("ufilters").addEventListener("click", (e: MouseEvent) => this.handler(e));
     }
 }

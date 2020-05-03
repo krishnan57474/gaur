@@ -1,27 +1,33 @@
 class Filter {
-    protected static handler(e: JQuery.ChangeEvent): void {
-        const elm: HTMLElement = e.target,
-            index = Jitems.get("filterby").index(elm),
-            fbyElm = Jitems.get("filterby").eq(index),
-            fvalElm = Jitems.get("filterval").eq(index);
+    protected static handler(e: Event): void {
+        const elm: HTMLElement = e.target as HTMLElement,
+            index: number = Jitems.getAll("filterby").indexOf(elm),
+            filterbyElm: HTMLSelectElement = Jitems.getAll<HTMLSelectElement>("filterby")[index],
+            filtervalElm: HTMLSelectElement = Jitems.getAll<HTMLSelectElement>("filterval")[index];
 
-        fvalElm.children().addClass("d-none");
+        for (const e of Array.from(filtervalElm.children)) {
+            e.classList.add("d-none");
+        }
 
-        if (fbyElm.val()) {
-            $("[data-item='" + fbyElm.val() + "']", fvalElm)
-                .removeClass("d-none")
-                .first()
-                .prop("selected", true);
+        if (filterbyElm.value) {
+            const elmsList: NodeListOf<HTMLOptionElement> = filtervalElm.querySelectorAll(
+                "[data-item='" + filterbyElm.value + "']"
+            );
+
+            for (const e of Array.from(elmsList)) {
+                e.classList.remove("d-none");
+            }
+
+            elmsList[0].selected = true;
         } else {
-            fvalElm
-                .children()
-                .first()
-                .removeClass("d-none")
-                .prop("selected", true);
+            filtervalElm.children[0].classList.remove("d-none");
+            filtervalElm.value = "";
         }
     }
 
     public static init(): void {
-        Jitems.get("filterby").on("change", (e: JQuery.ChangeEvent) => this.handler(e));
+        for (const elm of Jitems.getAll("filterby")) {
+            elm.addEventListener("change", (e: Event) => this.handler(e));
+        }
     }
 }

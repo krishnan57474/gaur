@@ -9,53 +9,67 @@ class Ufilter {
         }
 
         if (configs.filterBy.length || configs.searchBy.length) {
-            Jitems.get("ufilters").removeClass("d-none");
+            Jitems.get("ufilters").classList.remove("d-none");
         }
 
         if (configs.orderBy) {
             this.applyOrder();
         }
 
-        Jitems.get("listcount").val(configs.listCount);
+        Jitems.get<HTMLSelectElement>("listcount").value = String(configs.listCount);
     }
 
     protected static applyFilter(): void {
-        configs.filterBy.forEach((v, k) => {
-            Jitems.get("filterby")
-                .eq(k)
-                .val(v);
-            Jitems.get("filterval")
-                .eq(k)
-                .children()
-                .first()
-                .addClass("d-none")
-                .parent()
-                .find("[data-item='" + v + "']")
-                .removeClass("d-none")
-                .filter("[value='" + configs.filterVal[k] + "']")
-                .prop("selected", true);
-        });
+        const filterbyElms: Array<HTMLSelectElement> = Jitems.getAll("filterby"),
+            filtervalElms: Array<HTMLSelectElement> = Jitems.getAll("filterval"),
+            l: number = configs.filterBy.length;
+
+        let elmsList: NodeListOf<HTMLOptionElement>;
+
+        for (let i: number = 0; i < l; i++) {
+            if (!configs.filterBy[i]) {
+                continue;
+            }
+
+            filterbyElms[i].value = configs.filterBy[i];
+
+            elmsList = filtervalElms[i].querySelectorAll(
+                "[data-item='" + configs.filterBy[i] + "']"
+            );
+
+            for (const e of Array.from(elmsList)) {
+                e.classList.remove("d-none");
+            }
+
+            elmsList[0].selected = true;
+        }
     }
 
     protected static applyOrder(): void {
         Order.apply();
-        Jitems.get("orderby").val(configs.orderBy);
-        Jitems.get("sortby").val(configs.sortBy);
+        Jitems.get<HTMLSelectElement>("orderby").value = configs.orderBy;
+        Jitems.get<HTMLSelectElement>("sortby").value = String(configs.sortBy);
     }
 
     protected static applySearch(): void {
-        configs.searchBy.forEach(function(v, k) {
-            Jitems.get("searchby")
-                .eq(k)
-                .val(v);
-            Jitems.get("searchval")
-                .eq(k)
-                .val(configs.searchVal[k]);
-        });
+        const searchbyElms: Array<HTMLSelectElement> = Jitems.getAll("searchby"),
+            searchvalElms: Array<HTMLSelectElement> = Jitems.getAll("searchval"),
+            l: number = configs.searchBy.length;
+
+        for (let i: number = 0; i < l; i++) {
+            if (!configs.searchBy[i]) {
+                continue;
+            }
+
+            searchbyElms[i].value = configs.searchBy[i];
+            searchvalElms[i].value = configs.searchVal[i];
+        }
     }
 
     public static init(): void {
-        Jitems.get("filter").on("click", () => Jitems.get("ufilters").toggleClass("d-none"));
+        Jitems.get("filter").addEventListener("click", () =>
+            Jitems.get("ufilters").classList.toggle("d-none")
+        );
 
         this.apply();
     }

@@ -1,11 +1,13 @@
 class ListCount {
     protected static handler(): void {
+        const listCountElm: HTMLSelectElement = Jitems.get("listcount");
+
         if (configs.lock) {
-            Jitems.get("listcount").val(configs.listCount);
+            listCountElm.value = String(configs.listCount);
             return;
         }
 
-        configs.listCount = Number(Jitems.get("listcount").val());
+        configs.listCount = Number(listCountElm.value);
         configs.currentPage = 1;
         configs.totalPage = Math.ceil(configs.totalItems / configs.listCount);
 
@@ -13,6 +15,6 @@ class ListCount {
     }
 
     public static init(): void {
-        Jitems.get("listcount").on("change", () => this.handler());
+        Jitems.get("listcount").addEventListener("change", () => this.handler());
     }
 }

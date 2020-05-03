@@ -1,55 +1,56 @@
 class Confirm {
-    protected static action: VoidFunction | null;
+    protected static callback: VoidFunction | null;
 
-    protected static handler(e: JQuery.ClickEvent): void {
-        const elm: HTMLElement = e.target;
-        let action: string = "";
+    protected static handler(e: MouseEvent): void {
+        const elm: HTMLElement = e.target as HTMLElement;
+        let action: string = "",
+            callback: VoidFunction | null;
 
         if (elm.tagName === "BUTTON") {
-            action = $(elm).attr("data-action") || "";
+            action = elm.getAttribute("data-action") || "";
         }
 
         switch (action) {
             case "confirm":
-                if (this.action) {
-                    this.action.call(undefined);
+                callback = this.callback;
+                this.hide();
+                this.callback = null;
+
+                if (callback) {
+                    callback();
                 }
 
-                this.action = null;
                 break;
 
             case "cancel":
                 this.hide();
-                this.action = null;
+                this.callback = null;
                 break;
         }
     }
 
-    public static add(action: VoidFunction): void {
-        this.action = action;
+    protected static hide(): void {
+        Jitems.get("confirm").classList.add("d-none");
     }
 
-    public static hide(): void {
-        Jitems.get("confirm").addClass("d-none");
+    public static add(callback: VoidFunction): void {
+        this.callback = callback;
     }
 
     public static init(): void {
-        Jitems.get("confirm").on("click", (e: JQuery.ClickEvent) => this.handler(e));
+        Jitems.get("confirm").addEventListener("click", (e: MouseEvent) => this.handler(e));
     }
 
     public static show(msg: string): void {
-        if (Jitems.get("confirm-msg").text() !== msg) {
-            Jitems.get("confirm-msg").text(msg);
+        if (Jitems.get("confirm-msg").textContent !== msg) {
+            Jitems.get("confirm-msg").textContent = msg;
         }
 
-        Jitems.get("confirm").removeClass("d-none");
+        Jitems.get("confirm").classList.remove("d-none");
 
-        const elmPosition: JQuery.Coordinates | undefined = Jitems.get("confirm").offset();
-
-        if (elmPosition) {
-            $("html, body").animate({
-                scrollTop: elmPosition.top
-            });
-        }
+        Jitems.get("confirm").scrollIntoView({
+            behavior: "smooth",
+            block: "end"
+        });
     }
 }
