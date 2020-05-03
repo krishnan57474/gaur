@@ -2,20 +2,12 @@ class ValidateFile {
     protected static filesizeError: string;
     protected static invalidFileError: string;
 
-    protected static showError(args: ValidateFileInterface, error: string): void {
-        if (args.error) {
-            args.error([error]);
-        } else {
-            Errors.show([error], args.context || $());
-        }
-    }
-
     protected static toBytes(unit: string): number {
         const units: string = "bkmgtpezy",
             size: number = parseFloat(unit),
-            uprefix: string = unit.substr(-2, 1).toLowerCase();
+            uprefix: string = unit.replace(/[^a-zA-Z]+/, "").toLowerCase();
 
-        let uindex: number = units.indexOf(uprefix);
+        let uindex: number = units.indexOf(uprefix[0]);
 
         if (uindex < 0) {
             uindex = 0;
@@ -32,18 +24,20 @@ class ValidateFile {
     public static isValid(args: ValidateFileInterface): boolean {
         const {file} = args,
             rx: RegExp = new RegExp("^" + args.types.join("$|^") + "$", "i"),
-            ext: string | undefined = file.name.split(".").pop();
+            ext: string = file.name.split(".").pop() || "";
 
-        if (!rx.test(ext || "") || !file.size) {
-            this.showError(args, this.invalidFileError);
-            return false;
+        let error: string = "";
+
+        if (!rx.test(ext) || !file.size) {
+            error = this.invalidFileError;
+        } else if (file.size > this.toBytes(args.size)) {
+            error = this.filesizeError;
         }
 
-        if (file.size > this.toBytes(args.size)) {
-            this.showError(args, this.filesizeError);
-            return false;
+        if (error && args.error) {
+            args.error(error);
         }
 
-        return true;
+        return !error;
     }
 }
