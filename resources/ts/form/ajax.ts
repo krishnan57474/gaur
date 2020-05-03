@@ -1,97 +1,42 @@
 class Ajax {
-    protected static lock: boolean;
+    protected config: AjaxConfigInterface;
+    protected ignoreLock: boolean;
 
-    protected static getConfigs(
-        uconfigs: AjaxUserConfigsInterface,
-        handlers: AjaxHandlersInterface
-    ): JQuery.AjaxSettings {
-        const configs: JQuery.AjaxSettings = {
-            method: uconfigs.method || "POST",
-            url: uconfigs.url || location.href,
-            error: () => this.onError(uconfigs, handlers),
-            data: uconfigs.data
+    public constructor(method: string, url: string, ignoreLock: boolean) {
+        this.config = {
+            data: {},
+            events: {},
+            headers: {},
+            method: method.toUpperCase(),
+            upload: false,
+            url: "api/" + url
         };
 
-        if (uconfigs.upload) {
-            configs.processData = false;
-            configs.contentType = false;
-        }
-
-        return configs;
+        this.ignoreLock = ignoreLock;
     }
 
-    protected static getHandlers(uconfigs: AjaxUserConfigsInterface): AjaxHandlersInterface {
-        const handlers: AjaxHandlersInterface = {
-            error: (errors: Array<string> | string) => {
-                if (uconfigs.error) {
-                    uconfigs.error(errors);
-                } else {
-                    Errors.show(errors, uconfigs.context || $());
-                }
-            },
-            progress: (status: boolean) => {
-                if (uconfigs.progress) {
-                    uconfigs.progress(status);
-                } else if (status) {
-                    Progress.show();
-                } else {
-                    Progress.hide();
-                }
-            }
-        };
-
-        return handlers;
+    public data(data: AjaxConfigDataType): this {
+        Object.assign(this.config.data, data);
+        return this;
     }
 
-    protected static onError(
-        uconfigs: AjaxUserConfigsInterface,
-        handlers: AjaxHandlersInterface
-    ): void {
-        if (uconfigs.load) {
-            uconfigs.load();
-        }
-
-        handlers.progress(false);
-        handlers.error("");
-
-        this.lock = false;
+    public headers(headers: Record<string, string>): this {
+        Object.assign(this.config.headers, headers);
+        return this;
     }
 
-    protected static onSuccess(
-        uconfigs: AjaxUserConfigsInterface,
-        handlers: AjaxHandlersInterface,
-        response: AjaxResponseInterface,
-        status: string
-    ): void {
-        if (uconfigs.load) {
-            uconfigs.load();
-        }
-
-        handlers.progress(false);
-
-        if (status === "success" && response.status && !response.errors) {
-            uconfigs.success(response.data || "");
-        } else {
-            handlers.error(response.errors || "");
-        }
-
-        this.lock = false;
+    public on(type: string, listener: Function): this {
+        this.config.events[type] = listener;
+        return this;
     }
 
-    public static submit(uconfigs: AjaxUserConfigsInterface, ignoreLock: boolean): void {
-        if (this.lock && !ignoreLock) {
-            return;
-        }
+    public upload(status: boolean): this {
+        this.config.upload = status;
+        return this;
+    }
 
-        const handlers: AjaxHandlersInterface = this.getHandlers(uconfigs),
-            configs: JQuery.AjaxSettings = this.getConfigs(uconfigs, handlers);
-
-        this.lock = true;
+    public send(): Promise<AjaxResponse> {
         Errors.clear();
-        handlers.progress(true);
-
-        $.ajax(configs).done((response: AjaxResponseInterface, status: string) =>
-            this.onSuccess(uconfigs, handlers, response, status)
-        );
+        return new AjaxRequest(this.config).open(this.ignoreLock);
     }
 }
