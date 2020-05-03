@@ -30,13 +30,13 @@ class Ajax {
         return this;
     }
 
-    public upload(status: boolean): this {
-        this.config.upload = status;
-        return this;
-    }
-
     public send(): Promise<AjaxResponse> {
         Errors.clear();
         return new AjaxRequest(this.config).open(this.ignoreLock);
+    }
+
+    public upload(status: boolean): this {
+        this.config.upload = status;
+        return this;
     }
 }
