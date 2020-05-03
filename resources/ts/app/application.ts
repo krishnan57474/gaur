@@ -1,10 +1,7 @@
 class Application {
-    public addConfirm(action: VoidFunction): void {
+    public confirm(msg: string, action: VoidFunction): void {
         Confirm.add(action);
-    }
-
-    public hideConfirm(): void {
-        Confirm.hide();
+        Confirm.show(msg);
     }
 
     public init(uconfigs: UserConfigsInterface): void {
@@ -16,8 +13,10 @@ class Application {
         Configs.init();
 
         if (uconfigs) {
-            Configs.apply(uconfigs);
+            Object.assign(configs, uconfigs);
         }
+
+        Configs.normalize();
 
         Jitems.init();
         Confirm.init();
@@ -30,9 +29,5 @@ class Application {
         Ufilter.init();
 
         Items.get();
-    }
-
-    public showConfirm(msg: string): void {
-        Confirm.show(msg);
     }
 }
