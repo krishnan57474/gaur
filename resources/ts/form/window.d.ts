@@ -1,3 +1,3 @@
 interface Window {
-    GForm: () => Form;
+    GForm(): Form;
 }
