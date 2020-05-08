@@ -7,10 +7,17 @@ namespace Gaur\HTTP\FileUpload;
 trait ValidateTrait
 {
     /**
+     * Error message
+     *
+     * @var string
+     */
+    protected $errorMessage;
+
+    /**
      * Validate file size
      *
-     * @param array  $files list of files to check
-     * @param string $size  maximum file size with unit prefix
+     * @param mixed[][] $files list of files to check
+     * @param string    $size  maximum file size with unit prefix
      *
      * @return int
      */
@@ -19,8 +26,8 @@ trait ValidateTrait
         $eindex      = 0;
         $maxFilesize = $this->toBytes($size);
 
-        foreach ($files as $k => $v) {
-            if ($v['size'] > $maxFilesize) {
+        foreach ($files as $k => $item) {
+            if ($item['size'] > $maxFilesize) {
                 $eindex = $k + 1;
                 break;
             }
@@ -32,8 +39,8 @@ trait ValidateTrait
     /**
      * Validate file type
      *
-     * @param array $files  list of files to check
-     * @param array $atypes allowed file types
+     * @param mixed[][] $files  list of files to check
+     * @param string[]  $atypes allowed file types
      *
      * @return int
      */
@@ -42,8 +49,8 @@ trait ValidateTrait
         $eindex = 0;
         $finfo  = finfo_open(FILEINFO_MIME_TYPE);
 
-        foreach ($files as $k => $v) {
-            $fileExt = pathinfo($v['name'], PATHINFO_EXTENSION);
+        foreach ($files as $k => $item) {
+            $fileExt = pathinfo($item['name'], PATHINFO_EXTENSION);
 
             if (!ctype_alnum($fileExt)) {
                 $eindex = $k + 1;
@@ -58,7 +65,12 @@ trait ValidateTrait
                 break;
             }
 
-            $mimeType = finfo_file($finfo, $v['tmp_name']);
+            if (is_bool($finfo)) {
+                continue;
+            }
+
+            $mimeType = finfo_file($finfo, $item['tmp_name']);
+            $mimeType = is_bool($mimeType) ? '' : $mimeType;
             $mimeExt  = $this->getMimeExtension($mimeType);
 
             // Validate mime type
@@ -68,8 +80,26 @@ trait ValidateTrait
             }
         }
 
-        finfo_close($finfo);
+        if (!is_bool($finfo)) {
+            finfo_close($finfo);
+        }
 
         return $eindex;
+    }
+
+    /**
+     * Set upload error message
+     *
+     * @param string $errorFilename error filename
+     * @param string $errorMessage  error message
+     *
+     * @return void
+     */
+    public function setError(string $errorFilename, string $errorMessage): void
+    {
+        $this->errorMessage = 'Unable to upload the file '
+            . $errorFilename
+            . '. '
+            . $errorMessage;
     }
 }

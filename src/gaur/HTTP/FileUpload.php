@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Gaur\HTTP;
 
-use Gaur\HTTP\{
-    FileUpload\Errors,
-    FileUpload\FileTrait,
-    FileUpload\MimesTrait,
-    FileUpload\ValidateTrait,
-    Input
-};
+use Gaur\HTTP\FileUpload\Errors;
+use Gaur\HTTP\FileUpload\FileTrait;
+use Gaur\HTTP\FileUpload\MimesTrait;
+use Gaur\HTTP\FileUpload\ValidateTrait;
 
 class FileUpload
 {
@@ -19,85 +16,33 @@ class FileUpload
     use ValidateTrait;
 
     /**
-     * Error filename
-     *
-     * @var string
-     */
-    protected $errorFilename;
-
-    /**
-     * Error message
-     *
-     * @var string
-     */
-    protected $errorMessage;
-
-    /**
-     * Get upload error
+     * Get upload error message
      *
      * @return string
      */
     public function getError(): string
     {
-        $error = '';
-
-        if ($this->errorMessage) {
-            $error .= 'Unable to upload the file ';
-            $error .= $this->errorFilename;
-            $error .= '. ';
-            $error .= $this->errorMessage;
-        }
-
-        return $error;
-    }
-
-    /**
-     * Get uploaded files
-     *
-     * @param string $afield    attachment field name
-     * @param int    $count     number of files to move (0 for all)
-     * @param bool   $keepIndex preserve array keys
-     *
-     * @return array
-     */
-    public function getFiles(string $afield, int $count, bool $keepIndex): array
-    {
-        $files     = [];
-        $filesList = array_slice(
-            (new Input())->files($afield),
-            0,
-            $count ?: null,
-            $keepIndex
-        );
-
-        foreach ($filesList as $k => $v) {
-            if (!is_uploaded_file($v['tmp_name'])
-                || $v['error'] !== \UPLOAD_ERR_OK
-                || !$v['size']
-            ) {
-                continue;
-            }
-
-            if ($keepIndex) {
-                $files[$k] = $v;
-            } else {
-                $files[] = $v;
-            }
-        }
-
-        return $files;
+        return $this->errorMessage;
     }
 
     /**
      * Get non existing filename
      *
-     * @param string $fileExt file extension with dot
-     * @param string $path    path to check with trailing slashes
+     * @param string $fileExt file extension
+     * @param string $path    path to check
      *
      * @return string
      */
     public function getNewFilename(string $fileExt, string $path): string
     {
+        if ($fileExt[0] !== '.') {
+            $fileExt = '.' . $fileExt;
+        }
+
+        if (substr($path, -1) !== '/') {
+            $path .= '/';
+        }
+
         do {
             $filename = md5(uniqid((string)mt_rand(), true)) . $fileExt;
         } while (file_exists($path . $filename));
@@ -115,16 +60,15 @@ class FileUpload
      * string   name    attachment field name
      * string   path    destination path
      * string   size    maximum file size with unit prefix
-     * array    types   allowed file types
+     * string[] types   allowed file types
      *
-     * @param array $config upload configuration
+     * @param mixed[] $config upload configuration
      *
-     * @return array
+     * @return string[]
      */
     public function upload(array $config): array
     {
-        $this->errorMessage  = '';
-        $this->errorFilename = '';
+        $this->errorMessage = '';
 
         $files = $this->getFiles(
             $config['name'],
@@ -140,8 +84,10 @@ class FileUpload
         $eindex = $this->validateSize($files, $config['size']);
 
         if ($eindex) {
-            $this->errorMessage  = Errors::FILE_SIZE_EXCEED;
-            $this->errorFilename = $files[$eindex - 1]['name'];
+            $this->setError(
+                $files[$eindex - 1]['name'],
+                Errors::FILE_SIZE_EXCEED
+            );
             return [];
         }
 
@@ -149,8 +95,10 @@ class FileUpload
         $eindex = $this->validateType($files, $config['types']);
 
         if ($eindex) {
-            $this->errorMessage  = Errors::INVALID_FILE_TYPE;
-            $this->errorFilename = $files[$eindex - 1]['name'];
+            $this->setError(
+                $files[$eindex - 1]['name'],
+                Errors::INVALID_FILE_TYPE
+            );
             return [];
         }
 
@@ -160,12 +108,14 @@ class FileUpload
             $config['path'] .= '/';
         }
 
-        foreach ($files as $k => $v) {
-            $filename = $this->moveFile($v, $config['path']);
+        foreach ($files as $k => $item) {
+            $filename = $this->moveFile($item, $config['path']);
 
             if (!$filename) {
-                $this->errorMessage  = Errors::MOVE_FAILED;
-                $this->errorFilename = $v['name'];
+                $this->setError(
+                    $item['name'],
+                    Errors::MOVE_FAILED
+                );
                 break;
             }
 
