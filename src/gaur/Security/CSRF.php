@@ -32,13 +32,13 @@ class CSRF
      *
      * @param int $time token expiration time in minutes
      *
-     * @return array
+     * @return string[]
      */
-    public function create(int $time = 0): array
+    public function create(int $time): array
     {
         $token = [
-            'name' => bin2hex(random_bytes(32)),
-            'hash' => bin2hex(random_bytes(32))
+            'name' => bin2hex(random_bytes(16)),
+            'hash' => bin2hex(random_bytes(48))
         ];
 
         $_SESSION[$this->name] = [
@@ -46,11 +46,7 @@ class CSRF
             $token['hash']
         ];
 
-        if ($time) {
-            session()->markAsTempdata($this->name, $time * 60);
-        } else {
-            session()->markAsFlashdata($this->name);
-        }
+        session()->markAsTempdata($this->name, $time * 60);
 
         return $token;
     }
@@ -77,7 +73,7 @@ class CSRF
         $ptoken = '';
 
         if (isset($_SESSION[$this->name][0])) {
-            $ptoken = (new Input())->post($_SESSION[$this->name][0]);
+            $ptoken = Input::data($_SESSION[$this->name][0]);
         }
 
         return ($stoken === $ptoken);

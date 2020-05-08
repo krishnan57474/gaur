@@ -1,14 +1,16 @@
     <script nonce="<?= getCspNonce() ?>">
-    (function ($) {
+    (() => {
         "use strict";
+
+        let $;
 
         function segment(url) {
             return url.replace(/\/$/, "").split("/");
         }
 
         function compareSegment(base, current) {
-            var i = -1,
-            l = current.length,
+            const l = current.length;
+            let i = -1,
             match = false;
 
             while (++i < l) {
@@ -26,30 +28,30 @@
         }
 
         function setActiveMenu() {
-            var base = segment(location.href.replace(document.baseURI, "")),
-            current;
+            const base = segment(location.href.replace(document.baseURI, ""));
+            let current;
 
-            $(".g-main-menu").each(function () {
-                $("> li > a", this).each(function (k, elm) {
+            for (const melm of $(".g-main-menu").toArray()) {
+                for (const elm of $("> li > a", melm).toArray()) {
                     current = $(elm).attr("href");
 
                     if (compareSegment(base, segment(current))) {
                         $(elm).addClass("active");
-                        return false;
+                        return;
                     }
-                });
-            });
+                }
+            }
         }
 
         function initMenu() {
-            var inputFrg = $('<input class="g-menu-state" type="checkbox">'),
-            labelFrg = $('<label class="g-menu-icon"></label>'),
-            i = 1,
+            const inputFrg = $('<input class="g-menu-state" type="checkbox">'),
+            labelFrg = $('<label class="g-menu-icon"></label>');
+            let i = 1,
             childElm,
             id;
 
-            $(".g-sub-menu").each(function () {
-                childElm = $(this).parent().children();
+            for (const elm of $(".g-sub-menu").toArray()) {
+                childElm = $(elm).parent().children();
                 id = "menu-state-" + i;
                 i += 1;
 
@@ -60,7 +62,7 @@
                 childElm.last().after(
                     labelFrg.clone().attr("for", id)
                 );
-            });
+            }
         }
 
         function init() {

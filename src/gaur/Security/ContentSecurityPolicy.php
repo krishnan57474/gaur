@@ -23,7 +23,7 @@ class ContentSecurityPolicy
      *
      * @return string
      */
-    public function get(Config $config): string
+    public static function get(Config $config): string
     {
         $csp = '';
 
@@ -48,9 +48,9 @@ class ContentSecurityPolicy
      *
      * @return string
      */
-    public function getNonce(): string
+    public static function getNonce(): string
     {
-        if (!self::$nonce) {
+        if (!is_string(self::$nonce)) {
             self::$nonce = bin2hex(random_bytes(32));
         }
 

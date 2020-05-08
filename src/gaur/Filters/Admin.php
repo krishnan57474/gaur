@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace Gaur\Filters;
 
-use Gaur\{
-    Filters\Config,
-    HTTP\Input
-};
+use Gaur\Filters\Config;
+use Gaur\HTTP\Input;
 
 class Admin
 {
     /**
+     * Page name
+     *
+     * @var string
+     */
+    protected $name;
+
+    /**
      * Get fields
      *
-     * @param array $keys    keys list
-     * @param array $vals    values list
-     * @param array $afields allowed fields
+     * @param string[] $keys    keys list
+     * @param string[] $vals    values list
+     * @param string[] $afields allowed fields
      *
-     * @return array|null
+     * @return string[][]|null
      */
     protected function getFields(
         array $keys,
@@ -46,18 +51,26 @@ class Admin
     }
 
     /**
+     * Load initial values
+     *
+     * @param string $name page name
+     *
+     * @return void
+     */
+    public function __construct(string $name)
+    {
+        $this->name = 'admin-filter-' . $name;
+    }
+
+    /**
      * Filter user inputs
      *
-     * @param string $name   page name
      * @param Config $config filter configuration
      *
-     * @return array
+     * @return mixed[]
      */
-    public function filter(string $name, Config $config): array
+    public function filter(Config $config): array
     {
-        $input = new Input();
-        $name  = 'admin-filter-' . $name;
-
         $filter      = null;
         $search      = null;
         $currentPage = 1;
@@ -66,30 +79,30 @@ class Admin
         $order       = null;
 
         $filter = $this->getFields(
-            $input->postArray('filterby'),
-            $input->postArray('filterval'),
+            Input::urlArray('filterby'),
+            Input::urlArray('filterval'),
             $config->filterFields
         );
 
         $search = $this->getFields(
-            $input->postArray('searchby'),
-            $input->postArray('searchval'),
+            Input::urlArray('searchby'),
+            Input::urlArray('searchval'),
             $config->searchFields
         );
 
-        if (key_exists($input->post('orderby'), $config->orderFields)) {
+        if (key_exists(Input::url('orderby'), $config->orderFields)) {
             $order = [
-                'order' => $input->post('orderby'),
-                'sort'  => ($input->post('sortby') ? 'DESC' : 'ASC')
+                'order' => Input::url('orderby'),
+                'sort'  => (Input::url('sortby') ? 'DESC' : 'ASC')
             ];
         }
 
-        if (ctype_digit($input->post('page'))) {
-            $currentPage = (int)$input->post('page');
+        if (ctype_digit(Input::url('page'))) {
+            $currentPage = (int)Input::url('page');
         }
 
-        if (ctype_digit($input->post('count'))) {
-            $listCount = (int)$input->post('count');
+        if (ctype_digit(Input::url('count'))) {
+            $listCount = (int)Input::url('count');
         }
 
         if ($currentPage < 1) {
@@ -108,7 +121,7 @@ class Admin
             $offset = ($currentPage - 1) * $listCount;
         }
 
-        $_SESSION[$name] = [
+        $_SESSION[$this->name] = [
             'count'  => $listCount,
             'filter' => $filter,
             'offset' => $offset,
@@ -116,22 +129,18 @@ class Admin
             'search' => $search
         ];
 
-        return $_SESSION[$name];
+        return $_SESSION[$this->name];
     }
 
     /**
      * Get filtered inputs
      *
-     * @param string $name page name
-     *
-     * @return array
+     * @return mixed[]
      */
-    public function get(string $name): array
+    public function get(): array
     {
-        $name = 'admin-filter-' . $name;
-
-        if (!isset($_SESSION[$name])) {
-            $_SESSION[$name] = [
+        if (!isset($_SESSION[$this->name])) {
+            $_SESSION[$this->name] = [
                 'count'  => 5,
                 'filter' => null,
                 'offset' => 0,
@@ -140,6 +149,6 @@ class Admin
             ];
         }
 
-        return $_SESSION[$name];
+        return $_SESSION[$this->name];
     }
 }

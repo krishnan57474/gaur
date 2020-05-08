@@ -6,6 +6,6 @@ namespace App\Data\Users;
 
 class UserResetType
 {
-    public const ACCOUNT_ACTIVATION = 1;
-    public const PASSWORD_RESET     = 2;
+    public const ACTIVATE_ACCOUNT = 1;
+    public const RESET_PASSWORD   = 2;
 }
