@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Gaur\{
-    Controller,
-    Controller\AjaxUploadControllerTrait,
-    HTTP\Input,
-    HTTP\UploadCache,
-    Mail\Mail,
-    Security\CSRF
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\FileUpload;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Mail\Mail;
+use Gaur\Security\CSRF;
 
 class Enquiry extends Controller
 {
-    use AjaxUploadControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -24,10 +24,6 @@ class Enquiry extends Controller
      */
     protected function index(): void
     {
-        if ($this->isAjaxRequest()) {
-            return;
-        }
-
         $data = [];
 
         // 60 minutes
@@ -38,95 +34,41 @@ class Enquiry extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf   = new CSRF(__CLASS__);
-        $afield = 'attach';
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf
+        if (!$this->isValidCsrf()) {
             return;
         }
 
-        if (!$this->validateInput()) {
-            $this->removeAttachment(__CLASS__, $afield);
-            $response['errors'] = $this->errors;
+        if (!$this->validateInput()
+            || !$this->validateAttachment()
+        ) {
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
-        $this->assembleAttachment(
-            __CLASS__,
-            $afield,
-            FCPATH . 'assets/enquiry/'
-        );
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
+        $message = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config('Config\App')->siteName;
 
         if ($this->sendMail()) {
-            $response['data'] = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config('Config\App')->siteName;
+            Response::setStatus(StatusCode::OK);
+            Response::setJson([
+                'data' => [ 'message' => $message ]
+            ]);
         } else {
-            $response['errors'] = [
-                'Oops! something went wrong please try again later'
-            ];
+            Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
+            Response::setJson();
         }
-
-        $csrf->remove();
-        session_write_close();
-    }
-
-    /**
-     * Ajax file upload
-     *
-     * @param array $response ajax response
-     *
-     * @return void
-     */
-    protected function aactionUpload(array &$response): void
-    {
-        if (!(new CSRF(__CLASS__))->validate()) {
-            $response['status'] = false;
-            return;
-        }
-
-        $afield      = 'attach';
-        $uploadCache = new UploadCache(__CLASS__, $afield);
-        $uploadCount = count($uploadCache->get());
-        $uploadLimit = 1;
-
-        $this->finputs[$afield] = null;
-
-        if ($uploadCount + 1 <= $uploadLimit) {
-            $this->validateAttachment(
-                $afield,
-                [
-                    'count' => 1,
-                    'index' => false,
-                    'name'  => $afield,
-                    'size'  => '10MB',
-                    'types' => ['jpeg', 'jpg', 'png']
-                ]
-            );
-        } else {
-            $this->errors[] = 'Maximum number of files exceeded';
-        }
-
-        if ($this->finputs[$afield]) {
-            $uploadCache->add(
-                $uploadCount,
-                $this->finputs[$afield][0]
-            );
-        } elseif ($this->errors) {
-            $this->removeAttachment(__CLASS__, $afield);
-            $response['errors'] = $this->errors;
-        }
-
-        session_write_close();
-
-        $response['data'] = !$this->errors;
     }
 
     /**
@@ -155,7 +97,7 @@ class Enquiry extends Controller
             'attachments' => $attachments
         ];
 
-        $status = (new Mail())->send(
+        $status = Mail::send(
             'email/default/contact',
             $data
         );
@@ -170,7 +112,6 @@ class Enquiry extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'name',
             'email',
@@ -179,7 +120,7 @@ class Enquiry extends Controller
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';
@@ -213,12 +154,36 @@ class Enquiry extends Controller
             goto exitValidation;
         }
 
-        if (!(new UploadCache(__CLASS__, 'attach'))->get()) {
-            $this->errors[] = 'No attachment found!';
-            goto exitValidation;
+        exitValidation:
+        return !$this->errors;
+    }
+
+    /**
+     * Validate attachment
+     *
+     * @return bool
+     */
+    protected function validateAttachment(): bool
+    {
+        $fileUpload = new FileUpload();
+
+        $this->finputs['attach'] = $fileUpload->upload(
+            [
+                'count' => 1,
+                'index' => false,
+                'name'  => 'attach',
+                'path'  => FCPATH . 'assets/enquiry/',
+                'size'  => '10MB',
+                'types' => ['jpeg', 'jpg', 'png']
+            ]
+        );
+
+        if ($fileUpload->getError()) {
+            $this->errors[] = $fileUpload->getError();
+        } elseif (!$this->finputs['attach']) {
+            $this->errors[] = 'No attachment found';
         }
 
-        exitValidation:
         return !$this->errors;
     }
 }

@@ -5,22 +5,19 @@ declare(strict_types=1);
 namespace App\Controllers\Account;
 
 use App\Data\Users\UserResetType;
-use App\Models\Users\{
-    User,
-    UserReset
-};
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    HTTP\Response,
-    Mail\Mail,
-    Security\CSRF
-};
+use App\Models\Users\User;
+use App\Models\Users\UserReset;
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Mail\Mail;
+use Gaur\Security\CSRF;
 
 class Register extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -31,11 +28,7 @@ class Register extends Controller
     {
         // Prevent logged users
         if (isset($_SESSION['user_id'])) {
-            (new Response())->redirect('');
-            return;
-        }
-
-        if ($this->isAjaxRequest()) {
+            Response::redirect('');
             return;
         }
 
@@ -49,25 +42,26 @@ class Register extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf, logged users
+        if (!$this->isValidCsrf()
+            || !$this->isNotLoggedIn()
+        ) {
             return;
         }
 
         if (!$this->validateInput()
             || !$this->validateUser()
         ) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
@@ -78,21 +72,26 @@ class Register extends Controller
         $uid = (new User())->add($this->finputs);
 
         // Generate random token
-        $token = md5(uniqid((string)mt_rand(), true));
+        $token = bin2hex(random_bytes(128));
 
         // Add account verification
-        $this->addVerification($uid, $token);
+        $this->addVerification($uid, md5($token));
 
         // Send email verification
         $this->sendMail($token);
 
-        $response['data'] = [
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
+        $message = [
             'Congratulations! your new account has been successfully created.',
             'A confirmation has been sent to the provided email address. You will need to follow the instructions in that message in order to gain access to the site.'
         ];
 
-        $csrf->remove();
-        session_write_close();
+        Response::setStatus(StatusCode::CREATED);
+        Response::setJson([
+            'data' => [ 'message' => $message ]
+        ]);
     }
 
     /**
@@ -108,7 +107,7 @@ class Register extends Controller
         $data = [
             'uid'    => $uid,
             'token'  => $token,
-            'type'   => UserResetType::ACCOUNT_ACTIVATION,
+            'type'   => UserResetType::ACTIVATE_ACCOUNT,
             'expire' => null
         ];
 
@@ -133,8 +132,8 @@ class Register extends Controller
             'token'    => $token
         ];
 
-        $status = (new Mail())->send(
-            'email/default/account/email/activation',
+        $status = Mail::send(
+            'email/default/account/email/activate',
             $data
         );
 
@@ -148,14 +147,13 @@ class Register extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'username',
             'email'
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';

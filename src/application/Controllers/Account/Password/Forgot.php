@@ -5,22 +5,19 @@ declare(strict_types=1);
 namespace App\Controllers\Account\Password;
 
 use App\Data\Users\UserResetType;
-use App\Models\Users\{
-    User,
-    UserReset
-};
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    HTTP\Response,
-    Mail\Mail,
-    Security\CSRF
-};
+use App\Models\Users\User;
+use App\Models\Users\UserReset;
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Mail\Mail;
+use Gaur\Security\CSRF;
 
 class Forgot extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -31,11 +28,7 @@ class Forgot extends Controller
     {
         // Prevent logged users
         if (isset($_SESSION['user_id'])) {
-            (new Response())->redirect('');
-            return;
-        }
-
-        if ($this->isAjaxRequest()) {
+            Response::redirect('');
             return;
         }
 
@@ -49,18 +42,16 @@ class Forgot extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf, logged users
+        if (!$this->isValidCsrf()
+            || !$this->isNotLoggedIn()
+        ) {
             return;
         }
 
@@ -68,43 +59,47 @@ class Forgot extends Controller
             || !$this->validateIdentity()
             || !$this->validateUser()
         ) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
         // Generate random token
-        $token = md5(uniqid((string)mt_rand(), true));
+        $token = bin2hex(random_bytes(128));
 
-        // Add account verification
-        $this->addVerification($this->finputs['uid'], $token);
+        // Add password reset
+        $this->addReset($this->finputs['uid'], md5($token));
 
-        // Send password reset
-        if ($this->sendMail($this->finputs['username'], $token)) {
-            $response['data'] = 'Congratulations! a password reset has been sent.';
-        } else {
-            $response['errors'] = [
-                'Oops! something went wrong please try again later'
-            ];
-        }
-
-        $csrf->remove();
+        (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        if ($this->sendMail($token)) {
+            Response::setStatus(StatusCode::OK);
+            Response::setJson([
+                'data' => [ 'message' => 'Congratulations! a password reset has been sent.' ]
+            ]);
+        } else {
+            Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
+            Response::setJson();
+        }
     }
 
     /**
-     * Add account verification
+     * Add password reset
      *
      * @param int    $uid   user id
      * @param string $token random token
      *
      * @return void
      */
-    protected function addVerification(int $uid, string $token): void
+    protected function addReset(int $uid, string $token): void
     {
         $data = [
             'uid'     => $uid,
             'token'   => $token,
-            'type'    => UserResetType::PASSWORD_RESET,
+            'type'    => UserResetType::RESET_PASSWORD,
             'expire'  => date('Y-m-d H:i:s', strtotime('1 hour'))
         ];
 
@@ -114,23 +109,22 @@ class Forgot extends Controller
     /**
      * Send email
      *
-     * @param string $username username
-     * @param string $token    random token
+     * @param string $token random token
      *
      * @return bool
      */
-    protected function sendMail(string $username, string $token): bool
+    protected function sendMail(string $token): bool
     {
         helper('xhtml');
 
         $data = [
             'to'       => $this->finputs['email'],
             'subject'  => 'Password reset request',
-            'username' => $username,
+            'username' => $this->finputs['username'],
             'token'    => $token
         ];
 
-        $status = (new Mail())->send(
+        $status = Mail::send(
             'email/default/account/password/forgot',
             $data
         );
@@ -166,7 +160,7 @@ class Forgot extends Controller
      */
     protected function validateInput(): bool
     {
-        $this->finputs['identity'] = (new Input())->post('identity');
+        $this->finputs['identity'] = Input::data('identity');
 
         if ($this->finputs['identity'] === '') {
             $this->errors[] = 'Please fill all required fields!';

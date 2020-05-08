@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    Mail\Mail,
-    Security\CSRF
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Mail\Mail;
+use Gaur\Security\CSRF;
 
 class Contact extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -23,10 +23,6 @@ class Contact extends Controller
      */
     protected function index(): void
     {
-        if ($this->isAjaxRequest()) {
-            return;
-        }
-
         $data = [];
 
         // 60 minutes
@@ -37,36 +33,39 @@ class Contact extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf
+        if (!$this->isValidCsrf()) {
             return;
         }
 
         if (!$this->validateInput()) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
-        if ($this->sendMail()) {
-            $response['data'] = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config('Config\App')->siteName;
-        } else {
-            $response['errors'] = [
-                'Oops! something went wrong please try again later'
-            ];
-        }
-
-        $csrf->remove();
+        (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        $message = 'Congratulations! your message has been successfully sent. We will send you a reply as soon as possible. Thank you for your interest in ' . config('Config\App')->siteName;
+
+        if ($this->sendMail()) {
+            Response::setStatus(StatusCode::OK);
+            Response::setJson([
+                'data' => [ 'message' => $message ]
+            ]);
+        } else {
+            Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
+            Response::setJson();
+        }
     }
 
     /**
@@ -84,7 +83,7 @@ class Contact extends Controller
             'inputs'  => $this->finputs
         ];
 
-        $status = (new Mail())->send(
+        $status = Mail::send(
             'email/default/contact',
             $data
         );
@@ -99,7 +98,6 @@ class Contact extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'name',
             'email',
@@ -108,7 +106,7 @@ class Contact extends Controller
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';
