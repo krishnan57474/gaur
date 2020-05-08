@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace Gaur\HTTP;
 
+use Gaur\HTTP\InputRaw;
+
 class Input
 {
     /**
      * Get array value from given array
      *
-     * @param array  $data array to use
-     * @param string $key  field name
+     * @param mixed[] $data array to use
+     * @param string  $key  field name
      *
-     * @return array
+     * @return string[]
      */
-    protected function filterArray(array $data, string $key): array
+    protected static function filterArray(array $data, string $key): array
     {
         $values  = is_array($data[$key] ?? null) ? $data[$key] : [];
         $fvalues = [];
@@ -31,14 +33,38 @@ class Input
     /**
      * Get string value from given array
      *
-     * @param array  $data array to use
-     * @param string $key  field name
+     * @param mixed[] $data array to use
+     * @param string  $key  field name
      *
      * @return string
      */
-    protected function filterString(array $data, string $key): string
+    protected static function filterString(array $data, string $key): string
     {
         return is_string($data[$key] ?? null) ? trim($data[$key]) : '';
+    }
+
+    /**
+     * Get string value from request body
+     *
+     * @param string $key field name
+     *
+     * @return string
+     */
+    public static function data(string $key): string
+    {
+        return self::filterString(InputRaw::getData(), $key);
+    }
+
+    /**
+     * Get array value from request body
+     *
+     * @param string $key field name
+     *
+     * @return string[]
+     */
+    public static function dataArray(string $key): array
+    {
+        return self::filterArray(InputRaw::getData(), $key);
     }
 
     /**
@@ -46,9 +72,9 @@ class Input
      *
      * @param string $key field name
      *
-     * @return array
+     * @return mixed[][]
      */
-    public function files(string $key): array
+    public static function files(string $key): array
     {
         $files = [];
 
@@ -70,50 +96,26 @@ class Input
     }
 
     /**
-     * Get string value from $_GET array
+     * Get string value from url
      *
      * @param string $key field name
      *
      * @return string
      */
-    public function get(string $key): string
+    public static function url(string $key): string
     {
-        return $this->filterString($_GET, $key);
+        return self::filterString($_GET, $key);
     }
 
     /**
-     * Get array value from $_GET array
+     * Get array value from url
      *
      * @param string $key field name
      *
-     * @return array
+     * @return string[]
      */
-    public function getArray(string $key): array
+    public static function urlArray(string $key): array
     {
-        return $this->filterArray($_GET, $key);
-    }
-
-    /**
-     * Get string value from $_POST array
-     *
-     * @param string $key field name
-     *
-     * @return string
-     */
-    public function post(string $key): string
-    {
-        return $this->filterString($_POST, $key);
-    }
-
-    /**
-     * Get array value from $_POST array
-     *
-     * @param string $key field name
-     *
-     * @return array
-     */
-    public function postArray(string $key): array
-    {
-        return $this->filterArray($_POST, $key);
+        return self::filterArray($_GET, $key);
     }
 }
