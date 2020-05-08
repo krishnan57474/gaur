@@ -11,6 +11,7 @@ parameters:
 
     autoload_files:
         - application/Helpers/csp_helper.php
+        - application/Helpers/data_helper.php
         - application/Helpers/html_helper.php
         - application/Helpers/xhtml_helper.php
 
@@ -20,13 +21,13 @@ parameters:
             path: application/Models
 
         -
-            message: '#Binary operation "." between string and array<string>\\|string results in an error.#'
+            message: '#Binary operation "." between string and array<string>\|string results in an error.#'
             path: application/Models
 
         -
-            message: '#Undefined variable: .(csrf|user|filterConfig|filter|items)#'
+            message: '#Undefined variable: \$\w+#'
             path: application/Views/app
 
         -
-            message: '#Undefined variable: .(username|token|subject|colors|inputs)#'
+            message: '#Undefined variable: \$\w+#'
             path: application/Views/email
