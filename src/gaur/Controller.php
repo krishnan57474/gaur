@@ -6,31 +6,27 @@ namespace Gaur;
 
 use CodeIgniter\Controller as BaseController;
 use Config\Services;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
 
-abstract class Controller extends BaseController
+class Controller extends BaseController
 {
     /**
      * Helpers to be loaded automatically
      *
-     * @var array
+     * @var string[]
      */
     protected $preloadHelpers = [];
 
     /**
-     * Default page for this controller
-     *
-     * @return void
-     */
-    abstract protected function index(): void;
-
-    /**
      * Remap method calls
      *
+     * @param string $method  method in the controller gets called
      * @param string ...$args list of arguments
      *
      * @return void
      */
-    public function _remap(string ...$args): void
+    public function _remap(string $method, string ...$args): void
     {
         Services::session();
 
@@ -41,6 +37,11 @@ abstract class Controller extends BaseController
 
         helper(array_merge($helpers, $this->preloadHelpers));
 
-        $this->index(...$args);
+        if (method_exists($this, $method)) {
+            $this->{$method}(...$args);
+        } else {
+            Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
+            Response::setJson();
+        }
     }
 }
