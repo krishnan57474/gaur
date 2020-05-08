@@ -5,51 +5,46 @@ declare(strict_types=1);
 namespace App\Controllers\Admin\Users;
 
 use App\Models\Admin\Users\User;
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Response
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
 
 class View extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
      *
+     * @param string $id user id
+     *
      * @return void
      */
-    protected function index(): void
+    protected function index(string $id): void
     {
-        $id = $this->request->uri->getSegment(4);
-
-        // Prevent invalid id
-        if (!ctype_digit($id)
-            || $id < 1
-        ) {
-            (new Response())->pageNotFound();
-        }
-
         // Prevent non logged users
         if (!isset($_SESSION['user_id'])) {
-            (new Response())->loginRedirect('admin/users/view/' . $id);
+            Response::loginRedirect('admin/users/view/' . $id);
             return;
         }
 
         // Prevent non admin users
         if (!$_SESSION['is_admin']) {
-            (new Response())->pageNotFound();
+            Response::pageNotFound();
         }
 
-        if ($this->isAjaxRequest()) {
-            return;
+        $id = (int)$id;
+
+        // Prevent invalid id
+        if ($id < 1) {
+            Response::pageNotFound();
         }
 
-        $user = (new User())->get((int)$id);
+        $user = (new User())->get($id);
 
         if (!$user) {
-            (new Response())->pageNotFound();
+            Response::pageNotFound();
         }
 
         $data = [];
@@ -62,20 +57,68 @@ class View extends Controller
     /**
      * Activate account
      *
-     * @param array $response ajax response
+     * @param string $id user id
      *
      * @return void
      */
-    protected function aactionActivate(array &$response): void
+    protected function activate(string $id): void
     {
-        $id   = (int)$this->request->uri->getSegment(4);
+        // Prevent non logged users, non admin users
+        if (!$this->isLoggedIn()
+            || !$this->isAdmin()
+        ) {
+            return;
+        }
+
+        $id   = (int)$id;
         $user = new User();
 
-        if (!$user->exists($id)) {
-            $response['status'] = false;
+        // Prevent invalid id
+        if ($id < 1
+            || !$user->exists($id)
+        ) {
+            Response::setStatus(StatusCode::NOT_FOUND);
+            Response::setJson();
             return;
         }
 
         $user->activate($id);
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson();
+    }
+
+    /**
+     * Toggle user status
+     *
+     * @param string $id user id
+     *
+     * @return void
+     */
+    protected function toggleStatus(string $id): void
+    {
+        // Prevent non logged users, non admin users
+        if (!$this->isLoggedIn()
+            || !$this->isAdmin()
+        ) {
+            return;
+        }
+
+        $id   = (int)$id;
+        $user = new User();
+
+        // Prevent invalid id
+        if ($id < 1
+            || !$user->exists($id)
+        ) {
+            Response::setStatus(StatusCode::NOT_FOUND);
+            Response::setJson();
+            return;
+        }
+
+        $user->changeStatus($id);
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson();
     }
 }

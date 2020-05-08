@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers\Admin\Users;
 
 use App\Data\Users\FilterConfig;
-use App\Models\Admin\Users\{
-    User,
-    Users
-};
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    Filters\Admin,
-    HTTP\Input,
-    HTTP\Response
-};
+use App\Models\Admin\Users\Users;
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\Filters\Admin;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
 
 class Home extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -30,20 +25,16 @@ class Home extends Controller
     {
         // Prevent non logged users
         if (!isset($_SESSION['user_id'])) {
-            (new Response())->loginRedirect('admin/users');
+            Response::loginRedirect('admin/users');
             return;
         }
 
         // Prevent non admin users
         if (!$_SESSION['is_admin']) {
-            (new Response())->pageNotFound();
+            Response::pageNotFound();
         }
 
-        if ($this->isAjaxRequest()) {
-            return;
-        }
-
-        $filter = (new Admin())->get(__CLASS__);
+        $filter = (new Admin(__CLASS__))->get();
         session_write_close();
 
         $currentPage = 1;
@@ -52,10 +43,11 @@ class Home extends Controller
             $currentPage = ($filter['offset'] / $filter['count']) + 1;
         }
 
+        $filter['current_page'] = $currentPage;
+
         $data = [];
 
-        $data['filter']                 = $filter;
-        $data['filter']['current_page'] = $currentPage;
+        $data['filter'] = $filter;
 
         $data['filterConfig'] = new FilterConfig();
 
@@ -63,41 +55,20 @@ class Home extends Controller
     }
 
     /**
-     * Toggle user status
-     *
-     * @param array $response ajax response
-     *
-     * @return void
-     */
-    protected function aactionChangeStatus(array &$response): void
-    {
-        $user = new User();
-        $id   = (int)(new Input())->post('id');
-
-        if (!$user->exists($id)) {
-            $response['status'] = false;
-            return;
-        }
-
-        if ($_SESSION['user_id'] === $id) {
-            return;
-        }
-
-        $user->changeStatus($id);
-        $response['data'] = true;
-    }
-
-    /**
      * Get users list
      *
-     * @param array $response ajax response
-     *
      * @return void
      */
-    protected function aactionGetItems(array &$response): void
+    protected function getItems(): void
     {
-        $filter = (new Admin())->filter(
-            __CLASS__,
+        // Prevent non logged users, non admin users
+        if (!$this->isLoggedIn()
+            || !$this->isAdmin()
+        ) {
+            return;
+        }
+
+        $filter = (new Admin(__CLASS__))->filter(
             new FilterConfig()
         );
         session_write_close();
@@ -111,7 +82,10 @@ class Home extends Controller
         );
 
         if (!$items) {
-            $response['data'] = '';
+            Response::setStatus(StatusCode::OK);
+            Response::setJson([
+                'data' => [ 'content' => '' ]
+            ]);
             return;
         }
 
@@ -119,27 +93,42 @@ class Home extends Controller
 
         $data['items'] = $items;
 
-        $response['data'] = view(
+        $content = view(
             'app/admin/users/users_content',
             $data
         );
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson([
+            'data' => [ 'content' => $content ]
+        ]);
     }
 
     /**
      * Get users count
      *
-     * @param array $response ajax response
-     *
      * @return void
      */
-    protected function aactionGetTotal(array &$response): void
+    protected function getTotal(): void
     {
-        $filter = (new Admin())->get(__CLASS__);
+        // Prevent non logged users, non admin users
+        if (!$this->isLoggedIn()
+            || !$this->isAdmin()
+        ) {
+            return;
+        }
+
+        $filter = (new Admin(__CLASS__))->get();
         session_write_close();
 
-        $response['data'] = (new Users())->filterTotal(
+        $total = (new Users())->filterTotal(
             $filter['filter'],
             $filter['search']
         );
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson([
+            'data' => [ 'total' => $total ]
+        ]);
     }
 }

@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controllers\Account;
 
-use Gaur\{
-    Controller,
-    HTTP\Response
-};
+use Gaur\Controller;
+use Gaur\HTTP\Response;
 
 class Logout extends Controller
 {
@@ -22,6 +20,6 @@ class Logout extends Controller
             session_destroy();
         }
 
-        (new Response())->redirect('');
+        Response::redirect('');
     }
 }
