@@ -1,6 +1,6 @@
     <?= view('app/admin/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>Admin - <?= config('Config\App')->siteName ?></title>
 
