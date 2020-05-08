@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers\Account\Password;
+namespace App\Controllers\Account\Email;
 
 use App\Data\Users\UserResetType;
+use App\Models\Users\User;
 use App\Models\Users\UserReset;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Response;
 use Gaur\HTTP\StatusCode;
 
-class Reset extends Controller
+class Activate extends Controller
 {
     use APIControllerTrait;
 
@@ -34,11 +35,11 @@ class Reset extends Controller
 
         $data['token'] = $token;
 
-        echo view('app/default/account/password/reset', $data);
+        echo view('app/default/account/email/activate', $data);
     }
 
     /**
-     * Verify password reset
+     * Verify account activation
      *
      * @param string $token random token
      *
@@ -55,8 +56,7 @@ class Reset extends Controller
         $reset     = $userReset->get(md5($token));
 
         if (!$reset
-            || $reset['type'] != UserResetType::RESET_PASSWORD
-            || strtotime($reset['expire']) < time()
+            || $reset['type'] != UserResetType::ACTIVATE_ACCOUNT
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson([
@@ -67,18 +67,23 @@ class Reset extends Controller
 
         $userReset->remove($reset['id']);
 
-        // Password update verification
-        $_SESSION['password_update'] = $reset['uid'];
+        // Activate user
+        (new User())->activate($reset['uid']);
+
+        // Password create verification
+        $_SESSION['password_create'] = $reset['uid'];
 
         // 60 minutes
-        session()->markAsTempdata('password_update', 3600);
+        session()->markAsTempdata('password_create', 3600);
         session_write_close();
+
+        $message = 'Congratulations! your email address has been successfully verified.';
 
         Response::setStatus(StatusCode::OK);
         Response::setJson([
             'data' => [
-                'message' => 'Congratulations! Your password reset request has been successfully verified.',
-                'link' => 'account/password/update'
+                'message' => $message,
+                'link' => 'account/password/create'
             ]
         ]);
     }
