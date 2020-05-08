@@ -9,77 +9,77 @@ class Config
     /**
      * Valid sources of web workers, nested browsing contexts
      *
-     * @var array
+     * @var string[]
      */
     public $childSrc = [];
 
     /**
      * Valid sources of AJAX, WebSocket
      *
-     * @var array
+     * @var string[]
      */
     public $connectSrc = [];
 
     /**
      * Default policy for loading content
      *
-     * @var array
+     * @var string[]
      */
     public $defaultSrc = [];
 
     /**
      * Valid sources of fonts
      *
-     * @var array
+     * @var string[]
      */
     public $fontSrc = [];
 
     /**
      * Valid sources of form action
      *
-     * @var array
+     * @var string[]
      */
     public $formAction = [];
 
     /**
      * Valid sources of images
      *
-     * @var array
+     * @var string[]
      */
     public $imgSrc = [];
 
     /**
      * Valid sources of audio, video
      *
-     * @var array
+     * @var string[]
      */
     public $mediaSrc = [];
 
     /**
      * Valid sources of plugins
      *
-     * @var array
+     * @var string[]
      */
     public $objectSrc = [];
 
     /**
      * Valid MIME types for plugins
      *
-     * @var array
+     * @var string[]
      */
     public $pluginTypes = [];
 
     /**
      * Valid sources of javaScripts
      *
-     * @var array
+     * @var string[]
      */
     public $scriptSrc = [];
 
     /**
      * Valid sources of stylesheets
      *
-     * @var array
+     * @var string[]
      */
     public $styleSrc = [];
 }

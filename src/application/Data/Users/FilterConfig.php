@@ -11,7 +11,7 @@ class FilterConfig extends Config
     /**
      * Allowed filter fields
      *
-     * @var array
+     * @var string[]
      */
     public $filterFields = [
         'status'     => 'Status',
@@ -22,7 +22,7 @@ class FilterConfig extends Config
     /**
      * Allowed filter values
      *
-     * @var array
+     * @var string[][]
      */
     public $filterValues = [
         'status' => [
@@ -42,7 +42,7 @@ class FilterConfig extends Config
     /**
      * Allowed order fields
      *
-     * @var array
+     * @var string[]
      */
     public $orderFields = [
         'id'           => 'ID',
@@ -53,7 +53,7 @@ class FilterConfig extends Config
     /**
      * Allowed search fields
      *
-     * @var array
+     * @var string[]
      */
     public $searchFields = [
         'id'       => 'ID',

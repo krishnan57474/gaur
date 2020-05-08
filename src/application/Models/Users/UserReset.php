@@ -11,7 +11,7 @@ class UserReset extends Model
     /**
      * Add user reset
      *
-     * @param array $data reset information
+     * @param mixed[] $data reset information
      *
      * @return void
      */
@@ -32,16 +32,14 @@ class UserReset extends Model
      * Get user reset
      *
      * @param string $token token
-     * @param int    $type  reset type
      *
-     * @return array|null
+     * @return mixed[]|null
      */
-    public function get(string $token, int $type): ?array
+    public function get(string $token): ?array
     {
         $qry = 'SELECT *
                 FROM `' . $this->db->prefixTable('user_resets') . '`
-                WHERE `token` = ' . $this->db->escape($token)
-                    . ' AND `type` = ' . $type;
+                WHERE `token` = ' . $this->db->escape($token);
 
         return $this->db->query($qry)->getRowArray();
     }

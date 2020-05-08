@@ -18,9 +18,9 @@ class Image
      * string  ratio    aspect ratio dimension (auto, height, width)
      * int     width    width of the new image
      *
-     * @param string $filename source filename
-     * @param string $path     destination path
-     * @param array  $uconfig  user configuration
+     * @param string  $filename source filename
+     * @param string  $path     destination path
+     * @param mixed[] $uconfig  user configuration
      *
      * @return bool
      */

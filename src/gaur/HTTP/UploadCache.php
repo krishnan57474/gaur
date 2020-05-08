@@ -46,7 +46,7 @@ class UploadCache
     /**
      * Get upload cache
      *
-     * @return array
+     * @return string[]
      */
     public function get(): array
     {

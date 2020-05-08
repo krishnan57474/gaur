@@ -28,7 +28,7 @@ class User extends Model
     /**
      * Add user
      *
-     * @param array $data user information
+     * @param mixed[] $data user information
      *
      * @return void
      */
@@ -85,7 +85,7 @@ class User extends Model
      *
      * @param int $id user id
      *
-     * @return array|null
+     * @return mixed[]|null
      */
     public function get(int $id): ?array
     {
@@ -131,8 +131,8 @@ class User extends Model
     /**
      * Update user info
      *
-     * @param int   $id   user id
-     * @param array $data user information
+     * @param int     $id   user id
+     * @param mixed[] $data user information
      *
      * @return void
      */

@@ -28,7 +28,7 @@ class User extends Model
     /**
      * Add user
      *
-     * @param array $data user information
+     * @param mixed[] $data user information
      *
      * @return int
      */
@@ -54,7 +54,7 @@ class User extends Model
      *
      * @param int $id user id
      *
-     * @return array|null
+     * @return mixed[]|null
      */
     public function get(int $id): ?array
     {
@@ -70,7 +70,7 @@ class User extends Model
      *
      * @param string $email email address
      *
-     * @return array|null
+     * @return mixed[]|null
      */
     public function getByEmail(string $email): ?array
     {
@@ -86,7 +86,7 @@ class User extends Model
      *
      * @param string $username username
      *
-     * @return array|null
+     * @return mixed[]|null
      */
     public function getByUsername(string $username): ?array
     {

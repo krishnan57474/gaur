@@ -9,7 +9,7 @@ trait MimesTrait
     /**
      * Mime types list
      *
-     * @var array
+     * @var string[][]
      */
     protected $mimes = [
         'image/jpeg' => [
@@ -26,7 +26,7 @@ trait MimesTrait
      *
      * @param string $mimeType mime type
      *
-     * @return array
+     * @return string[]
      */
     protected function getMimeExtension(string $mimeType): array
     {

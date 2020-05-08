@@ -11,13 +11,13 @@ class Users extends Model
     /**
      * Get users list
      *
-     * @param array|null $filter filter
-     * @param array|null $search search
-     * @param int        $limit  item limit
-     * @param int        $offset page offset
-     * @param array|null $order  order by
+     * @param string[][]|null $filter filter
+     * @param string[][]|null $search search
+     * @param int             $limit  item limit
+     * @param int             $offset page offset
+     * @param string[]|null   $order  order by
      *
-     * @return  array
+     * @return  mixed[][]
      */
     public function filter(
         ?array $filter,
@@ -32,15 +32,17 @@ class Users extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE 1';
 
-        foreach ($filter['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` = ' . $this->db->escape($filter['val'][$k]);
+        if (isset($filter['by']) && isset($filter['val'])) {
+            foreach ($filter['by'] as $k => $v) {
+                $qry .= ' AND `' . $v . '` = ' . $this->db->escape($filter['val'][$k]);
+            }
         }
 
-        foreach ($search['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
-        }
+        if (isset($search['by']) && isset($search['val'])) {
+            foreach ($search['by'] as $k => $v) {
+                $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
+            }
 
-        if ($search) {
             $qry .= ' ESCAPE \'!\'';
         }
 
@@ -56,8 +58,8 @@ class Users extends Model
     /**
      * Get total users count
      *
-     * @param array|null $filter filter
-     * @param array|null $search search
+     * @param string[][]|null $filter filter
+     * @param string[][]|null $search search
      *
      * @return int
      */
@@ -70,15 +72,17 @@ class Users extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE 1';
 
-        foreach ($filter['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` = ' . $this->db->escape($filter['val'][$k]);
+        if (isset($filter['by']) && isset($filter['val'])) {
+            foreach ($filter['by'] as $k => $v) {
+                $qry .= ' AND `' . $v . '` = ' . $this->db->escape($filter['val'][$k]);
+            }
         }
 
-        foreach ($search['by'] ?? [] as $k => $v) {
-            $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
-        }
+        if (isset($search['by']) && isset($search['val'])) {
+            foreach ($search['by'] as $k => $v) {
+                $qry .= ' AND `' . $v . '` LIKE \'%' . $this->db->escapeLikeString($search['val'][$k]) . '%\'';
+            }
 
-        if ($search) {
             $qry .= ' ESCAPE \'!\'';
         }
 

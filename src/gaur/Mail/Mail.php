@@ -11,12 +11,12 @@ class Mail
     /**
      * Send email
      *
-     * @param string $path view path
-     * @param array  $data email data
+     * @param string  $path view path
+     * @param mixed[] $data email data
      *
      * @return bool
      */
-    public function send(string $path, array $data): bool
+    public static function send(string $path, array $data): bool
     {
         $msg   = view($path, $data);
         $email = Services::email();
