@@ -1,6 +1,6 @@
     <?= view('app/admin/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>Users - <?= config('Config\App')->siteName ?></title>
 
@@ -195,65 +195,32 @@
     <?= view('app/admin/common/foot_top') ?>
 
     <script nonce="<?= getCspNonce() ?>">
-    (function () {
+    (() => {
         "use strict";
 
-        function toArray(obj) {
-            var aobj = [];
-
-            Object.keys(obj).forEach(function (k) {
-                aobj[k] = obj[k];
-            });
-
-            return aobj;
-        }
-
         function init() {
-            var configs = {
-                context:     $("#j-ar"),
-
-                <?php if ($filter['filter']): ?>
-                filterBy:    <?= json_encode($filter['filter']['by']) ?>,
-                filterVal:   <?= json_encode($filter['filter']['val']) ?>,
-                <?php else: ?>
-                filterBy:    [],
-                filterVal:   [],
-                <?php endif; ?>
-
-                <?php if ($filter['search']): ?>
-                searchBy:    <?= json_encode($filter['search']['by']) ?>,
-                searchVal:   <?= json_encode($filter['search']['val']) ?>,
-                <?php else: ?>
-                searchBy:    [],
-                searchVal:   [],
-                <?php endif; ?>
-
+            const configs = {
+                context:     $("#j-ar")[0],
+                filterBy:    <?= json_encode($filter['filter']['by'] ?? []) ?>,
+                filterVal:   <?= json_encode($filter['filter']['val'] ?? []) ?>,
+                searchBy:    <?= json_encode($filter['search']['by'] ?? []) ?>,
+                searchVal:   <?= json_encode($filter['search']['val'] ?? []) ?>,
                 currentPage: <?= $filter['current_page'] ?>,
                 listCount:   <?= $filter['count'] ?>,
                 orderBy:     "<?= $filter['order']['order'] ?? '' ?>",
-                sortBy:      <?= (int)(($filter['order']['sort'] ?? '') === 'DESC') ?>
+                sortBy:      <?= (int)(($filter['order']['sort'] ?? '') === 'DESC') ?>,
+                url:         "admin/users"
             };
 
-            [
-                "filterBy",
-                "filterVal",
-                "searchBy",
-                "searchVal"
-            ].forEach(function (k) {
-                if (!Array.isArray(configs[k])) {
-                    configs[k] = toArray(configs[k]);
-                }
-            });
-
-            GApp().init(configs);
+            (new GApp()).init(configs);
         }
 
         (window._jq = window._jq || []).push(init);
     })();
     </script>
 
-    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
-    <script type="text/x-async-js" data-src="js/app.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/app.js" data-type="module" class="j-ajs"></script>
 
     <?= view('app/admin/common/js') ?>
     <?= view('app/admin/common/foot_bottom') ?>

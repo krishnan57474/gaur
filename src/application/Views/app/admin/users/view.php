@@ -8,7 +8,7 @@ $status = [
 ?>
     <?= view('app/admin/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>View a user - <?= config('Config\App')->siteName ?></title>
 
@@ -126,35 +126,38 @@ $status = [
 
     <?php if (!$user['activation']): ?>
     <script nonce="<?= getCspNonce() ?>">
-    (function ($) {
+    (() => {
         "use strict";
 
-        var gform, jar;
+        let $, gform, jar;
 
         function confirm() {
-            $(".j-confirm-change", jar).on("click", function () {
-                gform.submit({
-                    context: jar,
-                    data: {
-                        action: "activate",
-                        "j-ar": "r"
-                    },
-                    success: function () {
+            $(".j-confirm-change", jar).on("click", () => {
+                gform.request("post", "admin/users/<?= $user['id'] ?>/activate")
+                    .on("progress", gform.progress)
+                    .send()
+                    .then((response) => {
+                        const {errors} = response;
+
+                        if (errors) {
+                            gform.error(errors, jar[0]);
+                            return;
+                        }
+
                         location.reload();
-                    }
-                });
+                    });
             });
         }
 
         function confirmToggle() {
-            $(".j-confirm-toggle", jar).on("click", function () {
+            $(".j-confirm-toggle", jar).on("click", () => {
                 $(".j-confirm", jar).toggleClass("d-none");
             });
         }
 
         function init() {
             $ = jQuery;
-            gform = GForm();
+            gform = new GForm();
             jar = $("#j-ar");
 
             confirmToggle();
@@ -165,7 +168,7 @@ $status = [
     })();
     </script>
 
-    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
     <?php endif; ?>
 
     <?= view('app/admin/common/js') ?>

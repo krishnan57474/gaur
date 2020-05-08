@@ -1,6 +1,6 @@
     <?= view('app/admin/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>Add a user - <?= config('Config\App')->siteName ?></title>
 
@@ -84,41 +84,45 @@
     <?= view('app/admin/common/foot_top') ?>
 
     <script nonce="<?= getCspNonce() ?>">
-    (function ($) {
+    (() => {
         "use strict";
 
-        var gform, jar;
+        let $, gform, jar;
 
         function submitForm(form) {
-            var uinputs = {
-                action: "submit",
-                "j-ar": "r"
-            };
+            const uinputs = {};
 
-            $("[name]", form).each(function (k, v) {
-                uinputs[$(v).attr("name")] = $(v).val();
-            });
+            for (const elm of $("[name]", form).toArray()) {
+                uinputs[$(elm).attr("name")] = $(elm).val();
+            }
 
-            gform.submit({
-                context: jar,
-                data: uinputs,
-                success: function (rdata) {
-                    $(".j-success", jar).text(rdata[0]).removeClass("d-none");
+            gform.request("post", "admin/users")
+                .data(uinputs)
+                .on("progress", gform.progress)
+                .send()
+                .then((response) => {
+                    const {errors, data} = response;
+
+                    if (errors) {
+                        gform.error(errors, jar[0]);
+                        return;
+                    }
+
+                    $(".j-success", jar).text(data.message).removeClass("d-none");
                     $(form).addClass("d-none");
 
-                    setTimeout(function () {
-                        location.href = rdata[1];
+                    setTimeout(() => {
+                        location.href = data.link;
                     }, 3000);
-                }
-            });
+                });
         }
 
         function init() {
             $ = jQuery;
-            gform = GForm();
+            gform = new GForm();
             jar = $("#j-ar");
 
-            $("form", jar).on("submit", function (e) {
+            $("form", jar).on("submit", (e) => {
                 e.preventDefault();
                 submitForm(e.target);
             });
@@ -128,7 +132,7 @@
     })();
     </script>
 
-    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
 
     <?= view('app/admin/common/js') ?>
     <?= view('app/admin/common/foot_bottom') ?>

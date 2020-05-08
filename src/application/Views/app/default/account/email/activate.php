@@ -2,7 +2,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
-    <title>Reset your password - <?= config('Config\App')->siteName ?></title>
+    <title>Account activation - <?= config('Config\App')->siteName ?></title>
 
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
@@ -14,7 +14,7 @@
     <main class="container" id="j-ar">
         <div class="row justify-content-center">
             <div class="col-sm-9 col-md-7 col-lg-5">
-                <h1 class="text-center">Reset Password</h1>
+                <h1 class="text-center">Account Activation</h1>
 
                 <ul class="list-unstyled j-error d-none" data-show-errors></ul>
                 <p class="alert alert-success j-success d-none"></p>
@@ -36,7 +36,7 @@
         let $, gform, jar;
 
         function validateToken() {
-            gform.request("post", "account/password/reset/<?= $token ?>")
+            gform.request("post", "account/email/activate/<?= $token ?>")
                 .on("progress", gform.progress)
                 .send()
                 .then((response) => {

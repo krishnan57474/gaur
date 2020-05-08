@@ -1,6 +1,6 @@
     <?= view('app/default/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>Change or reset your password - <?= config('Config\App')->siteName ?></title>
 
@@ -43,37 +43,41 @@
     <?= view('app/default/common/foot_top') ?>
 
     <script nonce="<?= getCspNonce() ?>">
-    (function ($) {
+    (() => {
         "use strict";
 
-        var gform, jar;
+        let $, gform, jar;
 
         function submitForm(form) {
-            var uinputs = {
-                action: "submit",
-                "j-ar": "r"
-            };
+            const uinputs = {};
 
-            $("[name]", form).each(function (k, v) {
-                uinputs[$(v).attr("name")] = $(v).val();
-            });
+            for (const elm of $("[name]", form).toArray()) {
+                uinputs[$(elm).attr("name")] = $(elm).val();
+            }
 
-            gform.submit({
-                context: jar,
-                data: uinputs,
-                success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("d-none");
+            gform.request("post", "account/password/forgot")
+                .data(uinputs)
+                .on("progress", gform.progress)
+                .send()
+                .then((response) => {
+                    const {errors, data} = response;
+
+                    if (errors) {
+                        gform.error(errors, jar[0]);
+                        return;
+                    }
+
+                    $(".j-success", jar).text(data.message).removeClass("d-none");
                     $(form).addClass("d-none");
-                }
-            });
+                });
         }
 
         function init() {
             $ = jQuery;
-            gform = GForm();
+            gform = new GForm();
             jar = $("#j-ar");
 
-            $("form", jar).on("submit", function (e) {
+            $("form", jar).on("submit", (e) => {
                 e.preventDefault();
                 submitForm(e.target);
             });
@@ -83,7 +87,7 @@
     })();
     </script>
 
-    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
 
     <?= view('app/default/common/js') ?>
     <?= view('app/default/common/foot_bottom') ?>

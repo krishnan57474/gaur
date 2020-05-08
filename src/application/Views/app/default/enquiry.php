@@ -1,6 +1,6 @@
     <?= view('app/default/common/head_top') ?>
 
-    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('App\Data\Security\CspConfig', true) ?>">
+    <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
     <title>Enquiry - <?= config('Config\App')->siteName ?></title>
 
@@ -59,131 +59,85 @@
     <?= view('app/default/common/foot_top') ?>
 
     <script nonce="<?= getCspNonce() ?>">
-    (function ($) {
+    (() => {
         "use strict";
 
-        var gform, jar, formLock;
+        let $, gform, jar;
 
         function getFiles(form) {
-            var error = false,
-            files = {},
-            uconfig;
+            const files = {};
+            let uconfig, i, fk;
 
-            $("input[type=file]", form).each(function (k, elm) {
+            for (let elm of $("input[type=file]", form).toArray()) {
+                i = 0;
                 elm = $(elm);
 
                 if (!elm.attr("data-name") || !elm.prop("files").length) {
-                    return;
+                    continue;
                 }
 
                 uconfig = {
-                    context: jar,
+                    error: (e) => gform.error(e, jar[0]),
                     size: elm.attr("data-size"),
                     types: elm.attr("data-types").split(",")
                 };
 
-                $(elm.prop("files")).each(function (fk, file) {
+                for (const file of Array.from(elm.prop("files"))) {
                     uconfig.file = file;
 
                     if (!gform.isValidFile(uconfig)) {
-                        error = true;
                         return false;
                     }
 
-                    fk = elm.attr("data-index") || fk;
+                    fk = elm.attr("data-index") || i;
                     files[elm.attr("data-name") + "[" + fk + "]"] = file;
-                });
-
-                if (error) {
-                    return false;
+                    i += 1;
                 }
-            });
-
-            return error ? false : files;
-        }
-
-        function uploadFile(csrf, file, callback) {
-            var uinputs = new FormData();
-
-            uinputs.set("action", "upload");
-            uinputs.set("j-ar", "r");
-            uinputs.set(csrf.attr("name"), csrf.val());
-            uinputs.set(file[0], file[1]);
-
-            gform.submit({
-                context: jar,
-                data: uinputs,
-                load: function () {
-                    formLock = false;
-                },
-                success: function () {
-                    formLock = true;
-                    callback();
-                },
-                upload: true
-            });
-        }
-
-        function uploadQueue(csrf, files) {
-            var file = files.pop();
-
-            if (file) {
-                uploadFile(csrf, file, function () {
-                    setTimeout(function () {
-                        uploadQueue(csrf, files);
-                    }, 250);
-                });
-            } else {
-                submitData();
             }
-        }
 
-        function submitData() {
-            var form = $("form", jar),
-            uinputs = {
-                action: "submit",
-                "j-ar": "r"
-            };
-
-            $("[name]", form).each(function (k, v) {
-                uinputs[$(v).attr("name")] = $(v).val();
-            });
-
-            gform.submit({
-                context: jar,
-                data: uinputs,
-                load: function () {
-                    formLock = false;
-                },
-                success: function (msg) {
-                    $(".j-success", jar).text(msg).removeClass("d-none");
-                    $(form).addClass("d-none");
-                }
-            });
+            return files;
         }
 
         function submitForm(form) {
-            var files = getFiles(form),
-            csrf;
+            const uinputs = {},
+            files = getFiles(form);
 
-            if (formLock || !files) {
+            if (!files) {
                 return;
             }
 
-            formLock = true;
-            csrf = $("input[type=hidden]", form);
-            files = Object.entries(files).reverse();
+            for (const elm of $("[name]", form).toArray()) {
+                uinputs[$(elm).attr("name")] = $(elm).val();
+            }
 
-            uploadQueue(csrf, files);
+            for (const k of Object.keys(files)) {
+                uinputs[k] = files[k];
+            }
+
+            gform.request("post", "enquiry")
+                .data(uinputs)
+                .on("progress", gform.progress)
+                .upload(true)
+                .send()
+                .then((response) => {
+                    const {errors, data} = response;
+
+                    if (errors) {
+                        gform.error(errors, jar[0]);
+                        return;
+                    }
+
+                    $(".j-success", jar).text(data.message).removeClass("d-none");
+                    $(form).addClass("d-none");
+                });
         }
 
         function init() {
             $ = jQuery;
-            gform = GForm();
+            gform = new GForm();
             jar = $("#j-ar");
-            formLock = false;
 
-            $("form", jar).on("submit", function (e) {
+            $("form", jar).on("submit", (e) => {
                 e.preventDefault();
                 submitForm(e.target);
             });
@@ -193,7 +147,7 @@
     })();
     </script>
 
-    <script type="text/x-async-js" data-src="js/form.js" class="j-ajs"></script>
+    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
 
     <?= view('app/default/common/js') ?>
     <?= view('app/default/common/foot_bottom') ?>
