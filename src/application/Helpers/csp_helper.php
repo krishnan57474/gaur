@@ -19,9 +19,9 @@ function getCsp(
     bool $allowStyle = false
 ): string
 {
-    $config = new $cspConfig();
-    $csp    = new ContentSecurityPolicy();
-    $nonce  = $csp->getNonce();
+    $cspConfig = 'App\Data\Security\ContentSecurityPolicy\\' . $cspConfig;
+    $config    = new $cspConfig();
+    $nonce     = ContentSecurityPolicy::getNonce();
 
     if ($allowScript) {
         $config->scriptSrc   = $config->scriptSrc ?? [];
@@ -33,7 +33,7 @@ function getCsp(
         $config->styleSrc[] = '\'nonce-' . $nonce . '\'';
     }
 
-    return $csp->get($config);
+    return ContentSecurityPolicy::get($config);
 }
 
 /**
@@ -43,8 +43,7 @@ function getCsp(
  */
 function getCspNonce(): string
 {
-    $csp   = new ContentSecurityPolicy();
-    $nonce = $csp->getNonce();
+    $nonce = ContentSecurityPolicy::getNonce();
 
     return $nonce;
 }
