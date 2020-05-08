@@ -4,54 +4,51 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin\Users;
 
+use App\Controllers\Admin\Users\ValidateTrait;
 use App\Models\Admin\Users\User;
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    HTTP\Response,
-    Security\CSRF
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Security\CSRF;
 
 class Edit extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
+    use ValidateTrait;
 
     /**
      * Default page for this controller
      *
+     * @param string $id user id
+     *
      * @return void
      */
-    protected function index(): void
+    protected function index(string $id): void
     {
-        $id = $this->request->uri->getSegment(4);
-
-        // Prevent invalid id
-        if (!ctype_digit($id)
-            || $id < 1
-        ) {
-            (new Response())->pageNotFound();
-        }
-
         // Prevent non logged users
         if (!isset($_SESSION['user_id'])) {
-            (new Response())->loginRedirect('admin/users/edit/' . $id);
+            Response::loginRedirect('admin/users/edit/' . $id);
             return;
         }
 
         // Prevent non admin users
         if (!$_SESSION['is_admin']) {
-            (new Response())->pageNotFound();
+            Response::pageNotFound();
         }
 
-        if ($this->isAjaxRequest()) {
-            return;
+        $id = (int)$id;
+
+        // Prevent invalid id
+        if ($id < 1) {
+            Response::pageNotFound();
         }
 
-        $user = (new User())->get((int)$id);
+        $user = (new User())->get($id);
 
         if (!$user) {
-            (new Response())->pageNotFound();
+            Response::pageNotFound();
         }
 
         $data = [];
@@ -66,46 +63,61 @@ class Edit extends Controller
     }
 
     /**
-     * Ajax form submit
+     * Submit form
      *
-     * @param array $response ajax response
+     * @param string $id user id
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(string $id): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf, non logged users, non admin users
+        if (!$this->isValidCsrf()
+            || !$this->isLoggedIn()
+            || !$this->isAdmin()
+        ) {
             return;
         }
 
+        $id   = (int)$id;
         $user = new User();
-        $id   = (int)$this->request->uri->getSegment(4);
 
-        if (!$user->exists($id)) {
-            $response['status'] = false;
+        // Prevent invalid id
+        if ($id < 1
+            || !$user->exists($id)
+        ) {
+            Response::setStatus(StatusCode::NOT_FOUND);
+            Response::setJson();
             return;
         }
 
         if (!$this->validateInput()
-            || !$this->validateUser()
+            || !$this->validateIdentity()
+            || !$this->validatePassword()
+            || !$this->validateAdmin()
+            || !$this->validateStatus()
+            || !$this->validateUser($id)
         ) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
         // Update user
         $user->update($id, $this->finputs);
 
-        $response['data'] = [
-            'Congratulations! user has been successfully updated.',
-            'admin/users'
-        ];
-
-        $csrf->remove();
+        (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson([
+            'data' => [
+                'message' => 'Congratulations! user has been successfully updated.',
+                'link' => 'admin/users'
+            ]
+        ]);
     }
 
     /**
@@ -115,7 +127,6 @@ class Edit extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'username',
             'email',
@@ -128,90 +139,16 @@ class Edit extends Controller
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';
-                goto exitValidation;
+                break;
             }
         }
 
         foreach ($ofields as $field) {
-            $this->finputs[$field] = $input->post($field);
-        }
-
-        if (!ctype_alnum($this->finputs['username'])) {
-            $this->errors[] = 'Username does not appear to be valid!';
-            goto exitValidation;
-        } elseif (strlen($this->finputs['username']) < 3
-            || strlen($this->finputs['username']) > 32
-        ) {
-            $this->errors[] = 'Username must be between 3 and 32 characters!';
-            goto exitValidation;
-        }
-
-        if (!filter_var($this->finputs['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->errors[] = 'Email address does not appear to be valid!';
-            goto exitValidation;
-        } elseif (mb_strlen($this->finputs['email']) > 128) {
-            $this->errors[] = 'Email address must be less than 129 characters!';
-            goto exitValidation;
-        }
-
-        if ($this->finputs['password'] !== ''
-            && (mb_strlen($this->finputs['password']) < 4
-            || mb_strlen($this->finputs['password']) > 64)
-        ) {
-            $this->errors[] = 'Password must be between 4 and 64 characters!';
-            goto exitValidation;
-        }
-
-        if ($this->finputs['password'] !== $this->finputs['password-confirm']) {
-            $this->errors[] = 'Password confirmation does not match the password!';
-            goto exitValidation;
-        }
-
-        if (!ctype_digit($this->finputs['admin'])
-            || $this->finputs['admin'] > 1
-        ) {
-            $this->errors[] = 'Admin does not appear to be valid!';
-            goto exitValidation;
-        }
-
-        if (!ctype_digit($this->finputs['status'])
-            || $this->finputs['status'] > 1
-        ) {
-            $this->errors[] = 'Status does not appear to be valid!';
-            goto exitValidation;
-        }
-
-        exitValidation:
-        return !$this->errors;
-    }
-
-    /**
-     * Validate username and email
-     *
-     * @return bool
-     */
-    protected function validateUser(): bool
-    {
-        $user     = new User();
-        $id       = (int)$this->request->uri->getSegment(4);
-        $userInfo = $user->get($id);
-
-        // Normalize input
-        $this->finputs['username'] = strtolower($this->finputs['username']);
-        $this->finputs['email']    = mb_strtolower($this->finputs['email']);
-
-        if ($this->finputs['username'] !== $userInfo['username']
-            && $user->isUsernameExists($this->finputs['username'])
-        ) {
-            $this->errors[] = 'Username is already in use!';
-        } elseif ($this->finputs['email'] !== $userInfo['email']
-            && $user->isEmailExists($this->finputs['email'])
-        ) {
-            $this->errors[] = 'Email address is already in use!';
+            $this->finputs[$field] = Input::data($field);
         }
 
         return !$this->errors;

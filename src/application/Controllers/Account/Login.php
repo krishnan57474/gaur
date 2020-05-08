@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers\Account;
 
 use App\Models\Users\User;
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    HTTP\Response,
-    Security\CSRF
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Security\CSRF;
 
 class Login extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -26,16 +25,12 @@ class Login extends Controller
     {
         // Prevent logged users
         if (isset($_SESSION['user_id'])) {
-            (new Response())->redirect('');
+            Response::redirect('');
             return;
         }
 
         // Keep login redirect
         session()->keepFlashdata('login_redirect');
-
-        if ($this->isAjaxRequest()) {
-            return;
-        }
 
         $data = [];
 
@@ -47,18 +42,16 @@ class Login extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf, logged users
+        if (!$this->isValidCsrf()
+            || !$this->isNotLoggedIn()
+        ) {
             return;
         }
 
@@ -66,7 +59,10 @@ class Login extends Controller
             || !$this->validateIdentity()
             || !$this->validateUser()
         ) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
@@ -75,14 +71,19 @@ class Login extends Controller
         // Default login success redirect
         $url = $_SESSION['login_redirect'] ?? 'account';
 
-        $response['data'] = [
-            'You have successfully logged in',
-            $url
-        ];
-
         unset($_SESSION['login_redirect']);
-        $csrf->remove();
+        (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        $message = 'You have successfully logged in';
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson([
+            'data' => [
+                'message' => $message,
+                'link' => $url
+            ]
+        ]);
     }
 
     /**
@@ -113,14 +114,13 @@ class Login extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'identity',
             'password'
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';

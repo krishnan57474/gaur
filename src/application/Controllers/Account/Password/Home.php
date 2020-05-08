@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace App\Controllers\Account\Password;
 
 use App\Models\Users\User;
-use Gaur\{
-    Controller,
-    Controller\AjaxControllerTrait,
-    HTTP\Input,
-    HTTP\Response,
-    Security\CSRF
-};
+use Gaur\Controller;
+use Gaur\Controller\APIControllerTrait;
+use Gaur\HTTP\Input;
+use Gaur\HTTP\Response;
+use Gaur\HTTP\StatusCode;
+use Gaur\Security\CSRF;
 
 class Home extends Controller
 {
-    use AjaxControllerTrait;
+    use APIControllerTrait;
 
     /**
      * Default page for this controller
@@ -26,11 +25,7 @@ class Home extends Controller
     {
         // Prevent non logged users
         if (!isset($_SESSION['user_id'])) {
-            (new Response())->loginRedirect('account/password');
-            return;
-        }
-
-        if ($this->isAjaxRequest()) {
+            Response::loginRedirect('account/password');
             return;
         }
 
@@ -44,25 +39,26 @@ class Home extends Controller
     }
 
     /**
-     * Ajax form submit
-     *
-     * @param array $response ajax response
+     * Submit form
      *
      * @return void
      */
-    protected function aactionSubmit(array &$response): void
+    protected function submit(): void
     {
-        $csrf = new CSRF(__CLASS__);
-
-        if (!$csrf->validate()) {
-            $response['status'] = false;
+        // Prevent invalid csrf, non logged users
+        if (!$this->isValidCsrf()
+            || !$this->isLoggedIn()
+        ) {
             return;
         }
 
         if (!$this->validateInput()
             || !$this->validatePassword()
         ) {
-            $response['errors'] = $this->errors;
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson([
+                'errors' => $this->errors
+            ]);
             return;
         }
 
@@ -71,10 +67,13 @@ class Home extends Controller
             $this->finputs['password-new']
         );
 
-        $response['data'] = 'Congratulations! your password has been successfully updated.';
-
-        $csrf->remove();
+        (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        Response::setStatus(StatusCode::OK);
+        Response::setJson([
+            'data' => [ 'message' => 'Congratulations! your password has been successfully updated.' ]
+        ]);
     }
 
     /**
@@ -84,7 +83,6 @@ class Home extends Controller
      */
     protected function validateInput(): bool
     {
-        $input   = new Input();
         $rfields = [
             'password-current',
             'password-new',
@@ -92,7 +90,7 @@ class Home extends Controller
         ];
 
         foreach ($rfields as $field) {
-            $this->finputs[$field] = $input->post($field);
+            $this->finputs[$field] = Input::data($field);
 
             if ($this->finputs[$field] === '') {
                 $this->errors[] = 'Please fill all required fields!';
