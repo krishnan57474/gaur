@@ -212,7 +212,7 @@ class Pagination {
     static get() {
         configs.lock = true;
         gform
-            .request("get", configs.url + "/total")
+            .request("get", configs.url + "/total", true)
             .on("progress", gform.progress)
             .send()
             .then((response) => {
@@ -273,7 +273,7 @@ class Items {
     static get() {
         configs.lock = true;
         gform
-            .request("get", configs.url)
+            .request("get", configs.url, true)
             .data(this.getInputs())
             .on("progress", gform.progress)
             .send()
