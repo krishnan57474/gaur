@@ -42,7 +42,7 @@ class Items {
         configs.lock = true;
 
         gform
-            .request("get", configs.url)
+            .request("get", configs.url, true)
             .data(this.getInputs())
             .on("progress", gform.progress)
             .send()

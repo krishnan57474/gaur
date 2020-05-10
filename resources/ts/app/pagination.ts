@@ -68,7 +68,7 @@ class Pagination {
         configs.lock = true;
 
         gform
-            .request("get", configs.url + "/total")
+            .request("get", configs.url + "/total", true)
             .on("progress", gform.progress)
             .send()
             .then((response) => {
