@@ -77,7 +77,7 @@
                 }
 
                 uconfig = {
-                    error: (e) => gform.error(e, jar[0]),
+                    error: (e) => gform.error(e, jar),
                     size: elm.attr("data-size"),
                     types: elm.attr("data-types").split(",")
                 };
@@ -123,7 +123,7 @@
                     const {errors, data} = response;
 
                     if (errors) {
-                        gform.error(errors, jar[0]);
+                        gform.error(errors, jar);
                         return;
                     }
 
@@ -135,7 +135,7 @@
         function init() {
             $ = jQuery;
             gform = new GForm();
-            jar = $("#j-ar");
+            jar = document.querySelector("#j-ar");
 
             $("form", jar).on("submit", (e) => {
                 e.preventDefault();

@@ -140,7 +140,7 @@ $status = [
                         const {errors} = response;
 
                         if (errors) {
-                            gform.error(errors, jar[0]);
+                            gform.error(errors, jar);
                             return;
                         }
 
@@ -158,7 +158,7 @@ $status = [
         function init() {
             $ = jQuery;
             gform = new GForm();
-            jar = $("#j-ar");
+            jar = document.querySelector("#j-ar");
 
             confirmToggle();
             confirm();

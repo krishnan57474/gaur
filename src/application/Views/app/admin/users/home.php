@@ -200,7 +200,7 @@
 
         function init() {
             const configs = {
-                context:     $("#j-ar")[0],
+                context:     document.querySelector("#j-ar"),
                 filterBy:    <?= json_encode($filter['filter']['by'] ?? []) ?>,
                 filterVal:   <?= json_encode($filter['filter']['val'] ?? []) ?>,
                 searchBy:    <?= json_encode($filter['search']['by'] ?? []) ?>,

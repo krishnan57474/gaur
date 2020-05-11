@@ -45,7 +45,7 @@
                     $(".j-loading", jar).addClass("d-none");
 
                     if (errors) {
-                        gform.error(errors, jar[0]);
+                        gform.error(errors, jar);
                         return;
                     }
 
@@ -60,7 +60,7 @@
         function init() {
             $ = jQuery;
             gform = new GForm();
-            jar = $("#j-ar");
+            jar = document.querySelector("#j-ar");
 
             validateToken();
         }
