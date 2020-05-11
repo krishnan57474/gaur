@@ -29,15 +29,12 @@ class View extends Controller
             return;
         }
 
-        // Prevent non admin users
-        if (!$_SESSION['is_admin']) {
-            Response::pageNotFound();
-        }
-
         $id = (int)$id;
 
-        // Prevent invalid id
-        if ($id < 1) {
+        // Prevent non admin users, invalid id
+        if (!$_SESSION['is_admin']
+            || $id < 1
+        ) {
             Response::pageNotFound();
         }
 
