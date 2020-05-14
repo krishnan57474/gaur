@@ -102,16 +102,18 @@ class Edit extends Controller
             return;
         }
 
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
         // Update user
         $user->update($id, $this->finputs);
 
-        (new CSRF(__CLASS__))->remove();
-        session_write_close();
+        $message = 'Congratulations! user has been successfully updated.';
 
         Response::setStatus(StatusCode::OK);
         Response::setJson([
             'data' => [
-                'message' => 'Congratulations! user has been successfully updated.',
+                'message' => $message,
                 'link' => 'admin/users'
             ]
         ]);

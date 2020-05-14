@@ -66,19 +66,21 @@ class Forgot extends Controller
             return;
         }
 
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
         // Generate random token
         $token = bin2hex(random_bytes(128));
 
         // Add password reset
         $this->addReset($this->finputs['uid'], md5($token));
 
-        (new CSRF(__CLASS__))->remove();
-        session_write_close();
+        $message = 'Congratulations! a password reset has been sent.';
 
         if ($this->sendMail($token)) {
             Response::setStatus(StatusCode::OK);
             Response::setJson([
-                'data' => [ 'message' => 'Congratulations! a password reset has been sent.' ]
+                'data' => [ 'message' => $message ]
             ]);
         } else {
             Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);

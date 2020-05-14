@@ -62,17 +62,19 @@ class Home extends Controller
             return;
         }
 
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
         (new User())->updatePassword(
             $_SESSION['user_id'],
             $this->finputs['password-new']
         );
 
-        (new CSRF(__CLASS__))->remove();
-        session_write_close();
+        $message = 'Congratulations! your password has been successfully updated.';
 
         Response::setStatus(StatusCode::OK);
         Response::setJson([
-            'data' => [ 'message' => 'Congratulations! your password has been successfully updated.' ]
+            'data' => [ 'message' => $message ]
         ]);
     }
 

@@ -66,14 +66,14 @@ class Login extends Controller
             return;
         }
 
-        (new User())->updateLastVisit($_SESSION['user_id']);
-
         // Default login success redirect
         $url = $_SESSION['login_redirect'] ?? 'account';
 
         unset($_SESSION['login_redirect']);
         (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        (new User())->updateLastVisit($_SESSION['user_id']);
 
         $message = 'You have successfully logged in';
 

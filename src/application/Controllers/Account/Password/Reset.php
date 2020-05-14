@@ -58,14 +58,14 @@ class Reset extends Controller
             || $reset['type'] != UserResetType::RESET_PASSWORD
             || strtotime($reset['expire']) < time()
         ) {
+            $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
+
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson([
-                'errors' => [ 'Oops! verification failed. Invalid verification code or expired verification code.' ]
+                'errors' => [ $errorMessage ]
             ]);
             return;
         }
-
-        $userReset->remove($reset['id']);
 
         // Password update verification
         $_SESSION['password_update'] = $reset['uid'];
@@ -74,10 +74,14 @@ class Reset extends Controller
         session()->markAsTempdata('password_update', 3600);
         session_write_close();
 
+        $userReset->remove($reset['id']);
+
+        $message = 'Congratulations! Your password reset request has been successfully verified.';
+
         Response::setStatus(StatusCode::OK);
         Response::setJson([
             'data' => [
-                'message' => 'Congratulations! Your password reset request has been successfully verified.',
+                'message' => $message,
                 'link' => 'account/password/update'
             ]
         ]);

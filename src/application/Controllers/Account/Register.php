@@ -65,6 +65,9 @@ class Register extends Controller
             return;
         }
 
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
         // Random password
         $this->finputs['password'] = md5(uniqid((string)mt_rand(), true));
 
@@ -79,9 +82,6 @@ class Register extends Controller
 
         // Send email verification
         $this->sendMail($token);
-
-        (new CSRF(__CLASS__))->remove();
-        session_write_close();
 
         $message = [
             'Congratulations! your new account has been successfully created.',

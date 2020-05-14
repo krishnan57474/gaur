@@ -73,16 +73,18 @@ class Add extends Controller
             return;
         }
 
+        (new CSRF(__CLASS__))->remove();
+        session_write_close();
+
         // Add user
         (new User())->add($this->finputs);
 
-        (new CSRF(__CLASS__))->remove();
-        session_write_close();
+        $message = 'Congratulations! user has been successfully created.';
 
         Response::setStatus(StatusCode::CREATED);
         Response::setJson([
             'data' => [
-                'message' => 'Congratulations! user has been successfully created.',
+                'message' => $message,
                 'link' => 'admin/users'
             ]
         ]);

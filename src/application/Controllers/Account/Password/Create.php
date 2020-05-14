@@ -65,15 +65,17 @@ class Create extends Controller
             return;
         }
 
-        (new User())->updatePassword(
-            $_SESSION['password_create'],
-            $this->finputs['password']
-        );
+        $uid = $_SESSION['password_create'];
 
         unset($_SESSION['password_create']);
         session()->removeTempdata('password_create');
         (new CSRF(__CLASS__))->remove();
         session_write_close();
+
+        (new User())->updatePassword(
+            $uid,
+            $this->finputs['password']
+        );
 
         $message = 'Congratulations! your password has been successfully created. Now you can log in by using your new password.';
 

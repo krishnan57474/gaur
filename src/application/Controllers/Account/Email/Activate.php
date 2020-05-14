@@ -58,17 +58,14 @@ class Activate extends Controller
         if (!$reset
             || $reset['type'] != UserResetType::ACTIVATE_ACCOUNT
         ) {
+            $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
+
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson([
-                'errors' => [ 'Oops! verification failed. Invalid verification code or expired verification code.' ]
+                'errors' => [ $errorMessage ]
             ]);
             return;
         }
-
-        $userReset->remove($reset['id']);
-
-        // Activate user
-        (new User())->activate($reset['uid']);
 
         // Password create verification
         $_SESSION['password_create'] = $reset['uid'];
@@ -76,6 +73,11 @@ class Activate extends Controller
         // 60 minutes
         session()->markAsTempdata('password_create', 3600);
         session_write_close();
+
+        $userReset->remove($reset['id']);
+
+        // Activate user
+        (new User())->activate($reset['uid']);
 
         $message = 'Congratulations! your email address has been successfully verified.';
 

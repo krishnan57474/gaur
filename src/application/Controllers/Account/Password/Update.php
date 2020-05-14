@@ -65,20 +65,24 @@ class Update extends Controller
             return;
         }
 
-        (new User())->updatePassword(
-            $_SESSION['password_update'],
-            $this->finputs['password']
-        );
+        $uid = $_SESSION['password_update'];
 
         unset($_SESSION['password_update']);
         session()->removeTempdata('password_update');
         (new CSRF(__CLASS__))->remove();
         session_write_close();
 
+        (new User())->updatePassword(
+            $uid,
+            $this->finputs['password']
+        );
+
+        $message = 'Congratulations! your password has been successfully updated. Now you can log in by using your new password.';
+
         Response::setStatus(StatusCode::OK);
         Response::setJson([
             'data' => [
-                'message' => 'Congratulations! your password has been successfully updated. Now you can log in by using your new password.',
+                'message' => $message,
                 'link' => 'account/login'
             ]
         ]);
