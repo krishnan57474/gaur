@@ -1,6 +1,6 @@
 type AjaxConfigDataType = Record<
     string,
-    Array<number | string> | File | Record<string, number | string> | number | string
+    Array<File | number | string> | File | Record<string, File | number | string> | number | string
 >;
 
 type AjaxResponseDataType =

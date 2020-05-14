@@ -92,11 +92,11 @@ class AjaxRequest {
             type = this.typeOf(item);
             if (type === "Array" || type === "Object") {
                 for (const [i, v] of Object.entries(item)) {
-                    formData.set(k + "[" + i + "]", String(v));
+                    formData.set(k + "[" + i + "]", this.typeOf(v) === "File" ? v : String(v));
                 }
             }
             else {
-                formData.set(k, String(item));
+                formData.set(k, type === "File" ? item : String(item));
             }
         }
         return formData;
