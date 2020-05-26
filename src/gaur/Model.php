@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Gaur;
 
+use Config\Database;
+
 class Model
 {
     /**
-     * Database object
+     * Database instance
      *
      * @var \CodeIgniter\Database\BaseConnection
      */
@@ -22,6 +24,6 @@ class Model
      */
     public function __construct(string $group = null)
     {
-        $this->db = db_connect($group);
+        $this->db = Database::connect($group);
     }
 }

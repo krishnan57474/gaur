@@ -18,7 +18,11 @@ trait FileTrait
      *
      * @return mixed[][]
      */
-    protected function getFiles(string $afield, int $count, bool $keepIndex): array
+    protected function getFiles(
+        string $afield,
+        int $count,
+        bool $keepIndex
+    ): array
     {
         $files     = [];
         $filesList = array_slice(

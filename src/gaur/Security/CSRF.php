@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaur\Security;
 
+use Config\Services;
 use Gaur\HTTP\Input;
 
 class CSRF
@@ -32,7 +33,7 @@ class CSRF
      *
      * @param int $time token expiration time in minutes
      *
-     * @return string[]
+     * @return array<string, string>
      */
     public function create(int $time): array
     {
@@ -46,7 +47,7 @@ class CSRF
             $token['hash']
         ];
 
-        session()->markAsTempdata($this->name, $time * 60);
+        Services::session()->markAsTempdata($this->name, $time * 60);
 
         return $token;
     }
@@ -59,7 +60,7 @@ class CSRF
     public function remove(): void
     {
         unset($_SESSION[$this->name]);
-        session()->removeTempdata($this->name);
+        Services::session()->removeTempdata($this->name);
     }
 
     /**

@@ -24,7 +24,7 @@ class Image
      *
      * @return bool
      */
-    public function createThumb(
+    public static function createThumb(
         string $filename,
         string $path,
         array $uconfig = []

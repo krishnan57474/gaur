@@ -90,16 +90,16 @@ trait ValidateTrait
     /**
      * Set upload error message
      *
-     * @param string $errorFilename error filename
-     * @param string $errorMessage  error message
+     * @param string $filename error filename
+     * @param string $message  error message
      *
      * @return void
      */
-    public function setError(string $errorFilename, string $errorMessage): void
+    public function setError(string $filename, string $message): void
     {
         $this->errorMessage = 'Unable to upload the file '
-            . $errorFilename
+            . $filename
             . '. '
-            . $errorMessage;
+            . $message;
     }
 }

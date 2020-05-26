@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gaur\HTTP;
 
+use Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Response
@@ -18,7 +19,7 @@ class Response
     public static function loginRedirect(string $uri): void
     {
         $_SESSION['login_redirect'] = $uri;
-        session()->markAsFlashdata('login_redirect');
+        Services::session()->markAsFlashdata('login_redirect');
         session_write_close();
 
         self::redirect('account/login');
@@ -44,22 +45,28 @@ class Response
      */
     public static function redirect(string $uri): void
     {
-        service('response')->redirect(config('Config\App')->baseURL . $uri);
+        Services::Response()->redirect(
+            config('Config\App')->baseURL . $uri
+        );
     }
 
     /**
      * Set response body as json
      *
      * @param mixed[] $data output
+     * @param bool    $send send output
      *
      * @return void
      */
-    public static function setJson(array $data = null): void
+    public static function setJson(array $data = null, $send = true): void
     {
-        service('response')
+        Services::Response()
             ->setHeader('Content-Type', 'application/json; charset=UTF-8')
-            ->setBody($data ? json_encode($data) : '')
-            ->send();
+            ->setBody($data ? json_encode($data) : '');
+
+        if ($send) {
+            Services::Response()->send();
+        }
     }
 
     /**
@@ -71,21 +78,6 @@ class Response
      */
     public static function setStatus(int $code): void
     {
-        service('response')->setStatusCode($code);
-    }
-
-    /**
-     * Set response body as text
-     *
-     * @param string $data output
-     *
-     * @return void
-     */
-    public static function setText(string $data = null): void
-    {
-        service('response')
-            ->setHeader('Content-Type', 'text/plain; charset=UTF-8')
-            ->setBody($data ?? '')
-            ->send();
+        Services::Response()->setStatusCode($code);
     }
 }
