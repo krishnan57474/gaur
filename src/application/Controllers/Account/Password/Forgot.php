@@ -26,12 +26,6 @@ class Forgot extends Controller
      */
     protected function index(): void
     {
-        // Prevent logged users
-        if (isset($_SESSION['user_id'])) {
-            Response::redirect('');
-            return;
-        }
-
         $data = [];
 
         // 60 minutes
@@ -48,21 +42,16 @@ class Forgot extends Controller
      */
     protected function submit(): void
     {
-        // Prevent invalid csrf, logged users
-        if (!$this->isValidCsrf()
-            || !$this->isNotLoggedIn()
-        ) {
-            return;
-        }
-
         if (!$this->validateInput()
             || !$this->validateIdentity()
             || !$this->validateUser()
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
@@ -79,9 +68,11 @@ class Forgot extends Controller
 
         if ($this->sendMail($token)) {
             Response::setStatus(StatusCode::OK);
-            Response::setJson([
-                'data' => [ 'message' => $message ]
-            ]);
+            Response::setJson(
+                [
+                    'data' => [ 'message' => $message ]
+                ]
+            );
         } else {
             Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
             Response::setJson();

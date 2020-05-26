@@ -25,17 +25,6 @@ class Add extends Controller
      */
     protected function index(): void
     {
-        // Prevent non logged users
-        if (!isset($_SESSION['user_id'])) {
-            Response::loginRedirect('admin/users/add');
-            return;
-        }
-
-        // Prevent non admin users
-        if (!$_SESSION['is_admin']) {
-            Response::pageNotFound();
-        }
-
         $data = [];
 
         // 60 minutes
@@ -52,14 +41,6 @@ class Add extends Controller
      */
     protected function submit(): void
     {
-        // Prevent invalid csrf, non logged users, non admin users
-        if (!$this->isValidCsrf()
-            || !$this->isLoggedIn()
-            || !$this->isAdmin()
-        ) {
-            return;
-        }
-
         if (!$this->validateInput()
             || !$this->validateIdentity()
             || !$this->validatePassword()
@@ -67,27 +48,30 @@ class Add extends Controller
             || !$this->validateUser()
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
         (new CSRF(__CLASS__))->remove();
         session_write_close();
 
-        // Add user
         (new User())->add($this->finputs);
 
         $message = 'Congratulations! user has been successfully created.';
 
         Response::setStatus(StatusCode::CREATED);
-        Response::setJson([
-            'data' => [
-                'message' => $message,
-                'link' => 'admin/users'
+        Response::setJson(
+            [
+                'data' => [
+                    'message' => $message,
+                    'link' => 'admin/users'
+                ]
             ]
-        ]);
+        );
     }
 
     /**

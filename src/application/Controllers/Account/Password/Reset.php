@@ -6,6 +6,7 @@ namespace App\Controllers\Account\Password;
 
 use App\Data\Users\UserResetType;
 use App\Models\Users\UserReset;
+use Config\Services;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Response;
@@ -24,12 +25,6 @@ class Reset extends Controller
      */
     protected function index(string $token): void
     {
-        // Prevent logged users
-        if (isset($_SESSION['user_id'])) {
-            Response::redirect('');
-            return;
-        }
-
         $data = [];
 
         $data['token'] = $token;
@@ -46,11 +41,6 @@ class Reset extends Controller
      */
     protected function verify(string $token): void
     {
-        // Prevent logged users
-        if (!$this->isNotLoggedIn()) {
-            return;
-        }
-
         $userReset = new UserReset();
         $reset     = $userReset->get(md5($token));
 
@@ -61,9 +51,11 @@ class Reset extends Controller
             $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
 
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => [ $errorMessage ]
-            ]);
+            Response::setJson(
+                [
+                    'errors' => [ $errorMessage ]
+                ]
+            );
             return;
         }
 
@@ -71,7 +63,7 @@ class Reset extends Controller
         $_SESSION['password_update'] = $reset['uid'];
 
         // 60 minutes
-        session()->markAsTempdata('password_update', 3600);
+        Services::session()->markAsTempdata('password_update', 3600);
         session_write_close();
 
         $userReset->remove($reset['id']);
@@ -79,11 +71,13 @@ class Reset extends Controller
         $message = 'Congratulations! Your password reset request has been successfully verified.';
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [
-                'message' => $message,
-                'link' => 'account/password/update'
+        Response::setJson(
+            [
+                'data' => [
+                    'message' => $message,
+                    'link' => 'account/password/update'
+                ]
             ]
-        ]);
+        );
     }
 }

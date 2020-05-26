@@ -23,25 +23,12 @@ class View extends Controller
      */
     protected function index(string $id): void
     {
-        // Prevent non logged users
-        if (!isset($_SESSION['user_id'])) {
-            Response::loginRedirect('admin/users/view/' . $id);
-            return;
-        }
-
-        $id = (int)$id;
-
-        // Prevent non admin users, invalid id
-        if (!$_SESSION['is_admin']
-            || $id < 1
-        ) {
-            Response::pageNotFound();
-        }
-
+        $id   = (int)$id;
         $user = (new User())->get($id);
 
         if (!$user) {
             Response::pageNotFound();
+            return;
         }
 
         $data = [];
@@ -60,20 +47,11 @@ class View extends Controller
      */
     protected function activate(string $id): void
     {
-        // Prevent non logged users, non admin users
-        if (!$this->isLoggedIn()
-            || !$this->isAdmin()
-        ) {
-            return;
-        }
-
         $id   = (int)$id;
         $user = new User();
 
         // Prevent invalid id
-        if ($id < 1
-            || !$user->exists($id)
-        ) {
+        if (!$user->exists($id)) {
             Response::setStatus(StatusCode::NOT_FOUND);
             Response::setJson();
             return;
@@ -94,20 +72,11 @@ class View extends Controller
      */
     protected function toggleStatus(string $id): void
     {
-        // Prevent non logged users, non admin users
-        if (!$this->isLoggedIn()
-            || !$this->isAdmin()
-        ) {
-            return;
-        }
-
         $id   = (int)$id;
         $user = new User();
 
         // Prevent invalid id
-        if ($id < 1
-            || !$user->exists($id)
-        ) {
+        if (!$user->exists($id)) {
             Response::setStatus(StatusCode::NOT_FOUND);
             Response::setJson();
             return;

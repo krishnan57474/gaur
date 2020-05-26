@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Account\Password;
 
 use App\Models\Users\User;
+use Config\Services;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Input;
@@ -52,23 +53,20 @@ class Update extends Controller
             return;
         }
 
-        // Prevent invalid csrf
-        if (!$this->isValidCsrf()) {
-            return;
-        }
-
         if (!$this->validateInput()) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
         $uid = $_SESSION['password_update'];
 
         unset($_SESSION['password_update']);
-        session()->removeTempdata('password_update');
+        Services::session()->removeTempdata('password_update');
         (new CSRF(__CLASS__))->remove();
         session_write_close();
 
@@ -80,12 +78,14 @@ class Update extends Controller
         $message = 'Congratulations! your password has been successfully updated. Now you can log in by using your new password.';
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [
-                'message' => $message,
-                'link' => 'account/login'
+        Response::setJson(
+            [
+                'data' => [
+                    'message' => $message,
+                    'link' => 'account/login'
+                ]
             ]
-        ]);
+        );
     }
 
     /**

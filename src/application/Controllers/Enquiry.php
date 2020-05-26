@@ -40,18 +40,15 @@ class Enquiry extends Controller
      */
     protected function submit(): void
     {
-        // Prevent invalid csrf
-        if (!$this->isValidCsrf()) {
-            return;
-        }
-
         if (!$this->validateInput()
             || !$this->validateAttachment()
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
@@ -62,9 +59,11 @@ class Enquiry extends Controller
 
         if ($this->sendMail()) {
             Response::setStatus(StatusCode::OK);
-            Response::setJson([
-                'data' => [ 'message' => $message ]
-            ]);
+            Response::setJson(
+                [
+                    'data' => [ 'message' => $message ]
+                ]
+            );
         } else {
             Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
             Response::setJson();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Account;
 
 use App\Models\Users\User;
+use Config\Services;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Input;
@@ -23,14 +24,8 @@ class Login extends Controller
      */
     protected function index(): void
     {
-        // Prevent logged users
-        if (isset($_SESSION['user_id'])) {
-            Response::redirect('');
-            return;
-        }
-
         // Keep login redirect
-        session()->keepFlashdata('login_redirect');
+        Services::session()->keepFlashdata('login_redirect');
 
         $data = [];
 
@@ -48,21 +43,16 @@ class Login extends Controller
      */
     protected function submit(): void
     {
-        // Prevent invalid csrf, logged users
-        if (!$this->isValidCsrf()
-            || !$this->isNotLoggedIn()
-        ) {
-            return;
-        }
-
         if (!$this->validateInput()
             || !$this->validateIdentity()
             || !$this->validateUser()
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
@@ -78,12 +68,14 @@ class Login extends Controller
         $message = 'You have successfully logged in';
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [
-                'message' => $message,
-                'link' => $url
+        Response::setJson(
+            [
+                'data' => [
+                    'message' => $message,
+                    'link' => $url
+                ]
             ]
-        ]);
+        );
     }
 
     /**

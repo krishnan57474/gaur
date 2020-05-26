@@ -23,17 +23,6 @@ class Home extends Controller
      */
     protected function index(): void
     {
-        // Prevent non logged users
-        if (!isset($_SESSION['user_id'])) {
-            Response::loginRedirect('admin/users');
-            return;
-        }
-
-        // Prevent non admin users
-        if (!$_SESSION['is_admin']) {
-            Response::pageNotFound();
-        }
-
         $filter = (new Admin(__CLASS__))->get();
         session_write_close();
 
@@ -61,13 +50,6 @@ class Home extends Controller
      */
     protected function getItems(): void
     {
-        // Prevent non logged users, non admin users
-        if (!$this->isLoggedIn()
-            || !$this->isAdmin()
-        ) {
-            return;
-        }
-
         $filter = (new Admin(__CLASS__))->filter(
             new FilterConfig()
         );
@@ -83,9 +65,11 @@ class Home extends Controller
 
         if (!$items) {
             Response::setStatus(StatusCode::OK);
-            Response::setJson([
-                'data' => [ 'content' => '' ]
-            ]);
+            Response::setJson(
+                [
+                    'data' => [ 'content' => '' ]
+                ]
+            );
             return;
         }
 
@@ -99,9 +83,11 @@ class Home extends Controller
         );
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [ 'content' => $content ]
-        ]);
+        Response::setJson(
+            [
+                'data' => [ 'content' => $content ]
+            ]
+        );
     }
 
     /**
@@ -111,13 +97,6 @@ class Home extends Controller
      */
     protected function getTotal(): void
     {
-        // Prevent non logged users, non admin users
-        if (!$this->isLoggedIn()
-            || !$this->isAdmin()
-        ) {
-            return;
-        }
-
         $filter = (new Admin(__CLASS__))->get();
         session_write_close();
 
@@ -127,8 +106,10 @@ class Home extends Controller
         );
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [ 'total' => $total ]
-        ]);
+        Response::setJson(
+            [
+                'data' => [ 'total' => $total ]
+            ]
+        );
     }
 }

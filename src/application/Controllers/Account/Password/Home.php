@@ -23,12 +23,6 @@ class Home extends Controller
      */
     protected function index(): void
     {
-        // Prevent non logged users
-        if (!isset($_SESSION['user_id'])) {
-            Response::loginRedirect('account/password');
-            return;
-        }
-
         $data = [];
 
         // 60 minutes
@@ -45,20 +39,15 @@ class Home extends Controller
      */
     protected function submit(): void
     {
-        // Prevent invalid csrf, non logged users
-        if (!$this->isValidCsrf()
-            || !$this->isLoggedIn()
-        ) {
-            return;
-        }
-
         if (!$this->validateInput()
             || !$this->validatePassword()
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => $this->errors
-            ]);
+            Response::setJson(
+                [
+                    'errors' => $this->errors
+                ]
+            );
             return;
         }
 
@@ -73,9 +62,11 @@ class Home extends Controller
         $message = 'Congratulations! your password has been successfully updated.';
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [ 'message' => $message ]
-        ]);
+        Response::setJson(
+            [
+                'data' => [ 'message' => $message ]
+            ]
+        );
     }
 
     /**
@@ -98,6 +89,13 @@ class Home extends Controller
                 $this->errors[] = 'Please fill all required fields!';
                 goto exitValidation;
             }
+        }
+
+        if (mb_strlen($this->finputs['password-current']) < 4
+            || mb_strlen($this->finputs['password-current']) > 64
+        ) {
+            $this->errors[] = 'Incorrect current password!';
+            goto exitValidation;
         }
 
         if (mb_strlen($this->finputs['password-new']) < 4
@@ -123,24 +121,14 @@ class Home extends Controller
      */
     protected function validatePassword(): bool
     {
-        if (mb_strlen($this->finputs['password-current']) < 4
-            || mb_strlen($this->finputs['password-current']) > 64
-        ) {
-            $this->errors[] = 'Incorrect current password!';
-            goto exitValidation;
-        }
-
         $password = (new User())->getPassword($_SESSION['user_id']);
 
         if (!password_verify($this->finputs['password-current'], $password)) {
             $this->errors[] = 'Incorrect current password!';
-            goto exitValidation;
         } elseif ($this->finputs['password-current'] === $this->finputs['password-new']) {
             $this->errors[] = 'Please use different password!';
-            goto exitValidation;
         }
 
-        exitValidation:
         return !$this->errors;
     }
 }

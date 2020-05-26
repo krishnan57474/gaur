@@ -7,6 +7,7 @@ namespace App\Controllers\Account\Email;
 use App\Data\Users\UserResetType;
 use App\Models\Users\User;
 use App\Models\Users\UserReset;
+use Config\Services;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Response;
@@ -25,12 +26,6 @@ class Activate extends Controller
      */
     protected function index(string $token): void
     {
-        // Prevent logged users
-        if (isset($_SESSION['user_id'])) {
-            Response::redirect('');
-            return;
-        }
-
         $data = [];
 
         $data['token'] = $token;
@@ -47,11 +42,6 @@ class Activate extends Controller
      */
     protected function verify(string $token): void
     {
-        // Prevent logged users
-        if (!$this->isNotLoggedIn()) {
-            return;
-        }
-
         $userReset = new UserReset();
         $reset     = $userReset->get(md5($token));
 
@@ -61,9 +51,11 @@ class Activate extends Controller
             $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
 
             Response::setStatus(StatusCode::BAD_REQUEST);
-            Response::setJson([
-                'errors' => [ $errorMessage ]
-            ]);
+            Response::setJson(
+                [
+                    'errors' => [ $errorMessage ]
+                ]
+            );
             return;
         }
 
@@ -71,7 +63,7 @@ class Activate extends Controller
         $_SESSION['password_create'] = $reset['uid'];
 
         // 60 minutes
-        session()->markAsTempdata('password_create', 3600);
+        Services::session()->markAsTempdata('password_create', 3600);
         session_write_close();
 
         $userReset->remove($reset['id']);
@@ -82,11 +74,13 @@ class Activate extends Controller
         $message = 'Congratulations! your email address has been successfully verified.';
 
         Response::setStatus(StatusCode::OK);
-        Response::setJson([
-            'data' => [
-                'message' => $message,
-                'link' => 'account/password/create'
+        Response::setJson(
+            [
+                'data' => [
+                    'message' => $message,
+                    'link' => 'account/password/create'
+                ]
             ]
-        ]);
+        );
     }
 }
