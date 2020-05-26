@@ -31,17 +31,15 @@ class Controller extends BaseController
         Services::session();
 
         $helpers = [
-            'csp',
             'html'
         ];
 
+        if ($method === 'index') {
+            $helpers[] = 'csp';
+        }
+
         helper(array_merge($helpers, $this->preloadHelpers));
 
-        if (method_exists($this, $method)) {
-            $this->{$method}(...$args);
-        } else {
-            Response::setStatus(StatusCode::INTERNAL_SERVER_ERROR);
-            Response::setJson();
-        }
+        $this->{$method}(...$args);
     }
 }
