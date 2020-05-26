@@ -6,7 +6,6 @@ namespace App\Controllers\Account;
 
 use App\Models\Users\User;
 use Gaur\Controller;
-use Gaur\HTTP\Response;
 
 class Home extends Controller
 {
@@ -17,12 +16,6 @@ class Home extends Controller
      */
     protected function index(): void
     {
-        // Prevent non logged users
-        if (!isset($_SESSION['user_id'])) {
-            Response::loginRedirect('account');
-            return;
-        }
-
         $user = (new User())->get($_SESSION['user_id']);
 
         $data = [];
