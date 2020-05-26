@@ -9,7 +9,7 @@ trait MimesTrait
     /**
      * Mime types list
      *
-     * @var string[][]
+     * @var array<string, string[]>
      */
     protected $mimes = [
         'image/jpeg' => [

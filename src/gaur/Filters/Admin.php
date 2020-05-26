@@ -19,11 +19,11 @@ class Admin
     /**
      * Get fields
      *
-     * @param string[] $keys    keys list
-     * @param string[] $vals    values list
-     * @param string[] $afields allowed fields
+     * @param string[]              $keys    keys list
+     * @param string[]              $vals    values list
+     * @param array<string, string> $afields allowed fields
      *
-     * @return string[][]|null
+     * @return array<string, string[]>|null
      */
     protected function getFields(
         array $keys,

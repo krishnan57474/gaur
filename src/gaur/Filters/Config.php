@@ -9,28 +9,28 @@ class Config
     /**
      * Allowed filter fields
      *
-     * @var string[]
+     * @var array<string, string>
      */
     public $filterFields = [];
 
     /**
      * Allowed filter values
      *
-     * @var string[][]
+     * @var array<string, string[]>
      */
     public $filterValues = [];
 
     /**
      * Allowed order fields
      *
-     * @var string[]
+     * @var array<string, string>
      */
     public $orderFields = [];
 
     /**
      * Allowed search fields
      *
-     * @var string[]
+     * @var array<string, string>
      */
     public $searchFields = [];
 }

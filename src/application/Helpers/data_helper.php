@@ -7,7 +7,7 @@ declare(strict_types=1);
  *
  * @param string $path file path of json content
  *
- * @return array
+ * @return mixed[]
  */
 function getDataContents(string $path): array
 {
@@ -24,8 +24,8 @@ function getDataContents(string $path): array
 /**
  * Update json content of data directory
  *
- * @param string $path file path of json content
- * @param array  $data file data
+ * @param string  $path file path of json content
+ * @param mixed[] $data file data
  *
  * @return void
  */

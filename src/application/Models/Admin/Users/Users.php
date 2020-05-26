@@ -11,13 +11,13 @@ class Users extends Model
     /**
      * Get users list
      *
-     * @param string[][]|null $filter filter
-     * @param string[][]|null $search search
-     * @param int             $limit  item limit
-     * @param int             $offset page offset
-     * @param string[]|null   $order  order by
+     * @param array<string, string[]>|null $filter filter
+     * @param array<string, string[]>|null $search search
+     * @param int                          $limit  item limit
+     * @param int                          $offset page offset
+     * @param string[]|null                $order  order by
      *
-     * @return  mixed[][]
+     * @return mixed[][]
      */
     public function filter(
         ?array $filter,
@@ -58,8 +58,8 @@ class Users extends Model
     /**
      * Get total users count
      *
-     * @param string[][]|null $filter filter
-     * @param string[][]|null $search search
+     * @param array<string, string[]>|null $filter filter
+     * @param array<string, string[]>|null $search search
      *
      * @return int
      */
