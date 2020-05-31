@@ -1,19 +1,4 @@
 class Items {
-    protected static getInputs(): Record<string, number | string | Array<string>> {
-        const uinputs: Record<string, number | string | Array<string>> = {
-            filterby: configs.filterBy,
-            filterval: configs.filterVal,
-            searchby: configs.searchBy,
-            searchval: configs.searchVal,
-            count: configs.listCount,
-            page: configs.currentPage,
-            orderby: configs.orderBy,
-            sortby: configs.sortBy
-        };
-
-        return uinputs;
-    }
-
     protected static onLoad(): void {
         const elmsList: Array<string> = ["loading", "noitems", "items", "footer"];
 
@@ -65,5 +50,20 @@ class Items {
 
                 this.onSuccess(content);
             });
+    }
+
+    public static getInputs(): Record<string, number | string | Array<string>> {
+        const uinputs: Record<string, number | string | Array<string>> = {
+            filterby: configs.filterBy,
+            filterval: configs.filterVal,
+            searchby: configs.searchBy,
+            searchval: configs.searchVal,
+            count: configs.listCount,
+            page: configs.currentPage,
+            orderby: configs.orderBy,
+            sortby: configs.sortBy
+        };
+
+        return uinputs;
     }
 }
