@@ -25,7 +25,7 @@ class Ajax {
         return this;
     }
 
-    public on(type: string, listener: Function): this {
+    public on(type: string, listener: (...a: any) => void): this {
         this.config.events[type] = listener;
         return this;
     }

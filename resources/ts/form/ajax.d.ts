@@ -9,7 +9,7 @@ type AjaxResponseDataType =
 
 interface AjaxConfigInterface {
     data: AjaxConfigDataType;
-    events: Record<string, Function>;
+    events: Record<string, (...a: any) => void>;
     headers: Record<string, string>;
     method: string;
     upload: boolean;

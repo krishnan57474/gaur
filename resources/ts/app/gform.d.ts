@@ -9,7 +9,7 @@ interface AjaxResponse {
 interface Ajax {
     data(data: AjaxConfigDataType): this;
     headers(headers: Record<string, string>): this;
-    on(type: string, listener: Function): this;
+    on(type: string, listener: (...a: any) => void): this;
     send(): Promise<AjaxResponse>;
     upload(status: boolean): this;
 }
