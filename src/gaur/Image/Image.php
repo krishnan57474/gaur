@@ -15,6 +15,7 @@ class Image
      *
      * int     height   height of the new image
      * string  library  image library (gd, imagick)
+     * string  prefix   add prefix to the filename
      * string  ratio    aspect ratio dimension (auto, height, width)
      * int     width    width of the new image
      *
@@ -33,6 +34,7 @@ class Image
         $config            = [];
         $config['height']  = 256;
         $config['library'] = 'gd';
+        $config['prefix']  = '';
         $config['ratio']   = 'auto';
         $config['width']   = 256;
 
@@ -57,6 +59,7 @@ class Image
 
         $status = $image->save(
             $path
+            . $config['prefix']
             . basename($filename)
         );
 
