@@ -60,9 +60,7 @@ class Response
      */
     public static function setJson(array $data = null, $send = true): void
     {
-        Services::Response()
-            ->setHeader('Content-Type', 'application/json; charset=UTF-8')
-            ->setBody($data ? json_encode($data) : '');
+        Services::Response()->setHeader('Content-Type', 'application/json; charset=UTF-8')->setBody($data ? json_encode($data) : '');
 
         if ($send) {
             Services::Response()->send();

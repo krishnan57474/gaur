@@ -23,7 +23,7 @@ class UploadCache
      */
     public function __construct(string $name, string $afield)
     {
-        $this->name = 'upload-' . $name . $afield;
+        $this->name = 'upload-' . $name . '-' . $afield;
     }
 
     /**
