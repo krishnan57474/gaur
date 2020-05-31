@@ -69,6 +69,7 @@ class Pagination {
 
         gform
             .request("get", configs.url + "/total", true)
+            .data(Items.getInputs())
             .on("progress", gform.progress)
             .send()
             .then((response) => {
