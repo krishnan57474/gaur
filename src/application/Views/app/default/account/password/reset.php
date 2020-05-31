@@ -11,7 +11,7 @@
     <?= view('app/default/common/head_bottom') ?>
     <?= view('app/default/common/menu') ?>
 
-    <main class="container" id="j-ar">
+    <main class="container" id="j-ar" data-method="post" data-url="account/password/reset/<?= $token ?>">
         <div class="row justify-content-center">
             <div class="col-sm-9 col-md-7 col-lg-5">
                 <h1 class="text-center">Reset Password</h1>
@@ -36,7 +36,7 @@
         let $, gform, jar;
 
         function validateToken() {
-            gform.request("post", "account/password/reset/<?= $token ?>")
+            gform.request($(jar).attr("data-method") || $(jar).attr("method"), $(jar).attr("data-url"))
                 .on("progress", gform.progress)
                 .send()
                 .then((response) => {

@@ -69,7 +69,7 @@ $status = [
             <div class="row align-items-center">
                 <div class="col-sm-6 mb-2 mb-sm-0">Confirm change activation</div>
                 <div class="col-sm-6 text-sm-right">
-                    <button type="button" class="btn btn-success j-confirm-change">Confirm</button>
+                    <button type="button" class="btn btn-success j-confirm-change" data-method="post" data-url="admin/users/<?= $user['id'] ?>/activate">Confirm</button>
                     <button type="button" class="btn btn-secondary j-confirm-toggle">Cancel</button>
                 </div>
             </div>
@@ -132,8 +132,10 @@ $status = [
         let $, gform, jar;
 
         function confirm() {
-            $(".j-confirm-change", jar).on("click", () => {
-                gform.request("post", "admin/users/<?= $user['id'] ?>/activate")
+            $(".j-confirm-change", jar).on("click", (e) => {
+                const elm = $(e.target);
+
+                gform.request(elm.attr("data-method") || elm.attr("method"), elm.attr("data-url"))
                     .on("progress", gform.progress)
                     .send()
                     .then((response) => {

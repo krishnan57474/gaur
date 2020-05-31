@@ -20,7 +20,7 @@
                 <p class="alert alert-success j-success d-none"></p>
                 <p class="alert alert-warning j-warning d-none"></p>
 
-                <form method="post">
+                <form method="post" data-url="account/register">
                     <div class="form-group">
                         <label>Username <span class="text-danger">*</span></label>
                         <input class="form-control" name="username" type="text" required>
@@ -64,7 +64,7 @@
                 uinputs[$(elm).attr("name")] = $(elm).val();
             }
 
-            gform.request("post", "account/register")
+            gform.request(form.attr("data-method") || form.attr("method"), form.attr("data-url"))
                 .data(uinputs)
                 .on("progress", gform.progress)
                 .send()
@@ -78,7 +78,7 @@
 
                     $(".j-success", jar).text(data.message[0]).removeClass("d-none");
                     $(".j-warning", jar).text(data.message[1]).removeClass("d-none");
-                    $(form).addClass("d-none");
+                    form.addClass("d-none");
                 });
         }
 
@@ -89,7 +89,7 @@
 
             $("form", jar).on("submit", (e) => {
                 e.preventDefault();
-                submitForm(e.target);
+                submitForm($(e.target));
             });
         }
 
