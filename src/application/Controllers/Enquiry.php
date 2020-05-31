@@ -83,8 +83,8 @@ class Enquiry extends Controller
         $attachments = [];
         $path        = 'assets/enquiry/';
 
-        foreach ($inputs['attach'] as $k => $v) {
-            $attachments['attachment ' . ($k + 1)] = $path . $v;
+        foreach ($inputs['attach'] as $k => $attach) {
+            $attachments['attachment ' . ($k + 1)] = $path . $attach;
         }
 
         unset($inputs['attach']);
