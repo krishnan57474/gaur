@@ -36,7 +36,7 @@
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
 
-                <form method="post">
+                <form method="post" data-method="put" data-url="admin/users/<?= $user['id'] ?>" data-timeout="3000">
                     <div class="form-group">
                         <label>Username <span class="text-danger">*</span></label>
                         <input class="form-control" name="username" type="text" required value="<?= hentities($user['username']) ?>">
@@ -91,57 +91,6 @@
     </main>
 
     <?= view('app/admin/common/foot_top') ?>
-
-    <script nonce="<?= getCspNonce() ?>">
-    (() => {
-        "use strict";
-
-        let $, gform, jar;
-
-        function submitForm(form) {
-            const uinputs = {};
-
-            for (const elm of $("[name]", form).toArray()) {
-                uinputs[$(elm).attr("name")] = $(elm).val();
-            }
-
-            gform.request("put", "admin/users/<?= $user['id'] ?>")
-                .data(uinputs)
-                .on("progress", gform.progress)
-                .send()
-                .then((response) => {
-                    const {errors, data} = response;
-
-                    if (errors) {
-                        gform.error(errors, jar);
-                        return;
-                    }
-
-                    $(".j-success", jar).text(data.message).removeClass("d-none");
-                    $(form).addClass("d-none");
-
-                    setTimeout(() => {
-                        location.href = data.link;
-                    }, 3000);
-                });
-        }
-
-        function init() {
-            $ = jQuery;
-            gform = new GForm();
-            jar = document.querySelector("#j-ar");
-
-            $("form", jar).on("submit", (e) => {
-                e.preventDefault();
-                submitForm(e.target);
-            });
-        }
-
-        (window._jq = window._jq || []).push(init);
-    })();
-    </script>
-
-    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
-
+    <?= view('app/admin/common/js/form') ?>
     <?= view('app/admin/common/js') ?>
     <?= view('app/admin/common/foot_bottom') ?>

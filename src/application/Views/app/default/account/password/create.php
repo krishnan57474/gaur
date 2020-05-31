@@ -21,7 +21,7 @@
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
 
-                <form method="post">
+                <form method="post" data-url="account/password/create" data-timeout="5000">
                     <div class="form-group">
                         <label>Password <span class="text-danger">*</span></label>
                         <input class="form-control" name="password" type="password" required>
@@ -42,50 +42,17 @@
     </main>
 
     <?= view('app/default/common/foot_top') ?>
+    <?= view('app/default/common/js/form') ?>
 
     <script nonce="<?= getCspNonce() ?>">
     (() => {
         "use strict";
 
-        let $, gform, jar;
-
-        function submitForm(form) {
-            const uinputs = {};
-
-            for (const elm of $("[name]", form).toArray()) {
-                uinputs[$(elm).attr("name")] = $(elm).val();
-            }
-
-            gform.request("post", "account/password/create")
-                .data(uinputs)
-                .on("progress", gform.progress)
-                .send()
-                .then((response) => {
-                    const {errors, data} = response;
-
-                    if (errors) {
-                        gform.error(errors, jar);
-                        return;
-                    }
-
-                    $(".j-success", jar).text(data.message).removeClass("d-none");
-                    $(form).addClass("d-none");
-
-                    setTimeout(() => {
-                        location.href = data.link;
-                    }, 5000);
-                });
-        }
+        let $, jar;
 
         function init() {
             $ = jQuery;
-            gform = new GForm();
             jar = document.querySelector("#j-ar");
-
-            $("form", jar).on("submit", (e) => {
-                e.preventDefault();
-                submitForm(e.target);
-            });
 
             setTimeout(() => {
                 $(".j-info", jar).addClass("d-none");
@@ -95,8 +62,6 @@
         (window._jq = window._jq || []).push(init);
     })();
     </script>
-
-    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
 
     <?= view('app/default/common/js') ?>
     <?= view('app/default/common/foot_bottom') ?>

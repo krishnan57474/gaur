@@ -20,7 +20,7 @@
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
 
-                <form method="post">
+                <form method="post" data-url="enquiry">
                     <div class="form-group">
                         <label>Name <span class="text-danger">*</span></label>
                         <input class="form-control" name="name" type="text" required>
@@ -57,97 +57,6 @@
     </main>
 
     <?= view('app/default/common/foot_top') ?>
-
-    <script nonce="<?= getCspNonce() ?>">
-    (() => {
-        "use strict";
-
-        let $, gform, jar;
-
-        function getFiles(form) {
-            const files = {};
-            let uconfig, i, fk;
-
-            for (let elm of $("input[type=file]", form).toArray()) {
-                i = 0;
-                elm = $(elm);
-
-                if (!elm.attr("data-name") || !elm.prop("files").length) {
-                    continue;
-                }
-
-                uconfig = {
-                    error: (e) => gform.error(e, jar),
-                    size: elm.attr("data-size"),
-                    types: elm.attr("data-types").split(",")
-                };
-
-                for (const file of Array.from(elm.prop("files"))) {
-                    uconfig.file = file;
-
-                    if (!gform.isValidFile(uconfig)) {
-                        return false;
-                    }
-
-                    fk = elm.attr("data-index") || i;
-                    files[elm.attr("data-name") + "[" + fk + "]"] = file;
-                    i += 1;
-                }
-            }
-
-            return files;
-        }
-
-        function submitForm(form) {
-            const uinputs = {},
-            files = getFiles(form);
-
-            if (!files) {
-                return;
-            }
-
-            for (const elm of $("[name]", form).toArray()) {
-                uinputs[$(elm).attr("name")] = $(elm).val();
-            }
-
-            for (const k of Object.keys(files)) {
-                uinputs[k] = files[k];
-            }
-
-            gform.request("post", "enquiry")
-                .data(uinputs)
-                .on("progress", gform.progress)
-                .upload(true)
-                .send()
-                .then((response) => {
-                    const {errors, data} = response;
-
-                    if (errors) {
-                        gform.error(errors, jar);
-                        return;
-                    }
-
-                    $(".j-success", jar).text(data.message).removeClass("d-none");
-                    $(form).addClass("d-none");
-                });
-        }
-
-        function init() {
-            $ = jQuery;
-            gform = new GForm();
-            jar = document.querySelector("#j-ar");
-
-            $("form", jar).on("submit", (e) => {
-                e.preventDefault();
-                submitForm(e.target);
-            });
-        }
-
-        (window._jq = window._jq || []).push(init);
-    })();
-    </script>
-
-    <script type="text/x-async-js" data-src="js/form.js" data-type="module" class="j-ajs"></script>
-
+    <?= view('app/default/common/js/form_file') ?>
     <?= view('app/default/common/js') ?>
     <?= view('app/default/common/foot_bottom') ?>
