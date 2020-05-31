@@ -97,7 +97,9 @@ class Home extends Controller
      */
     protected function getTotal(): void
     {
-        $filter = (new Admin(__CLASS__))->get();
+        $filter = (new Admin(__CLASS__))->filter(
+            new FilterConfig()
+        );
         session_write_close();
 
         $total = (new Users())->filterTotal(
