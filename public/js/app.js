@@ -213,6 +213,7 @@ class Pagination {
         configs.lock = true;
         gform
             .request("get", configs.url + "/total", true)
+            .data(Items.getInputs())
             .on("progress", gform.progress)
             .send()
             .then((response) => {
@@ -237,19 +238,6 @@ class Pagination {
     }
 }
 class Items {
-    static getInputs() {
-        const uinputs = {
-            filterby: configs.filterBy,
-            filterval: configs.filterVal,
-            searchby: configs.searchBy,
-            searchval: configs.searchVal,
-            count: configs.listCount,
-            page: configs.currentPage,
-            orderby: configs.orderBy,
-            sortby: configs.sortBy
-        };
-        return uinputs;
-    }
     static onLoad() {
         const elmsList = ["loading", "noitems", "items", "footer"];
         for (const e of elmsList) {
@@ -291,6 +279,19 @@ class Items {
             }
             this.onSuccess(content);
         });
+    }
+    static getInputs() {
+        const uinputs = {
+            filterby: configs.filterBy,
+            filterval: configs.filterVal,
+            searchby: configs.searchBy,
+            searchval: configs.searchVal,
+            count: configs.listCount,
+            page: configs.currentPage,
+            orderby: configs.orderBy,
+            sortby: configs.sortBy
+        };
+        return uinputs;
     }
 }
 class Order {
