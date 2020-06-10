@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Gaur\Controller;
 
-use Config\Services;
-use Gaur\HTTP\Response;
-use Gaur\HTTP\StatusCode;
-use Gaur\Security\CSRF;
-
 trait APIControllerTrait
 {
     /**

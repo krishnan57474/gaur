@@ -105,6 +105,35 @@ class Enquiry extends Controller
     }
 
     /**
+     * Validate attachment
+     *
+     * @return bool
+     */
+    protected function validateAttachment(): bool
+    {
+        $fileUpload = new FileUpload();
+
+        $this->finputs['attach'] = $fileUpload->upload(
+            [
+                'count' => 1,
+                'index' => false,
+                'name'  => 'attach',
+                'path'  => FCPATH . 'assets/enquiry/',
+                'size'  => '10MB',
+                'types' => ['jpeg', 'jpg', 'png']
+            ]
+        );
+
+        if ($fileUpload->getError()) {
+            $this->errors[] = $fileUpload->getError();
+        } elseif (!$this->finputs['attach']) {
+            $this->errors[] = 'No attachment found';
+        }
+
+        return !$this->errors;
+    }
+
+    /**
      * Validate user inputs
      *
      * @return bool
@@ -154,35 +183,6 @@ class Enquiry extends Controller
         }
 
         exitValidation:
-        return !$this->errors;
-    }
-
-    /**
-     * Validate attachment
-     *
-     * @return bool
-     */
-    protected function validateAttachment(): bool
-    {
-        $fileUpload = new FileUpload();
-
-        $this->finputs['attach'] = $fileUpload->upload(
-            [
-                'count' => 1,
-                'index' => false,
-                'name'  => 'attach',
-                'path'  => FCPATH . 'assets/enquiry/',
-                'size'  => '10MB',
-                'types' => ['jpeg', 'jpg', 'png']
-            ]
-        );
-
-        if ($fileUpload->getError()) {
-            $this->errors[] = $fileUpload->getError();
-        } elseif (!$this->finputs['attach']) {
-            $this->errors[] = 'No attachment found';
-        }
-
         return !$this->errors;
     }
 }

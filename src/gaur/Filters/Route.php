@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Gaur\Filters;
 
-use Config\Services;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\Services;
 
 abstract class Route implements FilterInterface
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gaur\HTTP;
 
-use Config\Services;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use Config\Services;
 
 class Response
 {
@@ -58,7 +58,7 @@ class Response
      *
      * @return void
      */
-    public static function setJson(array $data = null, $send = true): void
+    public static function setJson(array $data = null, bool $send = true): void
     {
         Services::Response()->setHeader('Content-Type', 'application/json; charset=UTF-8')->setBody($data ? json_encode($data) : '');
 
