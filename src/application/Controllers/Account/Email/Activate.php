@@ -68,7 +68,6 @@ class Activate extends Controller
 
         $userReset->remove($reset['id']);
 
-        // Activate user
         (new User())->activate($reset['uid']);
 
         $message = 'Congratulations! your email address has been successfully verified.';

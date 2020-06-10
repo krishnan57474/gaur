@@ -57,19 +57,14 @@ class Register extends Controller
         (new CSRF(__CLASS__))->remove();
         session_write_close();
 
-        // Random password
         $this->finputs['password'] = md5(uniqid((string)mt_rand(), true));
 
-        // Add user
         $uid = (new User())->add($this->finputs);
 
-        // Generate random token
         $token = bin2hex(random_bytes(128));
 
-        // Add account verification
         $this->addVerification($uid, md5($token));
 
-        // Send email verification
         $this->sendMail($token);
 
         $message = [

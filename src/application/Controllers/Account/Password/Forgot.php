@@ -58,10 +58,8 @@ class Forgot extends Controller
         (new CSRF(__CLASS__))->remove();
         session_write_close();
 
-        // Generate random token
         $token = bin2hex(random_bytes(128));
 
-        // Add password reset
         $this->addReset($this->finputs['uid'], md5($token));
 
         $message = 'Congratulations! a password reset has been sent.';
