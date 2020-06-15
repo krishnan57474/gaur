@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Admin\Users;
 
+use App\Data\Users\UserSchema;
 use Gaur\Model;
 
 class User extends Model
@@ -28,12 +29,14 @@ class User extends Model
     /**
      * Add user
      *
-     * @param mixed[] $data user information
+     * @param mixed[] $rdata user information
      *
      * @return void
      */
-    public function add(array $data): void
+    public function add(array $rdata): void
     {
+        $data = (new UserSchema())->filter($rdata);
+
         $qry = 'INSERT INTO `' . $this->db->prefixTable('users') . '`(`username`, `email`, `password`, `status`, `activation`, `admin`, `date_added`)
                 VALUES ('
                     . $this->db->escape($data['username'])
@@ -93,7 +96,10 @@ class User extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE `id` = ' . $id;
 
-        return $this->db->query($qry)->getRowArray();
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
+
+        return $data;
     }
 
     /**
@@ -131,13 +137,14 @@ class User extends Model
     /**
      * Update user info
      *
-     * @param int     $id   user id
-     * @param mixed[] $data user information
+     * @param int     $id    user id
+     * @param mixed[] $rdata user information
      *
      * @return void
      */
-    public function update(int $id, array $data): void
+    public function update(int $id, array $rdata): void
     {
+        $data     = (new UserSchema())->filter($rdata);
         $password = '';
 
         if ($data['password'] !== '') {

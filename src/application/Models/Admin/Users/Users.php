@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Admin\Users;
 
+use App\Data\Users\UserSchema;
 use Gaur\Model;
 
 class Users extends Model
@@ -52,7 +53,10 @@ class Users extends Model
 
         $qry .= ' LIMIT ' . ($offset ? ($offset . ', ') : '') . $limit;
 
-        return $this->db->query($qry)->getResultArray();
+        $rdata = $this->db->query($qry)->getResultArray();
+        $data  = $rdata ? (new UserSchema())->filterBatch($rdata) : $rdata;
+
+        return $data;
     }
 
     /**
@@ -86,6 +90,9 @@ class Users extends Model
             $qry .= ' ESCAPE \'!\'';
         }
 
-        return $this->db->query($qry)->getRowArray()['total'] ?? 0;
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
+
+        return $data['total'] ?? 0;
     }
 }

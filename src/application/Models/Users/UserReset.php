@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Users;
 
+use App\Data\Users\UserResetSchema;
 use Gaur\Model;
 
 class UserReset extends Model
@@ -11,12 +12,14 @@ class UserReset extends Model
     /**
      * Add user reset
      *
-     * @param mixed[] $data reset information
+     * @param mixed[] $rdata reset information
      *
      * @return void
      */
-    public function add(array $data): void
+    public function add(array $rdata): void
     {
+        $data = (new UserResetSchema())->filter($rdata);
+
         $qry = 'INSERT INTO `' . $this->db->prefixTable('user_resets') . '`(`uid`, `token`, `type`, `expire`)
                 VALUES ('
                     . $data['uid']
@@ -41,7 +44,10 @@ class UserReset extends Model
                 FROM `' . $this->db->prefixTable('user_resets') . '`
                 WHERE `token` = ' . $this->db->escape($token);
 
-        return $this->db->query($qry)->getRowArray();
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserResetSchema())->filter($rdata) : $rdata;
+
+        return $data;
     }
 
     /**

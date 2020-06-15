@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Users;
 
+use App\Data\Users\UserSchema;
 use Gaur\Model;
 
 class User extends Model
@@ -28,12 +29,14 @@ class User extends Model
     /**
      * Add user
      *
-     * @param mixed[] $data user information
+     * @param mixed[] $rdata user information
      *
      * @return int
      */
-    public function add(array $data): int
+    public function add(array $rdata): int
     {
+        $data = (new UserSchema())->filter($rdata);
+
         $qry = 'INSERT INTO `' . $this->db->prefixTable('users') . '`(`username`, `email`, `password`, `status`, `activation`, `admin`, `date_added`)
                 VALUES ('
                     . $this->db->escape($data['username'])
@@ -62,7 +65,10 @@ class User extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE `id` = ' . $id;
 
-        return $this->db->query($qry)->getRowArray();
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
+
+        return $data;
     }
 
     /**
@@ -78,7 +84,10 @@ class User extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE `email` = ' . $this->db->escape($email);
 
-        return $this->db->query($qry)->getRowArray();
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
+
+        return $data;
     }
 
     /**
@@ -94,7 +103,10 @@ class User extends Model
                 FROM `' . $this->db->prefixTable('users') . '`
                 WHERE `username` = ' . $this->db->escape($username);
 
-        return $this->db->query($qry)->getRowArray();
+        $rdata = $this->db->query($qry)->getRowArray();
+        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
+
+        return $data;
     }
 
     /**
