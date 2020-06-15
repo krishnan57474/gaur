@@ -14,7 +14,7 @@ function getDataContents(string $path): array
     $path = APPPATH . 'Data/' . $path . '.json';
 
     $data = json_decode(
-        file_get_contents($path),
+        file_get_contents($path) ?: '',
         true
     );
 

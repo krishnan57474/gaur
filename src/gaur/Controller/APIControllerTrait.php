@@ -33,6 +33,6 @@ trait APIControllerTrait
         $this->errors  = [];
         $this->finputs = [];
 
-        $this->{$method}(...$args);
+        $this->$method(...$args);
     }
 }

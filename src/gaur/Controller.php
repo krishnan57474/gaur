@@ -40,6 +40,6 @@ class Controller extends BaseController
 
         helper(array_merge($helpers, $this->preloadHelpers));
 
-        $this->{$method}(...$args);
+        $this->$method(...$args);
     }
 }
