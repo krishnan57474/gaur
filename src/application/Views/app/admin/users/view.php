@@ -21,7 +21,7 @@ $status = [
 
     <main class="container mb-3" id="j-ar">
         <div class="row align-items-center">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="">Home</a>
@@ -37,8 +37,8 @@ $status = [
                     </li>
                 </ol>
             </div>
-            <div class="col-md-6 mb-2">
-                <div class="form-row row-cols-2 row-cols-sm-3 row-cols-lg-4 justify-content-end">
+            <div class="col-md-7 mb-2">
+                <div class="form-row row-cols-2 row-cols-sm-3 row-cols-lg-4 justify-content-sm-end">
                     <?php if (!$user['activation']): ?>
                     <div class="col mb-2">
                         <button type="button" class="btn btn-block btn-success j-confirm-toggle">
