@@ -5,6 +5,8 @@ parameters:
         - gaur
         - application/Controllers
         - application/Data
+        - application/Filters
+        - application/Helpers
         - application/Models
         - application/Views/app
         - application/Views/email
@@ -21,7 +23,7 @@ parameters:
             path: application/Models
 
         -
-            message: '#Binary operation "." between string and array<string>\|string results in an error.#'
+            message: '#Binary operation "." between string and array#'
             path: application/Models
 
         -
