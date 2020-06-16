@@ -98,4 +98,14 @@ class UserSchema extends SchemaFilter
         'null' => true,
         'type' => SchemaType::DATETIME
     ];
+
+    /**
+     * total
+     *
+     * @var array<string, mixed>
+     */
+    public $total = [
+        'null' => false,
+        'type' => SchemaType::INT
+    ];
 }
