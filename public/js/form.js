@@ -186,7 +186,7 @@ class Ajax {
             headers: {},
             method: method.toUpperCase(),
             upload: false,
-            url: "api/" + url
+            url: ("api/" + url).replace(/\/$/, "")
         };
         this.ignoreLock = ignoreLock;
     }
