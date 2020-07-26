@@ -7,6 +7,7 @@
         <div class="list-group list-group-flush d-none d-md-block j-list-menu-list">
             <a class="list-group-item list-group-item-action" href="account">Account</a>
             <a class="list-group-item list-group-item-action" href="account/password">Password</a>
+            <a class="list-group-item list-group-item-action" href="account/email">Email</a>
         </div>
     </div>
 

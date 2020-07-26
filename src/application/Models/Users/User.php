@@ -158,6 +158,23 @@ class User extends Model
     }
 
     /**
+     * Update account email
+     *
+     * @param int    $id    user id
+     * @param string $email email
+     *
+     * @return void
+     */
+    public function updateEmail(int $id, string $email): void
+    {
+        $qry = 'UPDATE `' . $this->db->prefixTable('users') . '`
+                SET `email` = ' . $this->db->escape($email)
+                . ' WHERE `id` = ' . $id;
+
+        $this->db->query($qry);
+    }
+
+    /**
      * Update last visited
      *
      * @param int $id user id
