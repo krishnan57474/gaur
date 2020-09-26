@@ -6,18 +6,9 @@ namespace Gaur;
 
 use CodeIgniter\Controller as BaseController;
 use Config\Services;
-use Gaur\HTTP\Response;
-use Gaur\HTTP\StatusCode;
 
 class Controller extends BaseController
 {
-    /**
-     * Helpers to be loaded automatically
-     *
-     * @var string[]
-     */
-    protected $preloadHelpers = [];
-
     /**
      * Remap method calls
      *
@@ -38,7 +29,7 @@ class Controller extends BaseController
             $helpers[] = 'csp';
         }
 
-        helper(array_merge($helpers, $this->preloadHelpers));
+        helper($helpers);
 
         $this->$method(...$args);
     }
