@@ -22,7 +22,13 @@ class FileUpload
      */
     public function getError(): string
     {
-        return $this->errorMessage;
+        $errorMessage = '';
+
+        if (isset($this->errorMessage)) {
+            $errorMessage = $this->errorMessage;
+        }
+
+        return $errorMessage;
     }
 
     /**
