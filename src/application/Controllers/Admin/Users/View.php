@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin\Users;
 
+use App\Data\Users\UserResetType;
 use App\Models\Admin\Users\User;
+use App\Models\Admin\Users\UserReset;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
 use Gaur\HTTP\Response;
@@ -47,17 +49,34 @@ class View extends Controller
      */
     protected function activate(string $id): void
     {
+        $userModel      = new User();
+        $userResetModel = new UserReset();
+
         $id   = (int)$id;
-        $user = new User();
+        $user = $userModel->get($id);
 
         // Prevent invalid id
-        if (!$user->exists($id)) {
+        if (!$user) {
             Response::setStatus(StatusCode::NOT_FOUND);
             Response::setJson();
             return;
         }
 
-        $user->activate($id);
+        // Prevent invalid user
+        if ($user['activation']) {
+            Response::setStatus(StatusCode::BAD_REQUEST);
+            Response::setJson();
+            return;
+        }
+
+        $userResetModel->remove(
+            $userResetModel->getID(
+                $id,
+                UserResetType::ACTIVATE_ACCOUNT
+            )
+        );
+
+        $userModel->activate($id);
 
         Response::setStatus(StatusCode::OK);
         Response::setJson();
