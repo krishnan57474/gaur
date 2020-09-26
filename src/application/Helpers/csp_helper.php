@@ -24,12 +24,10 @@ function getCsp(
     $nonce     = ContentSecurityPolicy::getNonce();
 
     if ($allowScript) {
-        $config->scriptSrc   = $config->scriptSrc ?? [];
         $config->scriptSrc[] = '\'nonce-' . $nonce . '\'';
     }
 
     if ($allowStyle) {
-        $config->styleSrc   = $config->styleSrc ?? [];
         $config->styleSrc[] = '\'nonce-' . $nonce . '\'';
     }
 

@@ -2,9 +2,6 @@
 class AjaxResponse {
     constructor(xhr) {
         this.raw = xhr;
-        Object.defineProperty(this, "raw", {
-            value: xhr
-        });
     }
     get data() {
         const { response } = this;

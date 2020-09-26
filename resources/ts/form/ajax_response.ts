@@ -3,10 +3,6 @@ class AjaxResponse {
 
     public constructor(xhr: XMLHttpRequest) {
         this.raw = xhr;
-
-        Object.defineProperty(this, "raw", {
-            value: xhr
-        });
     }
 
     public get data(): AjaxResponseDataType | null {
