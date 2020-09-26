@@ -4,12 +4,41 @@
 
         let $, gform, jar;
 
+        function assembleInputs(uinputs) {
+            const inputs = {};
+            let key;
+
+            Object.keys(uinputs)
+                .filter(k => k.indexOf(".") > 0)
+                .map(k => k.split(".")[0])
+                .filter((k, i, o) => o.indexOf(k) === i)
+                .forEach(k => inputs[k] = {});
+
+            for (const [k, v] of Object.entries(uinputs)) {
+                delete uinputs[k];
+
+                if (k.indexOf(".") > 0) {
+                    key = k.split(".");
+
+                    inputs[key[0]][key[1]] = v;
+                } else {
+                    inputs[k] = v;
+                }
+            }
+
+            Object.assign(uinputs, inputs);
+
+            return inputs;
+        }
+
         function submitForm(form) {
             const uinputs = {};
 
             for (const elm of $("[name]", form).toArray()) {
                 uinputs[$(elm).attr("name")] = $(elm).val();
             }
+
+            assembleInputs(uinputs);
 
             gform.request(form.attr("data-method") || form.attr("method"), form.attr("data-url"))
                 .data(uinputs)
