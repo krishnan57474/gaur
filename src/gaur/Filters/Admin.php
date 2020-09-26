@@ -14,7 +14,7 @@ class Admin
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Get fields

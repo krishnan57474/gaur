@@ -14,7 +14,7 @@ class CSRF
      *
      * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Load initial values

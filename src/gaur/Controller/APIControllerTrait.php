@@ -11,14 +11,14 @@ trait APIControllerTrait
      *
      * @var string[]
      */
-    protected $errors;
+    protected array $errors;
 
     /**
      * Filtered inputs
      *
      * @var mixed[]
      */
-    protected $finputs;
+    protected array $finputs;
 
     /**
      * Handle api request

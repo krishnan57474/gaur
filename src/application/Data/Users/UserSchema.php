@@ -14,7 +14,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $id = [
+    public array $id = [
         'null' => false,
         'type' => SchemaType::INT
     ];
@@ -24,17 +24,17 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $username = [
+    public array $username = [
         'null' => false,
         'type' => SchemaType::VARCHAR
     ];
 
     /**
-     * email
+     * email address
      *
      * @var array<string, mixed>
      */
-    public $email = [
+    public array $email = [
         'null' => false,
         'type' => SchemaType::VARCHAR
     ];
@@ -44,7 +44,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $password = [
+    public array $password = [
         'null' => false,
         'type' => SchemaType::VARCHAR
     ];
@@ -54,7 +54,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $status = [
+    public array $status = [
         'null' => false,
         'type' => SchemaType::TINYINT
     ];
@@ -64,7 +64,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $activation = [
+    public array $activation = [
         'null' => false,
         'type' => SchemaType::TINYINT
     ];
@@ -74,7 +74,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $admin = [
+    public array $admin = [
         'null' => false,
         'type' => SchemaType::TINYINT
     ];
@@ -84,7 +84,7 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $date_added = [
+    public array $date_added = [
         'null' => false,
         'type' => SchemaType::DATETIME
     ];
@@ -94,18 +94,8 @@ class UserSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $last_visited = [
+    public array $last_visited = [
         'null' => true,
         'type' => SchemaType::DATETIME
-    ];
-
-    /**
-     * total
-     *
-     * @var array<string, mixed>
-     */
-    public $total = [
-        'null' => false,
-        'type' => SchemaType::INT
     ];
 }

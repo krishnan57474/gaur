@@ -16,14 +16,14 @@ abstract class Route implements FilterInterface
      *
      * @var string
      */
-    protected static $controller;
+    protected static string $controller;
 
     /**
      * Method name
      *
      * @var string
      */
-    protected static $method;
+    protected static string $method;
 
     /**
      * Validate current request
@@ -66,7 +66,7 @@ abstract class Route implements FilterInterface
      */
     public function __construct()
     {
-        if (!self::$controller) {
+        if (!isset(self::$controller)) {
             Services::session();
             $this->init();
         }
@@ -75,14 +75,16 @@ abstract class Route implements FilterInterface
     /**
      * Filter current request
      *
-     * @param RequestInterface  $request  request instance
-     * @param ResponseInterface $response response instance
+     * @param RequestInterface  $request   request instance
+     * @param ResponseInterface $response  response instance
+     * @param mixed             $arguments filter arguments
      *
      * @return void
      */
     public function after(
         RequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
+        $arguments = null
     ): void
     {
     }
@@ -90,11 +92,12 @@ abstract class Route implements FilterInterface
     /**
      * Filter current request
      *
-     * @param RequestInterface $request request instance
+     * @param RequestInterface $request   request instance
+     * @param mixed            $arguments filter arguments
      *
      * @return ResponseInterface|null
      */
-    public function before(RequestInterface $request): ?ResponseInterface
+    public function before(RequestInterface $request, $arguments = null): ?ResponseInterface
     {
         $response = null;
 

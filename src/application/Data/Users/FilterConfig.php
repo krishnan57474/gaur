@@ -13,7 +13,7 @@ class FilterConfig extends Config
      *
      * @var array<string, string>
      */
-    public $filterFields = [
+    public array $filterFields = [
         'status'     => 'Status',
         'activation' => 'Activation',
         'admin'      => 'Admin'
@@ -24,7 +24,7 @@ class FilterConfig extends Config
      *
      * @var array<string, string[]>
      */
-    public $filterValues = [
+    public array $filterValues = [
         'status' => [
             'Disabled',
             'Enabled'
@@ -44,9 +44,9 @@ class FilterConfig extends Config
      *
      * @var array<string, string>
      */
-    public $orderFields = [
+    public array $orderFields = [
         'id'           => 'ID',
-        'last_visited' => 'Last Visited',
+        'last_visited' => 'Last visited',
         'status'       => 'Status'
     ];
 
@@ -55,7 +55,7 @@ class FilterConfig extends Config
      *
      * @var array<string, string>
      */
-    public $searchFields = [
+    public array $searchFields = [
         'id'       => 'ID',
         'username' => 'Username',
         'email'    => 'Email'

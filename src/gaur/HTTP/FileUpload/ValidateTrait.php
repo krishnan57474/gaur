@@ -11,7 +11,7 @@ trait ValidateTrait
      *
      * @var string
      */
-    protected $errorMessage;
+    protected string $errorMessage;
 
     /**
      * Validate file size

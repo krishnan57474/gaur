@@ -13,7 +13,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $connectSrc = [
+    public array $connectSrc = [
         '\'self\''
     ];
 
@@ -22,7 +22,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $defaultSrc = [
+    public array $defaultSrc = [
         '\'none\''
     ];
 
@@ -31,7 +31,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $fontSrc = [
+    public array $fontSrc = [
         'https://cdn.jsdelivr.net'
     ];
 
@@ -40,7 +40,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $imgSrc = [
+    public array $imgSrc = [
         '\'self\'',
         'https://cdn.jsdelivr.net'
     ];
@@ -50,7 +50,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $scriptSrc = [
+    public array $scriptSrc = [
         '\'self\'',
         'https://cdn.jsdelivr.net'
     ];
@@ -60,7 +60,7 @@ class Config extends CspConfig
      *
      * @var string[]
      */
-    public $styleSrc = [
+    public array $styleSrc = [
         '\'self\'',
         'https://cdn.jsdelivr.net'
     ];

@@ -14,7 +14,7 @@ class ContentSecurityPolicy
      *
      * @var string
      */
-    protected static $nonce;
+    protected static string $nonce;
 
     /**
      * Get CSP
@@ -50,7 +50,7 @@ class ContentSecurityPolicy
      */
     public static function getNonce(): string
     {
-        if (!is_string(self::$nonce)) {
+        if (!isset(self::$nonce)) {
             self::$nonce = bin2hex(random_bytes(32));
         }
 

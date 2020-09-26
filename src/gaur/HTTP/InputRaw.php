@@ -11,7 +11,7 @@ class InputRaw
      *
      * @var mixed[]
      */
-    protected static $data;
+    protected static array $data;
 
     /**
      * Parse request body data
@@ -28,13 +28,13 @@ class InputRaw
             $data = file_get_contents('php://input');
 
             if (is_string($data)) {
-                self::$data = json_decode($data, true, 3);
+                self::$data = json_decode($data, true, 3) ?? [];
             }
         } elseif ($contentType === 'multipart/form-data') {
             self::$data = $_POST;
         }
 
-        if (!is_array(self::$data)) {
+        if (!isset(self::$data)) {
             self::$data = [];
         }
     }
@@ -46,7 +46,7 @@ class InputRaw
      */
     public static function getData(): array
     {
-        if (!is_array(self::$data)) {
+        if (!isset(self::$data)) {
             self::parseData();
         }
 

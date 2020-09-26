@@ -11,75 +11,75 @@ class Config
      *
      * @var string[]
      */
-    public $childSrc = [];
+    public array $childSrc = [];
 
     /**
      * Valid sources of AJAX, WebSocket
      *
      * @var string[]
      */
-    public $connectSrc = [];
+    public array $connectSrc = [];
 
     /**
      * Default policy for loading content
      *
      * @var string[]
      */
-    public $defaultSrc = [];
+    public array $defaultSrc = [];
 
     /**
      * Valid sources of fonts
      *
      * @var string[]
      */
-    public $fontSrc = [];
+    public array $fontSrc = [];
 
     /**
      * Valid sources of form action
      *
      * @var string[]
      */
-    public $formAction = [];
+    public array $formAction = [];
 
     /**
      * Valid sources of images
      *
      * @var string[]
      */
-    public $imgSrc = [];
+    public array $imgSrc = [];
 
     /**
      * Valid sources of audio, video
      *
      * @var string[]
      */
-    public $mediaSrc = [];
+    public array $mediaSrc = [];
 
     /**
      * Valid sources of plugins
      *
      * @var string[]
      */
-    public $objectSrc = [];
+    public array $objectSrc = [];
 
     /**
      * Valid MIME types for plugins
      *
      * @var string[]
      */
-    public $pluginTypes = [];
+    public array $pluginTypes = [];
 
     /**
      * Valid sources of javaScripts
      *
      * @var string[]
      */
-    public $scriptSrc = [];
+    public array $scriptSrc = [];
 
     /**
      * Valid sources of stylesheets
      *
      * @var string[]
      */
-    public $styleSrc = [];
+    public array $styleSrc = [];
 }

@@ -11,7 +11,7 @@ trait MimesTrait
      *
      * @var array<string, string[]>
      */
-    protected $mimes = [
+    protected array $mimes = [
         'image/jpeg' => [
             'jpeg',
             'jpg'

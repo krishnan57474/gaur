@@ -11,26 +11,26 @@ class Config
      *
      * @var array<string, string>
      */
-    public $filterFields = [];
+    public array $filterFields = [];
 
     /**
      * Allowed filter values
      *
      * @var array<string, string[]>
      */
-    public $filterValues = [];
+    public array $filterValues = [];
 
     /**
      * Allowed order fields
      *
      * @var array<string, string>
      */
-    public $orderFields = [];
+    public array $orderFields = [];
 
     /**
      * Allowed search fields
      *
      * @var array<string, string>
      */
-    public $searchFields = [];
+    public array $searchFields = [];
 }

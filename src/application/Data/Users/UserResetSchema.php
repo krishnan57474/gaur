@@ -14,7 +14,7 @@ class UserResetSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $id = [
+    public array $id = [
         'null' => false,
         'type' => SchemaType::INT
     ];
@@ -24,7 +24,7 @@ class UserResetSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $uid = [
+    public array $uid = [
         'null' => false,
         'type' => SchemaType::INT
     ];
@@ -34,7 +34,7 @@ class UserResetSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $token = [
+    public array $token = [
         'null' => false,
         'type' => SchemaType::CHAR
     ];
@@ -44,7 +44,7 @@ class UserResetSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $type = [
+    public array $type = [
         'null' => false,
         'type' => SchemaType::TINYINT
     ];
@@ -54,7 +54,7 @@ class UserResetSchema extends SchemaFilter
      *
      * @var array<string, mixed>
      */
-    public $expire = [
+    public array $expire = [
         'null' => true,
         'type' => SchemaType::DATETIME
     ];
