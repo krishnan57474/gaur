@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers\Admin\Users;
 
-use App\Controllers\Admin\Users\ValidateTrait;
 use App\Models\Admin\Users\User;
 use Gaur\Controller;
 use Gaur\Controller\APIControllerTrait;
@@ -49,9 +48,7 @@ class Add extends Controller
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
@@ -68,7 +65,7 @@ class Add extends Controller
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'admin/users'
+                    'link'    => 'admin/users'
                 ]
             ]
         );

@@ -90,9 +90,6 @@ class Users extends Model
             $qry .= ' ESCAPE \'!\'';
         }
 
-        $rdata = $this->db->query($qry)->getRowArray();
-        $data  = $rdata ? (new UserSchema())->filter($rdata) : $rdata;
-
-        return $data['total'] ?? 0;
+        return (int)($this->db->query($qry)->getRowArray()['total'] ?? 0);
     }
 }

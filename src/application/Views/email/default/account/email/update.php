@@ -3,7 +3,7 @@
     <tr>
         <td style="background-color:#f6f6f7;padding:20px 20px 10px">
             <p style="color:#465059;font-size:24px;font-weight:bold;text-align:center;margin:0">
-                Email Update
+                Email address update
             </p>
         </td>
     </tr>
@@ -20,8 +20,8 @@
         <td style="background-color:#fff;padding:20px">
             <p style="font-size:14px;color:#555;line-height: 22px;margin:0">
                 Hi,<br />
-                <?= config('Config\App')->siteName ?> recently received a request for an email update.
-                To change your account email, please use code below.
+                <?= config('Config\App')->siteName ?> recently received a request for an email address update.
+                To change your account email address, please use the code below.
             </p>
         </td>
     </tr>

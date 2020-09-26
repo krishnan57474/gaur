@@ -26,7 +26,7 @@ class ContentType extends Route
             explode(';', $_SERVER['CONTENT_TYPE'] ?? '')[0] ?? ''
         );
 
-        $content = $contentType === '' || in_array($contentType, $allowedContentTypes);
+        $content = $contentType === '' || in_array($contentType, $allowedContentTypes, true);
 
         if (!$content) {
             Response::setStatus(StatusCode::UNSUPPORTED_MEDIA_TYPE);

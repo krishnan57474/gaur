@@ -23,8 +23,8 @@
             <table cellspacing="0" cellpadding="0" style="margin:0 auto;border:0;table-layout:fixed">
                 <tr>
                     <td style="background-color:#7fbe56;width:250px;text-align:center;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px">
-                        <a href="<?= config('Config\App')->baseURL ?>account/email/activate/<?= $token ?>" style="color:#fff;text-decoration:none;font-weight:bold;font-size:18px;padding:12px 15px;display:block">
-                            Activate Account
+                        <a href="<?= config('Config\App')->baseURL ?>account/activate/email/<?= $token ?>" style="color:#fff;text-decoration:none;font-weight:bold;font-size:18px;padding:12px 15px;display:block">
+                            Activate account
                         </a>
                     </td>
                 </tr>

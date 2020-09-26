@@ -56,9 +56,7 @@ class Update extends Controller
         if (!$this->validateInput()) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
@@ -82,7 +80,7 @@ class Update extends Controller
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'account/login'
+                    'link'    => 'account/login'
                 ]
             ]
         );

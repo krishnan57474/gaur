@@ -47,9 +47,7 @@ class Register extends Controller
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
@@ -170,7 +168,7 @@ class Register extends Controller
     }
 
     /**
-     * Validate username and email
+     * Validate username and email address
      *
      * @return bool
      */

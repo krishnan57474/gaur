@@ -46,19 +46,17 @@ class Home extends Controller
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
 
         $token = bin2hex(random_bytes(4));
 
-        // Email update verification
+        // Email address update verification
         $_SESSION['email_update'] = [
             'email' => $this->finputs['email'],
-            'code' => $token
+            'code'  => $token
         ];
 
         // 60 minutes
@@ -76,7 +74,7 @@ class Home extends Controller
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'account/email/update'
+                    'link'    => 'account/email/update'
                 ]
             ]
         );
@@ -95,7 +93,7 @@ class Home extends Controller
 
         $data = [
             'to'       => $this->finputs['email'],
-            'subject'  => 'Email update request',
+            'subject'  => 'Email address update request',
             'token'    => $token
         ];
 
@@ -134,7 +132,7 @@ class Home extends Controller
     }
 
     /**
-     * Validate email
+     * Validate email address
      *
      * @return bool
      */

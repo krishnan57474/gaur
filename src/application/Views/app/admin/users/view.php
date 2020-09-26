@@ -90,7 +90,7 @@ $status = [
                             <div class="col-8"><?= hentities($user['username']) ?></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-4">Email</div>
+                            <div class="col-4">Email address</div>
                             <div class="col-8"><?= hentities($user['email']) ?></div>
                         </div>
                         <div class="row mb-3">

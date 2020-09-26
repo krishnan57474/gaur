@@ -21,7 +21,7 @@
 
                 <form method="post" data-url="account/login" data-timeout="1000">
                     <div class="form-group">
-                        <label>Username / Email <span class="text-danger">*</span></label>
+                        <label>Username / Email address <span class="text-danger">*</span></label>
                         <input class="form-control" name="identity" type="text" required>
                     </div>
 
@@ -33,11 +33,11 @@
                     <div class="form-row align-items-center form-group">
                         <div class="col-5">
                             <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
-                            <input class="btn btn-block btn-primary" type="submit" value="Sign In">
+                            <input class="btn btn-block btn-primary" type="submit" value="Sign in">
                         </div>
                         <div class="col-7 text-right">
                             <span class="fas fa-unlock"></span>
-                            <a href="account/password/forgot">Forgot Password</a>
+                            <a href="account/password/forgot">Forgot password</a>
                         </div>
                     </div>
 

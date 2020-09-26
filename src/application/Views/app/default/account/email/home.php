@@ -2,7 +2,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
-    <title>Email - <?= config('Config\App')->siteName ?></title>
+    <title>Email address - <?= config('Config\App')->siteName ?></title>
 
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
@@ -25,19 +25,19 @@
                         <a href="account">Account</a>
                     </li>
                     <li class="breadcrumb-item active">
-                        Email
+                        Email address
                     </li>
                 </ol>
 
                 <div class="card">
-                    <div class="card-header">Change email</div>
+                    <div class="card-header">Change email address</div>
                     <div class="card-body pb-0" id="j-ar">
                         <ul class="list-unstyled j-error d-none"></ul>
                         <p class="alert alert-success j-success d-none"></p>
 
                         <form method="post" data-url="account/email" data-timeout="3000">
                             <div class="form-group">
-                                <label>New email <span class="text-danger">*</span></label>
+                                <label>New email address <span class="text-danger">*</span></label>
                                 <input class="form-control" name="email" type="email" required>
                             </div>
                             <div class="form-group">

@@ -3,7 +3,7 @@
     <tr>
         <td style="background-color:#f6f6f7;padding:20px 20px 10px">
             <p style="color:#465059;font-size:24px;font-weight:bold;text-align:center;margin:0">
-                Password Reset
+                Password reset
             </p>
         </td>
     </tr>

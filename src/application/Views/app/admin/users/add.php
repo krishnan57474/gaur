@@ -44,7 +44,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Email <span class="text-danger">*</span></label>
+                        <label>Email address <span class="text-danger">*</span></label>
                         <input class="form-control" name="email" type="email" required>
                     </div>
 
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Password Confirmation <span class="text-danger">*</span></label>
+                        <label>Password confirmation <span class="text-danger">*</span></label>
                         <input class="form-control" name="password-confirm" type="password" required>
                     </div>
 

@@ -94,7 +94,7 @@ trait ValidateTrait
     }
 
     /**
-     * Validate username and email
+     * Validate username and email address
      *
      * @param int $id user id
      *

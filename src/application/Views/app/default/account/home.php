@@ -34,7 +34,7 @@
                             <div class="col-7"><?= hentities($user['username']) ?></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-5">Email</div>
+                            <div class="col-5">Email address</div>
                             <div class="col-7"><?= hentities($user['email']) ?></div>
                         </div>
                         <div class="row mb-3">

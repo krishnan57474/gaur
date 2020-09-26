@@ -58,9 +58,7 @@ class Update extends Controller
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
@@ -77,14 +75,14 @@ class Update extends Controller
             $email
         );
 
-        $message = 'Congratulations! your email has been successfully updated.';
+        $message = 'Congratulations! your email address has been successfully updated.';
 
         Response::setStatus(StatusCode::OK);
         Response::setJson(
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'account'
+                    'link'    => 'account'
                 ]
             ]
         );
@@ -117,7 +115,7 @@ class Update extends Controller
     }
 
     /**
-     * Validate email
+     * Validate email address
      *
      * @return bool
      */

@@ -1,4 +1,4 @@
-    <header class="container border-bottom mb-3 mt-md-2 pb-md-2">
+    <header class="container border-bottom mb-3 py-md-2">
         <div class="row align-items-center">
             <div class="col-md-3 d-none d-md-block">
                 <div class="text-center">

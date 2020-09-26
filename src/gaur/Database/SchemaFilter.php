@@ -74,7 +74,7 @@ class SchemaFilter
                 if (is_array($v) || is_object($v)) {
                     $data[$k] = json_encode($v);
                 } elseif (is_string($v)) {
-                    $data[$k] = json_decode($v, true);
+                    $data[$k] = json_decode($v, true) ?? [];
                 }
             }
         }

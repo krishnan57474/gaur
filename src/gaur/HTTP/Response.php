@@ -58,7 +58,7 @@ class Response
      *
      * @return void
      */
-    public static function setJson(array $data = null, bool $send = true): void
+    public static function setJson(array $data = [], bool $send = true): void
     {
         Services::Response()->setHeader('Content-Type', 'application/json; charset=UTF-8')->setBody($data ? json_encode($data) : '');
 

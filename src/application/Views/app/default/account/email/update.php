@@ -2,7 +2,7 @@
 
     <meta http-equiv="Content-Security-Policy" content="<?= getCsp('Config', true) ?>">
 
-    <title>Update Email - <?= config('Config\App')->siteName ?></title>
+    <title>Update email address - <?= config('Config\App')->siteName ?></title>
 
     <!-- meta for search engines -->
     <meta name="robots" content="noindex">
@@ -14,7 +14,7 @@
     <main class="container" id="j-ar">
         <div class="row justify-content-center">
             <div class="col-sm-9 col-md-7 col-lg-5">
-                <h1 class="text-center">Update Email</h1>
+                <h1 class="text-center">Update email address</h1>
 
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>

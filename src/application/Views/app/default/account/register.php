@@ -28,14 +28,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Email <span class="text-danger">*</span></label>
+                        <label>Email address <span class="text-danger">*</span></label>
                         <input class="form-control" name="email" type="email" required>
                     </div>
 
                     <div class="form-row align-items-center form-group">
                         <div class="col-5">
                             <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
-                            <input class="btn btn-block btn-primary" type="submit" value="Sign Up">
+                            <input class="btn btn-block btn-primary" type="submit" value="Sign up">
                         </div>
                         <div class="col-7 text-sm-right">
                             <span class="fas fa-sign-in-alt"></span>
@@ -43,7 +43,11 @@
                         </div>
                     </div>
 
-                    <p>By registering you confirm that you accept the <a href="">Privacy Policy</a></p>
+                    <p class="text-center">
+                        <a href="account/activate/resend">Resend activation</a>
+                    </p>
+
+                    <p>By registering you confirm that you accept the <a href="">privacy policy</a></p>
                 </form>
             </div>
         </div>

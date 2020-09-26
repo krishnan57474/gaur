@@ -27,12 +27,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Email Address <span class="text-danger">*</span></label>
+                        <label>Email address <span class="text-danger">*</span></label>
                         <input class="form-control" name="email" type="email" required>
                     </div>
 
                     <div class="form-group">
-                        <label>Phone Number <span class="text-danger">*</span></label>
+                        <label>Phone number <span class="text-danger">*</span></label>
                         <input class="form-control" name="phone" type="text" required>
                     </div>
 

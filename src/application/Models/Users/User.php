@@ -72,7 +72,7 @@ class User extends Model
     }
 
     /**
-     * Get user info by email
+     * Get user info by email address
      *
      * @param string $email email address
      *
@@ -158,10 +158,10 @@ class User extends Model
     }
 
     /**
-     * Update account email
+     * Update account email address
      *
      * @param int    $id    user id
-     * @param string $email email
+     * @param string $email email address
      *
      * @return void
      */

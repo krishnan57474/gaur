@@ -14,14 +14,14 @@
     <main class="container" id="j-ar">
         <div class="row justify-content-center">
             <div class="col-sm-9 col-md-7 col-lg-5">
-                <h1 class="text-center">Forgot Password</h1>
+                <h1 class="text-center">Forgot password</h1>
 
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
 
                 <form method="post" data-url="account/password/forgot">
                     <div class="form-group">
-                        <label>Username / Email <span class="text-danger">*</span></label>
+                        <label>Username / Email address <span class="text-danger">*</span></label>
                         <input class="form-control" name="identity" type="text" required>
                     </div>
 
@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-7 text-right">
                             <span class="fas fa-sign-in-alt"></span>
-                            <a href="account/login">Sign In</a>
+                            <a href="account/login">Sign in</a>
                         </div>
                     </div>
                 </form>

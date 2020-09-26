@@ -42,9 +42,7 @@ class Contact extends Controller
         if (!$this->validateInput()) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }

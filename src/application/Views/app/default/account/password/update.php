@@ -14,7 +14,7 @@
     <main class="container" id="j-ar">
         <div class="row justify-content-center">
             <div class="col-sm-9 col-md-7 col-lg-5">
-                <h1 class="text-center">Update Password</h1>
+                <h1 class="text-center">Update password</h1>
 
                 <ul class="list-unstyled j-error d-none"></ul>
                 <p class="alert alert-success j-success d-none"></p>
@@ -26,13 +26,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Password Confirmation <span class="text-danger">*</span></label>
+                        <label>Password confirmation <span class="text-danger">*</span></label>
                         <input class="form-control" name="password-confirm" type="password" required>
                     </div>
 
                     <div class="form-group">
                         <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
-                        <input class="btn btn-primary" type="submit" value="Update Password">
+                        <input class="btn btn-primary" type="submit" value="Update password">
                     </div>
                 </form>
             </div>

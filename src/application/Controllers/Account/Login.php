@@ -49,9 +49,7 @@ class Login extends Controller
         ) {
             Response::setStatus(StatusCode::BAD_REQUEST);
             Response::setJson(
-                [
-                    'errors' => $this->errors
-                ]
+                [ 'errors' => $this->errors ]
             );
             return;
         }
@@ -72,7 +70,7 @@ class Login extends Controller
             [
                 'data' => [
                     'message' => $message,
-                    'link' => $url
+                    'link'    => $url
                 ]
             ]
         );
