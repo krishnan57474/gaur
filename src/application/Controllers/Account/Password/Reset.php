@@ -42,10 +42,12 @@ class Reset extends Controller
     protected function verify(string $token): void
     {
         $userReset = new UserReset();
-        $reset     = $userReset->get(md5($token));
+        $reset     = $userReset->get(
+            md5($token),
+            UserResetType::RESET_PASSWORD
+        );
 
         if (!$reset
-            || $reset['type'] != UserResetType::RESET_PASSWORD
             || strtotime($reset['expire']) < time()
         ) {
             $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
@@ -68,14 +70,14 @@ class Reset extends Controller
 
         $userReset->remove($reset['id']);
 
-        $message = 'Congratulations! Your password reset request has been successfully verified.';
+        $message = 'Congratulations! your password reset request has been successfully verified.';
 
         Response::setStatus(StatusCode::OK);
         Response::setJson(
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'account/password/update'
+                    'link'    => 'account/password/update'
                 ]
             ]
         );

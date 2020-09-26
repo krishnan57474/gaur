@@ -43,11 +43,12 @@ class Activate extends Controller
     protected function verify(string $token): void
     {
         $userReset = new UserReset();
-        $reset     = $userReset->get(md5($token));
+        $reset     = $userReset->get(
+            md5($token),
+            UserResetType::ACTIVATE_ACCOUNT
+        );
 
-        if (!$reset
-            || $reset['type'] != UserResetType::ACTIVATE_ACCOUNT
-        ) {
+        if (!$reset) {
             $errorMessage = 'Oops! verification failed. Invalid verification code or expired verification code.';
 
             Response::setStatus(StatusCode::BAD_REQUEST);
@@ -77,7 +78,7 @@ class Activate extends Controller
             [
                 'data' => [
                     'message' => $message,
-                    'link' => 'account/password/create'
+                    'link'    => 'account/password/create'
                 ]
             ]
         );
