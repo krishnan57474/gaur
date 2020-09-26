@@ -5,5 +5,6 @@ CREATE TABLE `gaur_user_resets` (
   `type` tinyint(3) UNSIGNED NOT NULL,
   `expire` datetime NULL,
   PRIMARY KEY (`id`),
-  KEY `token` (`token`)
+  KEY `token` (`token`,`type`),
+  KEY `utoken` (`uid`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
