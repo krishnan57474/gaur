@@ -9,6 +9,8 @@ class Application {
             return;
         }
 
+        gform = new GForm();
+
         Configs.initialized = true;
         Configs.init();
 
