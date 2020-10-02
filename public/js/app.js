@@ -164,25 +164,20 @@ class Pagination {
     static getPage(page) {
         let currentPage;
         switch (page) {
-            case "Start": {
+            case "Start":
                 currentPage = 1;
                 break;
-            }
-            case "Previous": {
+            case "Previous":
                 currentPage = configs.currentPage - 1;
                 break;
-            }
-            case "Next": {
+            case "Next":
                 currentPage = configs.currentPage + 1;
                 break;
-            }
-            case "End": {
+            case "End":
                 currentPage = configs.totalPage;
                 break;
-            }
-            default: {
+            default:
                 currentPage = Number(page);
-            }
         }
         if (!currentPage || currentPage < 1) {
             currentPage = 1;
@@ -563,6 +558,16 @@ class Ufilter {
     }
 }
 class Configs {
+    static toArray(obj) {
+        const aobj = [];
+        if (Array.isArray(obj)) {
+            return obj;
+        }
+        for (const [k, v] of Object.entries(obj)) {
+            aobj[Number(k)] = v;
+        }
+        return aobj;
+    }
     static init() {
         configs = {
             context: document.body,
@@ -589,16 +594,6 @@ class Configs {
             configs.url = configs.url.substr(0, configs.url.length - 1);
         }
     }
-    static toArray(obj) {
-        const aobj = [];
-        if (Array.isArray(obj)) {
-            return obj;
-        }
-        for (const [k, v] of Object.entries(obj)) {
-            aobj[Number(k)] = v;
-        }
-        return aobj;
-    }
 }
 class Application {
     confirm(msg, action) {
@@ -609,6 +604,7 @@ class Application {
         if (Configs.initialized) {
             return;
         }
+        gform = new GForm();
         Configs.initialized = true;
         Configs.init();
         if (uconfigs) {
@@ -631,7 +627,6 @@ function gapp() {
     return new Application();
 }
 function init() {
-    gform = new GForm();
     window.GApp = gapp;
 }
 init();
