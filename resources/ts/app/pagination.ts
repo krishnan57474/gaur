@@ -3,29 +3,24 @@ class Pagination {
         let currentPage: number;
 
         switch (page) {
-            case "Start": {
+            case "Start":
                 currentPage = 1;
                 break;
-            }
 
-            case "Previous": {
+            case "Previous":
                 currentPage = configs.currentPage - 1;
                 break;
-            }
 
-            case "Next": {
+            case "Next":
                 currentPage = configs.currentPage + 1;
                 break;
-            }
 
-            case "End": {
+            case "End":
                 currentPage = configs.totalPage;
                 break;
-            }
 
-            default: {
+            default:
                 currentPage = Number(page);
-            }
         }
 
         if (!currentPage || currentPage < 1) {
