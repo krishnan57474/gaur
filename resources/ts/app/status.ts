@@ -1,6 +1,6 @@
 class Status {
     protected static change(elm: HTMLElement): void {
-        const rowElm = elm.closest(".g-tr") as HTMLElement,
+        const rowElm: HTMLElement = elm.closest(".g-tr") as HTMLElement,
             id: string = rowElm.getAttribute("data-id") || "0";
 
         configs.lock = true;

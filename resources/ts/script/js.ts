@@ -76,7 +76,7 @@ class ImportJs {
             const fileSrc: string = elm.getAttribute("data-src") || "",
                 integrity: string = elm.getAttribute("data-integrity") || "",
                 type: string = elm.getAttribute("data-type") || "",
-                skipQueue = elm.hasAttribute("data-skip-queue");
+                skipQueue: boolean = elm.hasAttribute("data-skip-queue");
 
             if (ImportCache.exists(fileSrc)) {
                 callback();

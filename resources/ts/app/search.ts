@@ -58,7 +58,7 @@ class Search {
     }
 
     protected static isValid(): boolean {
-        let valid = true;
+        let valid: boolean = true;
 
         ValidateSearch.reset();
 
