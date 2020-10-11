@@ -11,7 +11,7 @@ parameters:
         - application/Views/app
         - application/Views/email
 
-    autoload_files:
+    bootstrapFiles:
         - application/Helpers/csp_helper.php
         - application/Helpers/data_helper.php
         - application/Helpers/html_helper.php
@@ -27,9 +27,9 @@ parameters:
             path: application/Models
 
         -
-            message: '#Undefined variable: \$\w+#'
+            message: '#Variable \$\w+ might not be defined#'
             path: application/Views/app
 
         -
-            message: '#Undefined variable: \$\w+#'
+            message: '#Variable \$\w+ might not be defined#'
             path: application/Views/email
