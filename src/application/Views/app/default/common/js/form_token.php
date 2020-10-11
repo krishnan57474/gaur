@@ -5,7 +5,7 @@
         let $, gform, jar;
 
         function validateToken() {
-            gform.request($(jar).attr("data-method") || $(jar).attr("method"), $(jar).attr("data-url"))
+            gform.request($(jar).attr("data-method"), $(jar).attr("data-url"))
                 .on("progress", gform.progress)
                 .send()
                 .then((response) => {
