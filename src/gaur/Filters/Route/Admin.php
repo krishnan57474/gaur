@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace Gaur\Filters\Route;
 
-use Config\Services;
 use Gaur\Filters\Route;
 use Gaur\HTTP\Response;
 use Gaur\HTTP\StatusCode;
 
-class LoggedIn extends Route
+class Admin extends Route
 {
     /**
      * Validate current request
@@ -18,19 +17,17 @@ class LoggedIn extends Route
      */
     protected function validate(): bool
     {
-        $isLoggedIn = isset($_SESSION['user_id']);
+        $isAdmin = $_SESSION['is_admin'] ?? false;
 
-        if (!$isLoggedIn) {
+        if (!$isAdmin) {
             if (self::$method === 'index') {
-                Response::loginRedirect(
-                    Services::URI()->getPath()
-                );
+                Response::pageNotFound();
             } elseif (self::$method === 'api') {
-                Response::setStatus(StatusCode::UNAUTHORIZED);
+                Response::setStatus(StatusCode::FORBIDDEN);
                 Response::setJson();
             }
         }
 
-        return $isLoggedIn;
+        return $isAdmin;
     }
 }

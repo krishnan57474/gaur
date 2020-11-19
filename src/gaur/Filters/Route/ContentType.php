@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace Gaur\Filters\Route;
 
 use Gaur\Filters\Route;
 use Gaur\HTTP\Response;

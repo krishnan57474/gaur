@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filters;
+namespace Gaur\Filters\Route;
 
 use Config\Services;
 use Gaur\Filters\Route;
