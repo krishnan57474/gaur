@@ -30,10 +30,6 @@
                             <input name="<?= $csrf['name'] ?>" type="hidden" value="<?= $csrf['hash'] ?>">
                             <input class="btn btn-block btn-primary" type="submit" value="Resend">
                         </div>
-                        <div class="col-7 text-right">
-                            <span class="fas fa-sign-in-alt"></span>
-                            <a href="account/login">Sign in</a>
-                        </div>
                     </div>
                 </form>
             </div>
