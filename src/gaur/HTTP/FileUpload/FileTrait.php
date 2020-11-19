@@ -83,7 +83,7 @@ trait FileTrait
     {
         $units   = 'bkmgtpezy';
         $size    = (float)$unit;
-        $uprefix = preg_replace('/[^a-zA-Z]+/', '', $unit);
+        $uprefix = preg_replace('#[^a-zA-Z]+#', '', $unit);
         $uindex  = strpos($units, strtolower($uprefix[0] ?? 'b'));
 
         if (is_bool($uindex)) {

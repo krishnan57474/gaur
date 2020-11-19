@@ -32,7 +32,7 @@ class ContentSecurityPolicy
                 continue;
             }
 
-            $k = preg_replace('/[A-Z]/', '-$0', (string)$k) ?: '';
+            $k = preg_replace('#[A-Z]#', '-$0', (string)$k) ?: '';
 
             $csp .= strtolower($k);
             $csp .= ' ';

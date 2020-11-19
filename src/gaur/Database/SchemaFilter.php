@@ -47,19 +47,19 @@ class SchemaFilter
                     $data[$k] = (float)$v;
                 }
             } elseif ($rule['type'] === SchemaTypeGroup::DATE) {
-                if (preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $v)) {
+                if (preg_match('#^\d{4}\-\d{2}\-\d{2}$#', $v)) {
                     $data[$k] = $v;
                 } else {
                     $data[$k] = '0000-00-00';
                 }
             } elseif ($rule['type'] === SchemaTypeGroup::DATETIME) {
-                if (preg_match('/^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/', $v)) {
+                if (preg_match('#^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$#', $v)) {
                     $data[$k] = $v;
                 } else {
                     $data[$k] = '0000-00-00 00:00:00';
                 }
             } elseif ($rule['type'] === SchemaTypeGroup::TIME) {
-                if (preg_match('/^\d{2}:\d{2}:\d{2}$/', $v)) {
+                if (preg_match('#^\d{2}:\d{2}:\d{2}$#', $v)) {
                     $data[$k] = $v;
                 } else {
                     $data[$k] = '00:00:00';
