@@ -35,7 +35,7 @@
                         <ul class="list-unstyled j-error d-none"></ul>
                         <p class="alert alert-success j-success d-none"></p>
 
-                        <form method="post" data-url="account/email" data-timeout="3000">
+                        <form method="post" data-url="account/email" data-timeout="1000">
                             <div class="form-group">
                                 <label>New email address <span class="text-danger">*</span></label>
                                 <input class="form-control" name="email" type="email" required>

@@ -22,7 +22,7 @@
                 <form method="post" data-url="account/email/update" data-timeout="5000">
                     <div class="form-group">
                         <label>Code <span class="text-danger">*</span></label>
-                        <input class="form-control" name="code" type="text" required>
+                        <input class="form-control" name="code" type="text" autocomplete="off" required>
                     </div>
 
                     <div class="form-group">
