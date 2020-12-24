@@ -102,8 +102,8 @@ class Update extends Controller
             goto exitValidation;
         }
 
-        if (!ctype_alnum($this->finputs['code'])
-            || strlen($this->finputs['code']) !== 8
+        if (!ctype_digit($this->finputs['code'])
+            || strlen($this->finputs['code']) !== 6
             || $_SESSION['email_update']['code'] !== $this->finputs['code']
         ) {
             $this->errors[] = 'Invalid verification code or expired verification code.';

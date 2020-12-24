@@ -51,7 +51,7 @@ class Home extends Controller
             return;
         }
 
-        $token = bin2hex(random_bytes(4));
+        $token = substr((string)mt_rand(), 0, 6);
 
         // Email address update verification
         $_SESSION['email_update'] = [
