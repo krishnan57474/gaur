@@ -42,7 +42,6 @@
     </main>
 
     <?= view('app/default/common/foot_top') ?>
-    <?= view('app/default/common/js/form') ?>
 
     <script nonce="<?= getCspNonce() ?>">
     (() => {
@@ -63,5 +62,6 @@
     })();
     </script>
 
+    <?= view('app/default/common/js/form') ?>
     <?= view('app/default/common/js') ?>
     <?= view('app/default/common/foot_bottom') ?>
