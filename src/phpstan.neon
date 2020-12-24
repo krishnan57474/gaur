@@ -5,7 +5,6 @@ parameters:
         - gaur
         - application/Controllers
         - application/Data
-        - application/Filters
         - application/Helpers
         - application/Models
         - application/Views/app
