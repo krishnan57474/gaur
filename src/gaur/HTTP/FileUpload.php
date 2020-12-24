@@ -61,6 +61,7 @@ class FileUpload
      *
      * $config fields
      *
+     * bool     aindex  allow arbitrary array keys
      * int      count   number of files to move (0 for all)
      * bool     index   preserve array keys
      * string   name    attachment field name
@@ -75,6 +76,10 @@ class FileUpload
     public function upload(array $config): array
     {
         $this->errorMessage = '';
+
+        if (!isset($config['aindex'])) {
+            $config['aindex'] = false;
+        }
 
         $files = $this->getFiles(
             $config['name'],
@@ -109,7 +114,12 @@ class FileUpload
         }
 
         // Validate file index
-        $eindex = $this->validateIndex($files, $config['count'], $config['index']);
+        $eindex = $this->validateIndex(
+            $files,
+            $config['count'],
+            $config['index'],
+            $config['aindex']
+        );
 
         if ($eindex) {
             $this->setError(

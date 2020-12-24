@@ -16,18 +16,25 @@ trait ValidateTrait
     /**
      * Validate file index
      *
-     * @param mixed[][] $files     list of files to check
-     * @param int       $count     number of files to move (0 for all)
-     * @param bool      $keepIndex preserve array keys
+     * @param mixed[][] $files          list of files to check
+     * @param int       $count          number of files to move (0 for all)
+     * @param bool      $keepIndex      preserve array keys
+     * @param bool      $arbitraryIndex allow arbitrary array keys
      *
      * @return int
      */
-    protected function validateIndex(array $files, int $count, bool $keepIndex): int
+    protected function validateIndex(
+        array $files,
+        int $count,
+        bool $keepIndex,
+        bool $arbitraryIndex
+    ): int
     {
         $eindex = 0;
 
         if (!$count
             || !$keepIndex
+            || $arbitraryIndex
         ) {
             return $eindex;
         }
