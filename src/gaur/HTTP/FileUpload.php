@@ -108,6 +108,17 @@ class FileUpload
             return [];
         }
 
+        // Validate file index
+        $eindex = $this->validateIndex($files, $config['count'], $config['index']);
+
+        if ($eindex) {
+            $this->setError(
+                $files[$eindex - 1]['name'],
+                Errors::FILE_COUNT_EXCEED
+            );
+            return [];
+        }
+
         $mfiles = [];
 
         if (substr($config['path'], -1) !== '/') {

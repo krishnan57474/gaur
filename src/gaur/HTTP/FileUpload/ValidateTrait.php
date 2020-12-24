@@ -14,6 +14,35 @@ trait ValidateTrait
     protected string $errorMessage;
 
     /**
+     * Validate file index
+     *
+     * @param mixed[][] $files     list of files to check
+     * @param int       $count     number of files to move (0 for all)
+     * @param bool      $keepIndex preserve array keys
+     *
+     * @return int
+     */
+    protected function validateIndex(array $files, int $count, bool $keepIndex): int
+    {
+        $eindex = 0;
+
+        if (!$count
+            || !$keepIndex
+        ) {
+            return $eindex;
+        }
+
+        foreach (array_keys($files) as $k) {
+            if ($k >= $count) {
+                $eindex = $k + 1;
+                break;
+            }
+        }
+
+        return $eindex;
+    }
+
+    /**
      * Validate file size
      *
      * @param mixed[][] $files list of files to check
